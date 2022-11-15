@@ -1,0 +1,43 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Auth extends Admin_Controller 
+{
+
+	public function __construct()
+	{
+		parent::__construct();
+
+	
+	}
+
+	/* Login View Load  */
+	public function login()
+	{
+		
+		$this->load->view('login');
+    }
+
+    	/* To Destroy Session and Logout View Load  */
+	public function logout()
+	{	
+
+		$conUserActive['conditions'] = array(
+            'id'=> $this->session->userdata('id'),
+            'is_active' => 1,
+            'is_deleted' => 0
+        );
+
+		$data = array(
+            'is_online' => 0,
+        );
+
+        $branches_row=$this->Crud_model->update('users',$data,$conUserActive);
+
+		$this->session->sess_destroy();
+
+		redirect('auth/login', 'refresh');
+	}
+
+}
