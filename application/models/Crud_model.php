@@ -1,6 +1,98 @@
 <?php
 class Crud_model extends CI_Model
 {
+
+
+    public function loadUsersForChat(){
+    $user_id=$this->session->userdata('id');
+    $outPutArray = array();
+    $ids=array();
+     
+    $sql = $this->db->query("SELECT MAX(message_id) as message_id FROM (SELECT * FROM messages ORDER BY message_id DESC) AS messages WHERE $user_id in (sender_message_id, receiver_message_id) GROUP BY receiver_message_id ORDER BY message_id DESC");
+
+    $array=$sql->result();
+
+        foreach ($array as $key => $value) {
+        
+            $value->sender_info=NULL;
+            $value->receiver_info=NULL;
+
+            $sql_last_mes_row = $this->db->query("SELECT * FROM messages WHERE message_id=$value->message_id AND is_deleted=0");
+            $message_info=$sql_last_mes_row->row();
+     
+            $value->message_id=$message_info->message_id;
+            $value->message=$message_info->message;
+            $value->message_time=$message_info->message_time; 
+            $value->is_seen=$message_info->is_seen; 
+            $value->is_deleted=$message_info->is_deleted; 
+            $value->is_delivered=$message_info->is_delivered; 
+            $value->is_sent=$message_info->is_sent; 
+            $value->sender_message_id=$message_info->sender_message_id; 
+            $value->receiver_message_id=$message_info->receiver_message_id; 
+
+                $sql_sender_row = $this->db->query("SELECT id,username,firstname,lastname,is_online FROM users WHERE id=$value->sender_message_id");
+                $sender_info=$sql_sender_row->row();
+                
+                $sql_receiver_row = $this->db->query("SELECT id,username,firstname,lastname,is_online FROM users WHERE id=$value->receiver_message_id");
+                $receiver_info=$sql_receiver_row->row();
+
+                if($value->sender_message_id!=$user_id){
+
+                    $value->id=$value->sender_message_id;
+                    $value->firstname=$sender_info->firstname;
+                    $value->lastname=$sender_info->lastname;
+                    $value->is_online=$sender_info->is_online;
+
+                }
+                else{
+
+                    $value->id=$value->receiver_message_id;
+                    $value->firstname=$receiver_info->firstname;
+                    $value->lastname=$receiver_info->lastname;
+                    $value->is_online=$receiver_info->is_online;
+                }
+
+                if(!in_array($value->id,$ids)){
+                    $outPutArray[]=$value;
+                    array_push($ids,$value->id);
+
+                }
+
+
+               
+        }
+
+        return $outPutArray;
+   
+    }
+
+     public function loadGroupsForChat(){
+        $user_id=$this->session->userdata('id');
+        $outPutArray = array();
+        $sql = $this->db->query("SELECT a.group_id,a.chat_group_name, t.group_messages_id, MAX(t.group_messages_id) AS group_messages_id 
+            FROM chat_groups AS a INNER JOIN group_messages AS t 
+            ON t.group_id = a.group_id 
+            GROUP BY a.group_id, t.group_id
+            ORDER BY MAX(t.group_messages_id) DESC "); 
+        $array=$sql->result();
+        foreach ($array as $key => $value) {
+            $con['conditions']=array(
+                'is_active' => 1,
+                'is_deleted' => 0,
+                'group_id' =>$value->group_id,
+                'user_id'=>$user_id
+            );
+            if($users_row=$this->Crud_model->getRows('group_user_mapping',$con,'row')){
+                    $outPutArray[]=$value;
+            }
+            // code...
+        }
+
+             return $outPutArray;
+     }
+
+
+
 	 
 	function getRows($table,$params = array(),$record){
 
@@ -48,6 +140,7 @@ class Crud_model extends CI_Model
 
   public function update($table,$data = array(),$params = array()){
 
+
      if(array_key_exists("conditions",$params)){
           foreach($params['conditions'] as $key => $value){
               $this->db->where($key,$value);
@@ -66,6 +159,7 @@ class Crud_model extends CI_Model
     }
 
   }
+
 
 
   public function delete($table,$params = array()){
@@ -113,6 +207,9 @@ class Crud_model extends CI_Model
 
             if ($where != false)
                 $this->db->where($where);
+
+            if($or_where!=false)
+                $this->db->or_where($or_where);
 
             if ($where_not_in != false) {
                 foreach ($where_not_in as $key => $value) {

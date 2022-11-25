@@ -126,14 +126,11 @@ class ChatGroup extends REST_Controller{
 
     }
 
-
-
-
-     public function showGroupListforChat_get($value='')
+    public function showGroupListforChat_get($value='')
     {
         
         if($this->session->userdata('email')){
-            
+
          $option = array(
             'select' => 'chat_groups.*,group_user_mapping.*',
             
@@ -141,25 +138,46 @@ class ChatGroup extends REST_Controller{
 
             'join' => array( array('group_user_mapping' => 'group_user_mapping.group_id = chat_groups.group_id')
                 ),
-                'where' =>array('chat_groups.is_deleted' => 0,'chat_groups.is_active' => 1,'chat_groups.company_id' => $this->session->userdata('company_id'),'group_user_mapping.user_id' => $this->session->userdata('id')),
+            
+            'where' =>array('chat_groups.is_deleted' => 0,'chat_groups.is_active' => 1,'chat_groups.company_id' => $this->session->userdata('company_id'),'group_user_mapping.user_id' => $this->session->userdata('id')),
             );
         
-            if($chatGroup_row=$this->Crud_model->commonGet($option)){
+            if(!empty($chatGroup_row=$this->Crud_model->commonGet($option))){
+                    if(!empty($returnedArray=$this->Crud_model->loadGroupsForChat())){
 
-       
-                          $this->response([
-                              "status" => TRUE,
-                              "message" => "Group Found for chatting.",
-                              "data"=>$chatGroup_row
-                          ], REST_Controller::HTTP_OK);
+               
+                                  $this->response([
+                                      "status" => TRUE,
+                                      "message" => "Group Found for chatting.",
+                                      "data"=>$returnedArray,
+                                      "new_group"=>$chatGroup_row,
+
+                                  ], REST_Controller::HTTP_OK);
+
+                    }
+                    else{
+                           $this->response([
+                                      "status" => TRUE,
+                                      "message" => "Group Found for chatting.",
+                                      "data"=>NULL,
+                                      "new_group"=>$chatGroup_row,
+
+                                  ], REST_Controller::HTTP_OK);
+                    }
 
             }
+
             else{
-                   $this->response([
-                  'status' => FALSE,
-                  "message" => "Group Not Found."
-                   ], REST_Controller::HTTP_BAD_REQUEST);
+
+                 $this->response([
+                          'status' => FALSE,
+                          "data"=>NULL,
+                          "new_group"=>NULL,
+                          "message" => "Company User Not Found for chat."
+                           ], REST_Controller::HTTP_BAD_REQUEST);
+
             }
+            
 
         }
 

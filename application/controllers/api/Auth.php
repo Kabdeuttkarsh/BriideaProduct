@@ -13,7 +13,7 @@ class Auth extends REST_Controller{
 
       /* Checking All Conditions for Login to all Stakeholders */
 
-    public function index_get(){
+    public function checkLogin_get(){
 
 
           $email = $this->security->xss_clean($this->get("email"));
@@ -68,12 +68,12 @@ class Auth extends REST_Controller{
                           'is_deleted' => 0
                       );
 
-
                         $data = array(
                            'is_online' => 1,
                         );
                         $branches_row=$this->Crud_model->update($this->table,$data,$conUserActive);
-
+                        
+                      
                           $this->response([
                               "status" => TRUE,
                               "message" => "Login Successful.Redirecting to Dashboard",
@@ -85,7 +85,7 @@ class Auth extends REST_Controller{
 
                       $this->response([
                           'status' => FALSE,
-                          "message" => "Password Incorrect.Please try again"],
+                          "message" => "Password Incorrect.Please try again."],
                           REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
                      }
 

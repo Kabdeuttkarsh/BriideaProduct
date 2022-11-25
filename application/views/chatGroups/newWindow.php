@@ -370,7 +370,7 @@ showGroupListforChat();
     
      $.ajax({
                 type: 'ajax',
-                url: "<?php echo base_url() ?>api/User/showUserListforChat/",
+                url: "<?php echo base_url() ?>api/UserChat/showUserListforChat/",
                 async: false,
                 method:'get',
                 dataType: 'json',
@@ -609,10 +609,33 @@ function showWindow12(firstname,lastname,id,messages) {
                             
                             html+= '<li class="clearfix">'+
                                     '<div class="message-data text-right">'+
-                                        '<span class="message-data-time">'+messages[i].message_time+', Today</span>'+
-                                     
+                                        '<span class="message-data-time">'+messages[i].message_time+', Today';
+
+                                        if (messages[i].is_sent==0) {
+                                             html+= '<i class="fa fa-clock-o fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
+                                         }
+
+                                         if(messages[i].is_sent==1){
+                                         
+                                            if (messages.is_delivered==1 && messages.is_seen==0) {
+                                                html+= '<i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i><i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
+                                            }
+                                            else if(messages.is_seen==1){
+                                                html+= '<i class="fa fa-eye fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
+                                            }
+                                            else{
+
+                                                html+= '<i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
+
+                                            }
+                                         }
+ 
+                                        
+                                        html+= ' </span>'+
+
                                   '  </div>'+
                                   '  <div class="message other-message float-right">'+messages[i].message+'</div>'+
+                           
                                ' </li>';
                             
                             }
@@ -621,14 +644,34 @@ function showWindow12(firstname,lastname,id,messages) {
                             
                               html+=' <li class="clearfix">'+
                                     '<div class="message-data">'+
-                                        '<span class="message-data-time">'+messages[i].message_time+'</span>'+
+                                        '<span class="message-data-time">'+messages[i].message_time+', Today ';
+
+                                         if (messages[i].is_sent==0) {
+                                             html+= '<i class="fa fa-clock-o fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
+                                         }
+
+                                         if(messages[i].is_sent==1){
+                                         
+                                            if (messages.is_delivered==1 && messages.is_seen==0) {
+                                                html+= '<i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i><i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
+                                            }
+                                            else if(messages.is_seen==1){
+                                                html+= '<i class="fa fa-eye fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
+                                            }
+                                            else{
+
+                                                html+= '<i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
+
+                                            }
+                                         }
+ 
+                                        html+='</span>'+
                                   '  </div>'+
                                    ' <div class="message my-message">'+messages[i].message+'</div>  '+                                  
                                ' </li> ';
                             
                              }
-
-                      
+                     
                         }
                           html+=' </ul></div>';
                         
@@ -779,6 +822,8 @@ $('#mainDiv').on('click', '.btnSendMessageNew', function(){
 
     else{
 
+
+
         $.ajax({
             type: 'ajax',
             method:'post',
@@ -885,6 +930,7 @@ function  refreshChatNew(id,firstname,lastname) {
         async: false,
         dataType: 'json',
         success: function(response){
+           
             cht_messages=response.data;
 
             sender_data_row=response.sender_data_row;
@@ -893,7 +939,6 @@ function  refreshChatNew(id,firstname,lastname) {
             var html="";
              
             if(response.status){
-
 
 
                 html=showWindow12(receiver_data_row.firstname,receiver_data_row.lastname,receiver_data_row.id,cht_messages);
@@ -943,9 +988,7 @@ function  refreshGroupChatNew(id,grp_id) {
                 html=showGroupChatWindow12(group_row.chat_group_name,grp_id,grp_cht_messages);
 
                $('#ShowChatPerson').html(html);
-              
-
-            
+             
 
             }
 
@@ -974,6 +1017,5 @@ function  refreshGroupChatNew(id,grp_id) {
 
 }
 
-
-
 </script>
+

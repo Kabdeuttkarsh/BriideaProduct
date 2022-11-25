@@ -71,7 +71,7 @@
          
 
       
-          <?php if(in_array('createOnetoOneChat', $user_permission) || in_array('updateOnetoOneChat', $user_permission) || in_array('viewOnetoOneChat', $user_permission) || in_array('deleteOnetoOneChat', $user_permission)): ?>
+        <!--   <?php if(in_array('createOnetoOneChat', $user_permission) || in_array('updateOnetoOneChat', $user_permission) || in_array('viewOnetoOneChat', $user_permission) || in_array('deleteOnetoOneChat', $user_permission)): ?>
             <li class="treeview" id="userMainNav">
               <a href="#">
                 <i class="fa fa-comment"></i>
@@ -92,9 +92,9 @@
                 <?php endif; ?>
               </ul>
             </li>
-          <?php endif; ?>
+          <?php endif; ?> -->
 
-
+<!-- 
           <?php if(in_array('createGroupChat', $user_permission) || in_array('updateGroupChat', $user_permission) || in_array('viewGroupChat', $user_permission) || in_array('deleteGroupChat', $user_permission)): ?>
             <li class="treeview" id="groupMainNav">
               <a href="#">
@@ -116,15 +116,17 @@
                 <?php endif; ?>
               </ul>
             </li>
-          <?php endif; ?>
+          <?php endif; ?> -->
+
+<!-- 
+    <li><a href="<?php echo base_url('ChatGroups/newWindow') ?>"><i class="fa fa-comment"></i> <span>User Chat</span></a></li> -->
+  
+    <li><a href="<?php echo base_url('ChatGroups/newWindowGroup') ?>"><i class="fa fa-comment"></i> <span>Chat</span></a></li>
+
 
     <li><a href="<?php echo base_url('auth/logout') ?>"><i class="fa fa-power-off"></i> <span>Logout</span></a></li>
    
 
-
-    <li><a href="<?php echo base_url('ChatGroups/newWindow') ?>"><i class="fa fa-comment"></i> <span>User Chat</span></a></li>
-  
-    <li><a href="<?php echo base_url('ChatGroups/newWindowGroup') ?>"><i class="fa fa-comment"></i> <span>Group Chat</span></a></li>
 
 
 

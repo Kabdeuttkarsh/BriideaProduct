@@ -67,3 +67,40 @@
       $("#dashboardMainMenu").addClass('active');
     });
   </script>
+
+<script type="text/javascript">
+  checkForNewUserMessages();
+//  checkForNewGroupMessages();
+
+  function checkForNewUserMessages(){
+         $.ajax({
+        type: 'ajax',
+        method: 'get',
+        url: '<?php echo base_url(); ?>api/UserChat/checkForNewUserMessages',
+        async: false,
+        dataType: 'json',
+        success: function(response){
+        
+            var html="";
+             
+            if(response.status){
+
+               toastr.info('You have new Messages. Please Check it.');
+
+
+            }
+
+            else{
+    
+            }
+           
+        },
+          error: function(response){
+       
+               // var data =JSON.parse(response.responseText);
+               // toastr.error(data.message);
+        }
+    });
+
+  }
+</script>

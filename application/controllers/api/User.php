@@ -399,65 +399,6 @@ class User extends REST_Controller{
     }
 
 
-    public function showUserListforChat_get($value='')
-    {
-        
-        if($this->session->userdata('email')){
-            
-            $conUser['conditions']=array(
-                 'id'=> $this->session->userdata('id'),
-                 'is_active' => 1,
-                 'is_deleted' => 0,
-                 'is_verified' => 1
-            );
-            if($groups_row=$this->Crud_model->getRows($this->table,$conUser,'row')){
-
-                 $conUserList['conditions']=array(
-                    
-                     'company_id'=>$groups_row->company_id,
-                     'id!='=>$groups_row->id,
-                     'is_active' => 1,
-                     'is_deleted' => 0,
-                     'is_verified' => 1
-                
-                 );
-
-                  if($UserList=$this->Crud_model->getRows($this->table,$conUserList,'result')){
-                        
-                          $this->response([
-                              "status" => TRUE,
-                              "message" => "Users Found for chatting.",
-                              "data"=>$UserList
-                          ], REST_Controller::HTTP_OK);
-
-                  }
-                  else{
-                     $this->response([
-                          'status' => FALSE,
-                          "message" => "Company User Not Found for chat."
-                           ], REST_Controller::HTTP_BAD_REQUEST);
-                  }
-
-            }
-            else{
-                   $this->response([
-                  'status' => FALSE,
-                  "message" => "User Not Found. Please Login Again"
-                   ], REST_Controller::HTTP_BAD_REQUEST);
-            }
-
-        }
-
-        else{
-
-            $this->response([
-                  'status' => FALSE,
-                  "message" => "Session Not Found. Please Login Again"
-                   ], REST_Controller::HTTP_BAD_REQUEST);
-              
-        }
-       
-    }
 
 
 
