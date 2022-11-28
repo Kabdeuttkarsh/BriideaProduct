@@ -80,7 +80,7 @@
 
       this.socket = new WebSocket("wss://" + url);
       
-         this.setupConnectionEvents();
+      this.setupConnectionEvents();
 
     }
 
