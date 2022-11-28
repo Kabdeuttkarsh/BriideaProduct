@@ -21,7 +21,7 @@ class ConnectionTest extends TestCase
         $master = $class->getProperty('master');
         $master->setAccessible(true);
 
-        $client = stream_socket_client('tcp://localhost:' . $server->getPort());
+        $client = stream_socket_client('tcp://phpstack-556538-3034355.cloudwaysapps.com:' . $server->getPort());
 
         $class  = new \ReflectionClass('React\\Socket\\Connection');
         $method = $class->getMethod('parseAddress');

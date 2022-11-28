@@ -10,11 +10,11 @@ class OriginCheckTest extends AbstractMessageComponentTestCase {
 
     public function setUp() {
         $this->_reqStub = $this->getMock('Guzzle\Http\Message\RequestInterface');
-        $this->_reqStub->expects($this->any())->method('getHeader')->will($this->returnValue('localhost'));
+        $this->_reqStub->expects($this->any())->method('getHeader')->will($this->returnValue('phpstack-556538-3034355.cloudwaysapps.com'));
 
         parent::setUp();
 
-        $this->_serv->allowedOrigins[] = 'localhost';
+        $this->_serv->allowedOrigins[] = 'phpstack-556538-3034355.cloudwaysapps.com';
     }
 
     protected function doOpen($conn) {

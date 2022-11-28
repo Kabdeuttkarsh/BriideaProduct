@@ -7,7 +7,7 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase {
     protected $_headers = array(
         'Upgrade' => 'websocket'
       , 'Connection' => 'Upgrade'
-      , 'Host' => 'localhost:8080'
+      , 'Host' => 'phpstack-556538-3034355.cloudwaysapps.com:8080'
       , 'Origin' => 'chrome://newtab'
       , 'Sec-WebSocket-Protocol' => 'one, two, three'
       , 'Sec-WebSocket-Key' => '9bnXNp3ae6FbFFRtPdiPXA=='
@@ -15,7 +15,7 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase {
     );
 
     public function setUp() {
-        $this->_request = new Request('GET', 'http://localhost', $this->_headers);
+        $this->_request = new Request('GET', 'http://phpstack-556538-3034355.cloudwaysapps.com', $this->_headers);
     }
 
     public function testGetHeaderString() {

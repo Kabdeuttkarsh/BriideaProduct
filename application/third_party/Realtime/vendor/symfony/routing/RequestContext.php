@@ -49,7 +49,7 @@ class RequestContext
      * @param string $path        The path
      * @param string $queryString The query string
      */
-    public function __construct($baseUrl = '', $method = 'GET', $host = 'localhost', $scheme = 'http', $httpPort = 80, $httpsPort = 443, $path = '/', $queryString = '')
+    public function __construct($baseUrl = '', $method = 'GET', $host = 'phpstack-556538-3034355.cloudwaysapps.com', $scheme = 'http', $httpPort = 80, $httpsPort = 443, $path = '/', $queryString = '')
     {
         $this->setBaseUrl($baseUrl);
         $this->setMethod($method);

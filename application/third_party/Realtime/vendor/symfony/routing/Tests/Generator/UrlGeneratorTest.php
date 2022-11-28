@@ -24,7 +24,7 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $routes = $this->getRoutes('test', new Route('/testing'));
         $url = $this->getGenerator($routes)->generate('test', array(), UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $this->assertEquals('http://localhost/app.php/testing', $url);
+        $this->assertEquals('http://phpstack-556538-3034355.cloudwaysapps.com/app.php/testing', $url);
     }
 
     public function testAbsoluteSecureUrlWithPort443()
@@ -32,7 +32,7 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $routes = $this->getRoutes('test', new Route('/testing'));
         $url = $this->getGenerator($routes, array('scheme' => 'https'))->generate('test', array(), UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $this->assertEquals('https://localhost/app.php/testing', $url);
+        $this->assertEquals('https://phpstack-556538-3034355.cloudwaysapps.com/app.php/testing', $url);
     }
 
     public function testAbsoluteUrlWithNonStandardPort()
@@ -40,7 +40,7 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $routes = $this->getRoutes('test', new Route('/testing'));
         $url = $this->getGenerator($routes, array('httpPort' => 8080))->generate('test', array(), UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $this->assertEquals('http://localhost:8080/app.php/testing', $url);
+        $this->assertEquals('http://phpstack-556538-3034355.cloudwaysapps.com:8080/app.php/testing', $url);
     }
 
     public function testAbsoluteSecureUrlWithNonStandardPort()
@@ -48,7 +48,7 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $routes = $this->getRoutes('test', new Route('/testing'));
         $url = $this->getGenerator($routes, array('httpsPort' => 8080, 'scheme' => 'https'))->generate('test', array(), UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $this->assertEquals('https://localhost:8080/app.php/testing', $url);
+        $this->assertEquals('https://phpstack-556538-3034355.cloudwaysapps.com:8080/app.php/testing', $url);
     }
 
     public function testRelativeUrlWithoutParameters()
@@ -114,7 +114,7 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $routes = $this->getRoutes('test', new Route('/testing'));
         $url = $this->getGenerator($routes)->generate('test', array('foo' => 'bar'), UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $this->assertEquals('http://localhost/app.php/testing?foo=bar', $url);
+        $this->assertEquals('http://phpstack-556538-3034355.cloudwaysapps.com/app.php/testing?foo=bar', $url);
     }
 
     public function testUrlWithNullExtraParameters()
@@ -122,7 +122,7 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $routes = $this->getRoutes('test', new Route('/testing'));
         $url = $this->getGenerator($routes)->generate('test', array('foo' => null), UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $this->assertEquals('http://localhost/app.php/testing', $url);
+        $this->assertEquals('http://phpstack-556538-3034355.cloudwaysapps.com/app.php/testing', $url);
     }
 
     public function testUrlWithExtraParametersFromGlobals()
@@ -254,16 +254,16 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testSchemeRequirementForcesAbsoluteUrl()
     {
         $routes = $this->getRoutes('test', new Route('/', array(), array(), array(), '', array('https')));
-        $this->assertEquals('https://localhost/app.php/', $this->getGenerator($routes)->generate('test'));
+        $this->assertEquals('https://phpstack-556538-3034355.cloudwaysapps.com/app.php/', $this->getGenerator($routes)->generate('test'));
 
         $routes = $this->getRoutes('test', new Route('/', array(), array(), array(), '', array('http')));
-        $this->assertEquals('http://localhost/app.php/', $this->getGenerator($routes, array('scheme' => 'https'))->generate('test'));
+        $this->assertEquals('http://phpstack-556538-3034355.cloudwaysapps.com/app.php/', $this->getGenerator($routes, array('scheme' => 'https'))->generate('test'));
     }
 
     public function testSchemeRequirementCreatesUrlForFirstRequiredScheme()
     {
         $routes = $this->getRoutes('test', new Route('/', array(), array(), array(), '', array('Ftp', 'https')));
-        $this->assertEquals('ftp://localhost/app.php/', $this->getGenerator($routes)->generate('test'));
+        $this->assertEquals('ftp://phpstack-556538-3034355.cloudwaysapps.com/app.php/', $this->getGenerator($routes)->generate('test'));
     }
 
     public function testPathWithTwoStartingSlashes()

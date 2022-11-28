@@ -3,7 +3,7 @@
   , "outdir": "reports/rfc"
 
   , "servers": [
-       {"agent": "Ratchet", "url": "ws://localhost:8000", "options": {"version": 18}}
+       {"agent": "Ratchet", "url": "ws://phpstack-556538-3034355.cloudwaysapps.com:8000", "options": {"version": 18}}
     ]
 
   , "cases": ["*"]
