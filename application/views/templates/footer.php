@@ -74,11 +74,11 @@
     var Connection2 = (function(){
 
   function Connection2(url) {
-
+alert(url);
 
       this.open = false;
 
-      this.socket = new WebSocket("wss://" + location.host+"/");
+      this.socket = new WebSocket("wss://" + url);
       
          this.setupConnectionEvents();
 
