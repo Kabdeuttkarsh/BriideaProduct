@@ -74,7 +74,7 @@
     var Connection2 = (function(){
 
   function Connection2(url) {
-alert(url);
+
 
       this.open = false;
 
