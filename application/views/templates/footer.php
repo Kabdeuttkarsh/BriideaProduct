@@ -247,7 +247,7 @@
 
 <script type="text/javascript">
   
-var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
+var conn = new Connection2(Broadcast.BROADCAST_URL);
 </script>
 
   <footer class="main-footer">
