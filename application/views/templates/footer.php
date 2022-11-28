@@ -81,6 +81,9 @@
       this.socket = new WebSocket("wss://" + location.host);
       
          this.setupConnectionEvents();
+         socket.addEventListner('error',(event)=>{
+            console.log("Websocket Error :- ",event);
+         });
     }
 
   Connection2.prototype = {
