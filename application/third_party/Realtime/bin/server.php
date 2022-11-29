@@ -12,4 +12,6 @@ $server = IoServer::factory(new HttpServer(new WsServer(new Chat)), 2000);
 
 $server->run();
 
+echo "server runned";
+
 ?>
