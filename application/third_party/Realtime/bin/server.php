@@ -1,8 +1,9 @@
+<script type="text/javascript">
+	
+	console.log("Server File runned.");
+</script>
+
 <?php
-
-
-echo "server runned";
-
 
 require __DIR__ . "/../vendor/autoload.php";
 
