@@ -1,5 +1,9 @@
 <?php
 
+
+echo "server runned";
+
+
 require __DIR__ . "/../vendor/autoload.php";
 
 use Chat\Chat;
@@ -11,7 +15,5 @@ use Ratchet\WebSocket\WsServer;
 $server = IoServer::factory(new HttpServer(new WsServer(new Chat)), 2000);
 
 $server->run();
-
-echo "server runned";
 
 ?>
