@@ -78,7 +78,7 @@
 
       this.open = false;
 
-      this.socket = new WebSocket(url);
+      this.socket = new WebSocket("wss://" + url);
       
       this.setupConnectionEvents();
 
