@@ -248,7 +248,8 @@
 
 <script type="text/javascript">
   
-var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT+"/websocket");
+// var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT+"/websocket");
+var conn = new Connection2(Broadcast.BROADCAST_URL+"/websocket");
 </script>
 
   <footer class="main-footer">
