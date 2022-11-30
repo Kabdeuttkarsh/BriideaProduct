@@ -4,7 +4,7 @@
 </div>
 
  -->
- 
+
 <script type="text/javascript">
     function sendDeliveryReceiptToSenderForGroup(message_id) {
 
@@ -246,10 +246,7 @@
 
 </script>
 
-<script type="text/javascript">
-  
-var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
-</script>
+
 
   <footer class="main-footer">
     <div class="pull-right hidden-xs">

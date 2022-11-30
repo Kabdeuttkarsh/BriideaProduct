@@ -247,6 +247,10 @@ img {
 </style>
 
 </head>
+<script type="text/javascript">
+  
+var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
+</script>
 <body class="hold-transition skin-green sidebar-mini">
 <div class="wrapper" id="main_div_for_ref">
 
