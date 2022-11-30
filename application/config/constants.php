@@ -89,5 +89,5 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 /** WEBSOCKETS BROADCAST TYPES **/
 
 define("POST",					"dashboard");
-define("BROADCAST_URL",			"phpstack-556538-3034355.cloudwaysapps.com");
+define("BROADCAST_URL",			"phpstack-556538-3034355.cloudwaysapps.com/websocket");
 define("BROADCAST_PORT",		"2000");
