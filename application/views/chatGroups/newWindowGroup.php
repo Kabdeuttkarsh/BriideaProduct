@@ -395,13 +395,12 @@ showGroupListforChat();
                                 '<div class="about">'+
                                 '<div class="name"> '+data[i].firstname+' '+data[i].lastname;
 
-                                // if(data[i].is_delivered==1 && data[i].is_seen==0 && data[i].sender_message_id!='<?php echo $this->session->userdata("id");?>'){
-                                   html+='<div id="showNewMsgDiv_'+data[i].id+'"></div></div>';
-                                // }
-                                
-                                // '<div class="circle">5</div>'+
-
-                                    // '<div class="status"><i class="fa fa-circle offline"></i> left 7 mins ago </div>'+
+                                  if(data[i].count_unseenmessage_info>0){
+                            
+                             html+='<div id="showNewMsgDiv_'+data[i].id+'"><i class="fa fa-circle offline">'+data[i].count_unseenmessage_info+'</i></div>';
+                             
+                              }
+                  
 
                                  html+='</div>'+
                               '</li></a>';

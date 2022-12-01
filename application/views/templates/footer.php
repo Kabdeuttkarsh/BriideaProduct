@@ -157,7 +157,7 @@
                         
                         else{
 
-                            $('#showNewMsgDiv_'+data.data.sender_message_id).html('<i class="fa fa-circle offline"> New</i>');
+                    
 
                             toastr.info('You have new Message from '+data.sender_first_name+' ' +data.sender_last_name);
                         }
@@ -165,7 +165,7 @@
                     }
 
                     else{
-                        $('#showNewMsgDiv_'+data.data.sender_message_id).html('<i class="fa fa-circle offline"> New</i>');
+                      
                            toastr.info('You have new Message from '+data.sender_first_name+' ' +data.sender_last_name);
                         }
 
