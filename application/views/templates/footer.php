@@ -6,14 +6,14 @@
  -->
  
 <script type="text/javascript">
-    function sendDeliveryReceiptToSenderForGroup(message_id) {
+    function sendDeliveryReceiptToSenderForGroup(message_id,user_id,grp_id) {
 
         if(message_id!=''){
              $.ajax({
                     type: 'ajax',
                     method:'post',
                     url: '<?php echo base_url();?>api/ChatGroup_Messages/sendDeliveryReceiptToSenderForGroup',
-                    data: {'group_message_id':message_id},
+                    data: {'group_message_id':message_id,'grp_id':grp_id,'user_id':user_id},
                     async: false,
                     dataType: 'json',
                     success: function(response){
@@ -78,7 +78,7 @@
 
       this.open = false;
 
-      this.socket = new WebSocket("wss://" + url);
+      this.socket = new WebSocket("ws://" + url);
       
       this.setupConnectionEvents();
 
@@ -157,7 +157,7 @@
                         
                         else{
 
-                    
+                            // $('#showNewMsgDiv_'+data.data.sender_message_id).html('<i class="fa fa-circle offline"> New</i>');
 
                             toastr.info('You have new Message from '+data.sender_first_name+' ' +data.sender_last_name);
                         }
@@ -165,7 +165,8 @@
                     }
 
                     else{
-                      
+                        // $('#showNewMsgDiv_'+data.data.sender_message_id).html('<i class="fa fa-circle offline"> New</i>');
+                        
                            toastr.info('You have new Message from '+data.sender_first_name+' ' +data.sender_last_name);
                         }
 
@@ -181,6 +182,7 @@
                 
                 if(data.data.sender_message_id==<?php echo $this->session->userdata('id')?>){
                  
+                   sendDeliveryReceiptToSenderForUserChat(data.data.message_id);
                    // showWindow12(data.firstnameSend,data.lastnameSend,data.data.receiver_id,cht_messages);
                     
                      showUserListforChat();
@@ -202,7 +204,14 @@
              
                if(data1[i].user_id==<?php echo $this->session->userdata('id')?>){
 
-                    sendDeliveryReceiptToSenderForGroup(data1[i].group_messages_id);
+
+
+                    if(data1[i].group_message_sender_id!=<?php echo $this->session->userdata('id')?>){
+
+                        sendDeliveryReceiptToSenderForGroup(data1[i].group_messages_id,<?php echo $this->session->userdata('id')?>,data.grp_id);
+                    }
+                    
+
 
 
                     if('<?php echo $this->session->userdata('sess_page') ?>'=='Chat_Window' ||'<?php echo  $this->session->userdata('sess_page') ?>'=='Group_Chat_Window')
@@ -210,17 +219,19 @@
                     {
                         showGroupListforChat();
                         if(chat_open_group==data.grp_id){
+
                             refreshGroupChatNew(data1[i].user_id,data.grp_id);
+                        
                         }
                         else{
-                           $('#showGroupNewMsgDiv_'+data.grp_id).html('<i class="fa fa-circle offline"> New</i>');
+                          
                            toastr.info('You have new Message from '+data.chat_group_name);
                         }
                      
                     }
                     
                     else{
-                        $('#showGroupNewMsgDiv_'+data.grp_id).html('<i class="fa fa-circle offline"> New</i>');
+                       
                            toastr.info('You have new Message from '+data.chat_group_name);
                     }
                     
@@ -248,8 +259,7 @@
 
 <script type="text/javascript">
   
-// var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT+"/websocket");
-var conn = new Connection2(Broadcast.BROADCAST_URL+"/websocket");
+var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
 </script>
 
   <footer class="main-footer">

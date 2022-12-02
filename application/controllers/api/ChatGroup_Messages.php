@@ -31,7 +31,6 @@ class ChatGroup_Messages extends REST_Controller{
 
                     );
 
-
                 $sent_row=$this->Crud_model->commonGet($option);
 
                 $messgaes_1 = array_column($sent_row, 'group_messages_id');
@@ -71,8 +70,8 @@ class ChatGroup_Messages extends REST_Controller{
 
                }
 
-            else{
-                 $this->response([
+            else {
+                  $this->response([
                           'status' => FALSE,
                           "message" => "Users Not Found.Please try again."],
                           REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
@@ -116,18 +115,41 @@ class ChatGroup_Messages extends REST_Controller{
 
             foreach ($groups_row as $key => $value) {
                   
-                  $datasd = array(
-                    'is_delivered' => 0,
-                    'delivery_time'=>NULL,
-                    'user_id'=>$value->user_id,
-                  );
+                 if($value->user_id!=$this->session->userdata('id')){
+
+                      $datasd = array(
+                        'is_delivered' => 0,
+                        'delivery_time'=>NULL,
+                        'user_id'=>$value->user_id,
+                      );
+
+                      $dataseen = array(
+                        'is_seen' => 0,
+                        'seen_time'=>NULL,
+                        'user_id'=>$value->user_id,
+                      );
+                  
+                 }
+                 
+                 else{
+
+                      $datasd = array(
+                        'is_delivered' => 1,
+                        'delivery_time'=>date('Y-m-d H:i:s'),
+                        'user_id'=>$value->user_id,
+                      );
+
+                      $dataseen = array(
+                       'is_seen' => 1,
+                       'seen_time'=>date('Y-m-d H:i:s'),
+                        'user_id'=>$value->user_id,
+                      );
+            
+                 }
+                 
                   $delivery_to_array[]=$datasd;
 
-                  $dataseen = array(
-                    'is_seen' => 0,
-                    'seen_time'=>NULL,
-                    'user_id'=>$value->user_id,
-                  );
+             
                   $seen_by_array[]=$dataseen;
                   
             }
@@ -164,7 +186,57 @@ class ChatGroup_Messages extends REST_Controller{
                 );
 
                 $sent_row=$this->Crud_model->commonGet($option);
-                    // Set the response and exit
+                
+                  //Moving Delivery Status of Message from Temporary table to Main
+
+                    $conTemp['conditions']=array(
+                        'group_id'=>$grp_id
+                    );
+
+                    if($checkOldDelivery = $this->Crud_model->getRows('delivery_temp_table',$conTemp,'result')){
+
+                        foreach ($checkOldDelivery as $checkOldDelivery_key => $checkOldDelivery_value) {
+                          
+                            $conGroupMess['conditions']=array(
+                               'group_messages_id'=>$checkOldDelivery_value->group_message_id
+                            );
+
+                             if($GroupTrack=$this->Crud_model->getRows('group_messages',$conGroupMess,'row')){
+
+                                $delivered_to=json_decode($GroupTrack->delivered_to);
+
+                                foreach ($delivered_to as $delivered_tokey => $delivered_tovalue) {
+
+                                        if($delivered_tovalue->user_id==$checkOldDelivery_value->user_id && $delivered_tovalue->is_delivered==0){
+                                              
+                                            $delivered_tovalue->is_delivered=1;
+                                            $delivered_tovalue->delivery_time=$checkOldDelivery_value->time;
+                                                       
+                                        }
+
+                                }
+
+                                $dataToUpdate=array(
+                                    'delivered_to'=>json_encode($delivered_to)
+                                );
+
+                               if($this->Crud_model->update('group_messages',$dataToUpdate,$conGroupMess)){
+
+                                     $conDelete['conditions']=array(
+                                      'temp_table_id'=>$checkOldDelivery_value->temp_table_id,
+                                    
+                                  );
+                                     $this->Crud_model->delete('delivery_temp_table',$conDelete);
+
+                               }
+
+                             }
+
+                        }
+
+                    }
+                        
+
                         $this->response([
                               "status" => TRUE,
                               "message" => "Message Sent Successfully.",
@@ -194,68 +266,195 @@ class ChatGroup_Messages extends REST_Controller{
 
     }
 
-
-
     public function sendSeenReceiptToSenderForGroupChat_post($group_id=''){
-         $group_id = $this->security->xss_clean($this->post("group_id"));
       
+      $group_id = $this->security->xss_clean($this->post("group_id"));
+
+      $conGroupMess['conditions']=array(
+        'group_id'=>$group_id,
+        'is_active'=>1,
+        'is_deleted'=>0,
+        'is_sent'=>1,
+
+      );
+       
+        if($GroupTrack=$this->Crud_model->getRows('group_messages',$conGroupMess,'result')){
+
+            foreach ($GroupTrack as $key => $value) {
+
+                $seen_by=json_decode($value->seen_by);
+                
+                foreach ($seen_by as $seen_by_key => $seen_by_value) {
+                   if($seen_by_value->is_seen==0 && $seen_by_value->user_id==$this->session->userdata('id')){
+                        $seen_by_value->is_seen=1;
+                        $seen_by_value->seen_time=date('Y-m-d H:i:s');
+                   }
+                }
+
+             
+                $conUpdate['conditions']=array(
+                        'group_id'=>$group_id,
+                        'is_active'=>1,
+                        'is_deleted'=>0,
+                        'is_sent'=>1,
+                        'group_messages_id'=>$value->group_messages_id,
+                );
+                $data=array('seen_by'=>json_encode($seen_by));
+                $update_status=$this->Crud_model->update('group_messages',$data,$conUpdate);  
+            }
+
+
+        }
+
+        if($update_status){
+
+                        $this->response([
+                              "status" => TRUE,
+                              "message" => "Message Seen Successfully.",
+                              "data"=>$update_status,
+                          
+                          ], REST_Controller::HTTP_OK );
+                
+                      }
+                      else{
+                          // Set the response and exit
+                        $this->response([
+                              'status' => FALSE,
+                              "message" => "Message not Seen."],
+                              REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+                          
+                      }
+              
     }
 
 
+
     public function sendDeliveryReceiptToSenderForGroup_post($message_id=''){
-      $group_message_id = $this->security->xss_clean($this->post("group_message_id")); 
 
-      $con['conditions']=array(
-        'is_sent'=>1,
-        'is_active'   => 1,
-        'is_deleted'=>0,
-        'group_messages_id'=> $group_message_id,
-      );
-      if($groups_row=$this->Crud_model->getRows('group_messages',$con,'row')){
+      $group_message_id = $this->security->xss_clean($this->post("group_message_id"));
+      $grp_id = $this->security->xss_clean($this->post("grp_id"));
+      $user_id = $this->security->xss_clean($this->post("user_id"));
       
-        $prev_delivered_to_array=json_decode($groups_row->delivered_to);
-     
-        foreach ($prev_delivered_to_array as $prev_delivered_to_array_key => $prev_delivered_to_array_value) {
+      $dataas = array(
+                    'group_message_id' => $group_message_id,
+                    'user_id' => $user_id,
+                    'group_id' => $grp_id,
+                    'time'=>date('Y-m-d H:i:s')
+                    );
+          if($u_row=$this->Crud_model->insert('delivery_temp_table',$dataas)){
 
-            if ($prev_delivered_to_array_value->user_id==$this->session->userdata('id') && $prev_delivered_to_array_value->is_delivered==0) {
-
-                    $prev_delivered_to_array_value->is_delivered = 1;
-                    $prev_delivered_to_array_value->delivery_time=date('Y-m-d H:i:s');
-                    $prev_delivered_to_array_value->user_id      =$value->user_id;
-             
-               }
-
-        }
-
-        $array_update=array(
-            'delivered_to'=>json_encode($prev_delivered_to_array)
-        );    
-
-        if($u_row=$this->Crud_model->update($this->table,$array_update,$con)){
                  $this->response([
-                              "status" => TRUE,
-                              "message" => "Message Delivered Successfully.",
-                              "data"=>$u_row,
-                              // "grp_members"=>$grp_members,
-                         
-                          ], REST_Controller::HTTP_OK );
+                            "status" => TRUE,
+                            "message" => "Message Delivered Successfully.",
+                            "data"=>$u_row,
+                        ], REST_Controller::HTTP_OK );
+          }
+
+          else{
+                $this->response([
+                              'status' => FALSE,
+                              "message" => "Please Fill Complete Information."],
+                              REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+           
+          }
+
+     
+      }
+
+   public function checkForNewGroupMessages_get($value='')
+   
+    {  
+        
+       if($this->session->userdata('email')){
+   
+        $option = array(
+            'select' => 'users.*, chat_groups.*,company.*',
+            'table' =>'chat_groups',
+
+            'join' => array(array('company' => 'company.id = chat_groups.company_id','users' => 'users.id = chat_groups.created_by')),
+            'where' =>array('chat_groups.is_active' => 1,'chat_groups.is_deleted' => 0,'chat_groups.company_id' => $this->session->userdata('company_id')),
+        
+        );
+
+
+        if($chatGroup_row=$this->Crud_model->commonGet($option)){
+           
+            foreach ($chatGroup_row as $chatGroup_row_key => $chatGroup_row_value) {
+              $option1 = array(
+                
+                'select' => 'group_messages.*',
+                'table' =>'group_messages',
+                'where' =>array('group_messages.is_active' => 1,'group_messages.is_deleted' => 0,'group_messages.group_id' => $chatGroup_row_value->group_id),
+                'single'=>TRUE,
+                'order'=>array('group_messages_id'=>'DESC')
+            
+            );
+
+            if($chatGroup_row1=$this->Crud_model->commonGet($option1)){
+
+                   $chatGroup_row_value->group_messages_id=$chatGroup_row1->group_messages_id;
+
+                $con['conditions']=array(
+                    'group_message_id'=>$chatGroup_row_value->group_messages_id,
+                    'user_id'=>$this->session->userdata('id'),
+                    'group_id'=>$chatGroup_row_value->group_id
+                );
+
+                if($groups_recent_msg=$this->Crud_model->getRows('delivery_temp_table',$con,'row')){
+
+                }
+
+            else{
+
+                 $dataas = array(
+                    'group_message_id' =>  $chatGroup_row1->group_messages_id,
+                    'user_id' => $this->session->userdata('id'),
+                    'group_id' => $chatGroup_row_value->group_id,
+                    'time'=>date('Y-m-d H:i:s')
+                  );
+
+                  $u_row=$this->Crud_model->insert('delivery_temp_table',$dataas);
+
+                 }
+                }
+        
+
+            }
+          
+             if($u_row){
+
+                         $this->response([
+                                    "status" => TRUE,
+                                    "message" => "Message Delivered Successfully.",
+                                    "data"=>$u_row,
+                                ], REST_Controller::HTTP_OK );
+                  }
+
+                  else{
+                        $this->response([
+                                      'status' => FALSE,
+                                      "message" => "No New Messages."],
+                                      REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+                   
+                  }
+
+           }
+
+
         }
         else{
 
-            $this->response([
-                          'status' => FALSE,
-                          "message" => "Please Fill Complete Information."],
-                          REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+             $this->response([
+                  'status' => FALSE,
+                  "message" => "Session Not Found. Please Login Again"
+                   ], REST_Controller::HTTP_BAD_REQUEST);
         }
 
 
-      }
-                  
-    }   
+    }
 
-
-
-}
+     
+    }
 
 
 ?>

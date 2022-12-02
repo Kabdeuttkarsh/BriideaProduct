@@ -382,8 +382,7 @@ showGroupListforChat();
                
                     var html='<p>User Chat History</p><ul class="list-unstyled chat-list mt-2 mb-0" style="overflow-y: auto;">';
                     var html2='';
-                    //alert(data.length);
-
+                   
                     if(data!=null){
 
                     for (var i = 0; i < data.length; i++) {
@@ -394,15 +393,14 @@ showGroupListforChat();
                              '<img src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"  style="width:25px; height:25px;">'+
                                 '<div class="about">'+
                                 '<div class="name"> '+data[i].firstname+' '+data[i].lastname;
-
-                                  if(data[i].count_unseenmessage_info>0){
+                        
+                            if(data[i].count_unseenmessage_info>0){
                             
                              html+='<div id="showNewMsgDiv_'+data[i].id+'"><i class="fa fa-circle offline">'+data[i].count_unseenmessage_info+'</i></div>';
                              
                               }
                   
-
-                                 html+='</div>'+
+                                html+='</div>'+
                               '</li></a>';
                     }
       
@@ -421,12 +419,7 @@ showGroupListforChat();
                                  '<img src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"  style="width:25px; height:25px;">'+
                                     '<div class="about">'+
                                     '<div class="name"> '+new_chat[j].firstname+' '+new_chat[j].lastname;
-
-                                    
-                                    // '<div class="circle">5</div>'+
-
-                                        // '<div class="status"><i class="fa fa-circle offline"></i> left 7 mins ago </div>'+
-
+                     
                                      html2+='</div>'+
                                   '</li></a>';
                         }
@@ -435,11 +428,9 @@ showGroupListforChat();
                     else{
                         html2+='<p style="opacity:0.50; text-align:center;">No Users Found<p><br>';
                     }
-                  
-
+         
                     html+='New Chat<br>'+html2+'</ul>';
 
-               
 
                     $('#showUserListforChat12').html(html);
 
@@ -451,9 +442,7 @@ showGroupListforChat();
 
             });
 
-
   }
-
 
   function showGroupListforChat(argument) {
     
@@ -478,7 +467,16 @@ showGroupListforChat();
                                      '<img src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"   style="width:25px; height:25px;">'+
                                         '<div class="about">'+
                                         '<div class="name">'+data[i].chat_group_name+'</div>';
-                                           html+='<div id="showGroupNewMsgDiv_'+data[i].group_id+'"></div></div>';
+
+
+                                          if(data[i].unseen_msgs>0){
+                            
+                                         html+='<div id="showGroupNewMsgDiv_'+data[i].group_id+'"><i class="fa fa-circle offline"> '+data[i].unseen_msgs+'</i></div>';
+                                         
+                                          }
+
+                                         
+
                                         html+='</div>'+
                                       '</li></a>';
                          }
@@ -496,7 +494,7 @@ showGroupListforChat();
                                      '<img src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"   style="width:25px; height:25px;">'+
                                         '<div class="about">'+
                                         '<div class="name">'+new_group[i].chat_group_name+'</div>';
-                                           html2+='<div id="showGroupNewMsgDiv_'+new_group[i].group_id+'"></div></div>';
+                                         
                                         html2+='</div>'+
                                       '</li></a>';
                          }
@@ -595,11 +593,17 @@ $('#mainDiv').on('click', '.item-OpenGroupChatWindow12', function(){
         dataType: 'json',
         success: function(response){
             
-            sendSeenReceiptToSenderForGroupChat(id);
+           // sendSeenReceiptToSenderForGroupChat(id);
             var grp_cht_messages=response.data;
             group_row=response.group_row;
             var html="";
-             
+
+
+              if( grp_cht_messages!=null){
+                if(grp_cht_messages[grp_cht_messages.length-1].group_message_sender_id!=<?php echo $this->session->userdata('id') ?>){
+                     sendSeenReceiptToSenderForGroupChat(id);
+                 }
+            }
             if(response.status){
 
                // html=showGroupChatWindow(group_row.chat_group_name,id,grp_cht_messages);
@@ -621,7 +625,7 @@ $('#mainDiv').on('click', '.item-OpenGroupChatWindow12', function(){
             
                
             }
-
+             $('#showGroupNewMsgDiv_'+id).html('');
              var objDiv = document.getElementById("chatHistoryMessage");
              objDiv.scrollTop = objDiv.scrollHeight;
            
@@ -1067,8 +1071,13 @@ function  refreshGroupChatNew(id,grp_id) {
             group_row=response.group_row;
             var html="";
 
-            sendSeenReceiptToSenderForGroupChat(id);
-             
+
+            if( grp_cht_messages!=null){
+                if(grp_cht_messages[grp_cht_messages.length-1].group_message_sender_id!=<?php echo $this->session->userdata('id') ?>){
+                     sendSeenReceiptToSenderForGroupChat(grp_id);
+                 }
+            }
+            
             if(response.status){
 
                 html=showGroupChatWindow12(group_row.chat_group_name,grp_id,grp_cht_messages);
@@ -1085,7 +1094,7 @@ function  refreshGroupChatNew(id,grp_id) {
                    $('#ShowChatPerson').html(html);
                
             }
-
+            $('#showGroupNewMsgDiv_'+grp_id).html('');
              var objDiv = document.getElementById("chatHistoryMessage");
                objDiv.scrollTop = objDiv.scrollHeight;
            

@@ -3,81 +3,80 @@ class Crud_model extends CI_Model
 {
 
 
-        public function loadUsersForChat(){
-            $user_id=$this->session->userdata('id');
-            $outPutArray = array();
-            $ids=array();
-             
-            $sql = $this->db->query("SELECT MAX(message_id) as message_id FROM (SELECT * FROM messages ORDER BY message_id DESC) AS messages WHERE $user_id in (sender_message_id, receiver_message_id) GROUP BY receiver_message_id ORDER BY message_id DESC");
+    public function loadUsersForChat(){
+    $user_id=$this->session->userdata('id');
+    $outPutArray = array();
+    $ids=array();
+     
+    $sql = $this->db->query("SELECT MAX(message_id) as message_id FROM (SELECT * FROM messages ORDER BY message_id DESC) AS messages WHERE $user_id in (sender_message_id, receiver_message_id) GROUP BY receiver_message_id ORDER BY message_id DESC");
 
-            $array=$sql->result();
+    $array=$sql->result();
 
-                foreach ($array as $key => $value) {
+        foreach ($array as $key => $value) {
+        
+            $value->sender_info=NULL;
+            $value->receiver_info=NULL;
+
+
+            $sql_last_mes_row = $this->db->query("SELECT * FROM messages WHERE message_id=$value->message_id AND is_deleted=0");
+            $message_info=$sql_last_mes_row->row();
+
+
+     
+            $value->message_id=$message_info->message_id;
+            $value->message=$message_info->message;
+            $value->message_time=$message_info->message_time; 
+            $value->is_seen=$message_info->is_seen; 
+            $value->is_deleted=$message_info->is_deleted; 
+            $value->is_delivered=$message_info->is_delivered; 
+            $value->is_sent=$message_info->is_sent; 
+            $value->sender_message_id=$message_info->sender_message_id; 
+            $value->receiver_message_id=$message_info->receiver_message_id; 
+
+                $sql_sender_row = $this->db->query("SELECT id,username,firstname,lastname,is_online FROM users WHERE id=$value->sender_message_id");
+                $sender_info=$sql_sender_row->row();
                 
-                    $value->sender_info=NULL;
-                    $value->receiver_info=NULL;
+                $sql_receiver_row = $this->db->query("SELECT id,username,firstname,lastname,is_online FROM users WHERE id=$value->receiver_message_id");
+                $receiver_info=$sql_receiver_row->row();
 
+                if($value->sender_message_id!=$user_id){
 
-                    $sql_last_mes_row = $this->db->query("SELECT * FROM messages WHERE message_id=$value->message_id AND is_deleted=0");
-                    $message_info=$sql_last_mes_row->row();
+                    $value->id=$value->sender_message_id;
+                    $value->firstname=$sender_info->firstname;
+                    $value->lastname=$sender_info->lastname;
+                    $value->is_online=$sender_info->is_online;
 
+                }
+                else{
 
-             
-                    $value->message_id=$message_info->message_id;
-                    $value->message=$message_info->message;
-                    $value->message_time=$message_info->message_time; 
-                    $value->is_seen=$message_info->is_seen; 
-                    $value->is_deleted=$message_info->is_deleted; 
-                    $value->is_delivered=$message_info->is_delivered; 
-                    $value->is_sent=$message_info->is_sent; 
-                    $value->sender_message_id=$message_info->sender_message_id; 
-                    $value->receiver_message_id=$message_info->receiver_message_id; 
-
-                        $sql_sender_row = $this->db->query("SELECT id,username,firstname,lastname,is_online FROM users WHERE id=$value->sender_message_id");
-                        $sender_info=$sql_sender_row->row();
-                        
-                        $sql_receiver_row = $this->db->query("SELECT id,username,firstname,lastname,is_online FROM users WHERE id=$value->receiver_message_id");
-                        $receiver_info=$sql_receiver_row->row();
-
-                        if($value->sender_message_id!=$user_id){
-
-                            $value->id=$value->sender_message_id;
-                            $value->firstname=$sender_info->firstname;
-                            $value->lastname=$sender_info->lastname;
-                            $value->is_online=$sender_info->is_online;
-
-                        }
-                        else{
-
-                            $value->id=$value->receiver_message_id;
-                            $value->firstname=$receiver_info->firstname;
-                            $value->lastname=$receiver_info->lastname;
-                            $value->is_online=$receiver_info->is_online;
-                        }
-
-                        if(!in_array($value->id,$ids)){
-                            $outPutArray[]=$value;
-                            array_push($ids,$value->id);
-
-                        }
-
-
-                    $sql_count_unseen_msg = $this->db->query("SELECT count(*) AS unseen_msgs FROM messages WHERE receiver_message_id=$user_id AND sender_message_id=$value->id AND is_deleted=0 AND is_delivered=1 AND is_seen=0");
-                    $count_unseenmessage_info=$sql_count_unseen_msg->row();
-                   
-                    if($count_unseenmessage_info){
-                        $value->count_unseenmessage_info=$count_unseenmessage_info->unseen_msgs;
-                    }else{
-                        $value->count_unseenmessage_info=0;
-                    }
-
-                
+                    $value->id=$value->receiver_message_id;
+                    $value->firstname=$receiver_info->firstname;
+                    $value->lastname=$receiver_info->lastname;
+                    $value->is_online=$receiver_info->is_online;
                 }
 
-                return $outPutArray;
-   
+                if(!in_array($value->id,$ids)){
+                    $outPutArray[]=$value;
+                    array_push($ids,$value->id);
+
+                }
+
+
+            $sql_count_unseen_msg = $this->db->query("SELECT count(*) AS unseen_msgs FROM messages WHERE receiver_message_id=$user_id AND sender_message_id=$value->id AND is_deleted=0 AND is_delivered=1 AND is_seen=0");
+            $count_unseenmessage_info=$sql_count_unseen_msg->row();
+           
+            if($count_unseenmessage_info){
+                $value->count_unseenmessage_info=$count_unseenmessage_info->unseen_msgs;
+            }else{
+                $value->count_unseenmessage_info=0;
+            }
+
+        
         }
 
+        return $outPutArray;
+   
+    }
 
      public function loadGroupsForChat(){
         $user_id=$this->session->userdata('id');
@@ -88,7 +87,9 @@ class Crud_model extends CI_Model
             GROUP BY a.group_id, t.group_id
             ORDER BY MAX(t.group_messages_id) DESC "); 
         $array=$sql->result();
+   
         foreach ($array as $key => $value) {
+            $value->unseen_msgs=0;
             $con['conditions']=array(
                 'is_active' => 1,
                 'is_deleted' => 0,
@@ -99,7 +100,47 @@ class Crud_model extends CI_Model
                     $outPutArray[]=$value;
             }
             // code...
+            
+            $conCheck['conditions']=array(
+                'is_active' => 1,
+                'is_deleted' => 0,
+                'group_id' =>$value->group_id,
+               // 'group_message_sender_id!='=>$user_id
+            );
+            
+            if($grpMsg=$this->Crud_model->getRows('group_messages',$conCheck,'result')){
+                $unseen_count=0;
+
+                foreach ($grpMsg as $grpMsgkey => $grpMsgvalue) {
+
+                    $seen_by=json_decode($grpMsgvalue->seen_by);
+                    foreach($seen_by as $seen_by_row => $seen_by_val){
+
+                        if($seen_by_val->user_id==$user_id && $seen_by_val->is_seen==0){
+                                $unseen_count=$unseen_count+1;
+                             
+                                $conCheckLatest['conditions']=array(
+                                    'seen_group_message_id' => $grpMsgvalue->group_messages_id,
+                                    'seen_group_id' =>$grpMsgvalue->group_id,
+                                    'seen_user_id' =>$user_id,
+                                );
+
+                                if($this->Crud_model->getRows('seen_temp_table',$conCheckLatest,'row')){
+                                      $unseen_count=$unseen_count-1;
+                                }
+
+                        }
+
+                        $value->unseen_msgs=$unseen_count;  
+
+                    }
+                }
+        
+
+            }
+
         }
+
 
              return $outPutArray;
      }
@@ -152,7 +193,7 @@ class Crud_model extends CI_Model
 
 
   public function update($table,$data = array(),$params = array()){
-
+   
 
      if(array_key_exists("conditions",$params)){
           foreach($params['conditions'] as $key => $value){

@@ -12,9 +12,7 @@ class ChatGroup extends REST_Controller{
 
     public function showCompanyAllChatGroup_get($value='')
     {
-        // code...
         
-
         $option = array(
              'select' => 'users.*, chat_groups.*,company.*',
             'table' =>'chat_groups',
@@ -71,7 +69,6 @@ class ChatGroup extends REST_Controller{
                               'added_by'=>$this->session->userdata('id'),
                              );
                           $grop_map_row=$this->Crud_model->insert('group_user_mapping',$grop_mem_data);
-
                 
                       }
 

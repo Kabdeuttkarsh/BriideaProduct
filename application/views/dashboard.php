@@ -69,9 +69,11 @@
   </script>
 
 <script type="text/javascript">
-  checkForNewUserMessages();
-//  checkForNewGroupMessages();
 
+if (<?php echo $this->session->userdata('LoginAfterLogout')?>) {
+  checkForNewUserMessages();
+  checkForNewGroupMessages();
+}
   function checkForNewUserMessages(){
          $.ajax({
         type: 'ajax',
@@ -85,7 +87,7 @@
              
             if(response.status){
 
-               toastr.info('You have new Messages. Please Check it.');
+               toastr.info('You have new One To One Messages. Please Check it.');
 
 
             }
@@ -103,4 +105,38 @@
     });
 
   }
+
+
+  function checkForNewGroupMessages(){
+         $.ajax({
+        type: 'ajax',
+        method: 'get',
+        url: '<?php echo base_url(); ?>api/ChatGroup_Messages/checkForNewGroupMessages',
+        async: false,
+        dataType: 'json',
+        success: function(response){
+        
+            var html="";
+             
+            if(response.status){
+
+               toastr.info('You have new Group Messages. Please Check it.');
+            }
+
+            else{
+    
+            }
+           
+        },
+          error: function(response){
+       
+               // var data =JSON.parse(response.responseText);
+               // toastr.error(data.message);
+        }
+    });
+
+  }
+
+
+
 </script>
