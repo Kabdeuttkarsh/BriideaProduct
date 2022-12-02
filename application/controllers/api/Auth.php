@@ -57,7 +57,7 @@ class Auth extends REST_Controller{
                             'group_name' => $user_group->group_name,
                             'permission' => $user_group->permission,
                             'company_id' => $users_row->company_id,
-                            'LoginAfterLogout' => TRUE,
+                            'LoginAfterLogout' => 1,
                             
                       );
                       $this->session->set_userdata($logged_in_sess);

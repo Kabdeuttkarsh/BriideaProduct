@@ -65,7 +65,7 @@ class Admin_Controller extends MY_Controller
 		$this->load->view('templates/side_menubar',$data);
 		$this->load->view($page, $data);
 		$this->load->view('templates/footer',$data);
-		$this->session->set_userdata('LoginAfterLogout',FALSE);
+		$this->session->set_userdata('LoginAfterLogout',0);
 	}
 
 	

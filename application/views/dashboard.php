@@ -70,7 +70,7 @@
 
 <script type="text/javascript">
 
-if (<?php echo $this->session->userdata('LoginAfterLogout')?>) {
+if (<?php echo $this->session->userdata('LoginAfterLogout')==1?>) {
   checkForNewUserMessages();
   checkForNewGroupMessages();
 }
