@@ -102,7 +102,7 @@ class User extends REST_Controller{
                     if($groups_row->is_active==1 && $groups_row->is_deleted==0 &&  $groups_row->is_verified==1){
                         $this->response([
                           'status' => FALSE,
-                          "message" => "Entered Email is already registered and verified with us."],
+                          "message" => "Entered Email is already registered and verified with us.Please Change Email Address"],
                           REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
                     }
                     else {
@@ -254,20 +254,55 @@ class User extends REST_Controller{
         $insert_type = $this->security->xss_clean($this->post("insert_type"));
       
     
-         // 'designation_name' => $designation,
+        // 'designation_name' => $designation,
       
-        if (!empty($email) && !empty($fname) && 
-            !empty($lname) && !empty($phone) && 
-            !empty($gender) && !empty($designation) && 
-            !empty($company)
-            )  
+        if (!empty($email) && !empty($fname) &&  !empty($lname) && !empty($phone) && 
+            !empty($gender) && !empty($designation) &&  !empty($company) && !empty($username))  
 
                 {
+
+                $conEmail['conditions'] = array(
+                    'email' => $email,
+                ); 
+                $user_row=$this->Crud_model->getRows($this->table,$conEmail,'row');
+
+
+                $conPhoneCheck['conditions'] = array(
+                          'phone' => $phone,
+                          'id!='=>$user_row->id
+                );
+
+                $conUsernameCheck['conditions'] = array(
+                          'username' => $username,
+                           'id!='=>$user_row->id
+                );  
+               
+                if($phone_row=$this->Crud_model->getRows($this->table,$conPhoneCheck,'row')){
+
+                            $this->response([
+                              'status' => FALSE,
+                              "message" => "Entered Mobile no. already exist.Please change mobile no."],
+                              REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+                          
+                }
+                else{
+                   
+                    if($username_row=$this->Crud_model->getRows($this->table,$conUsernameCheck,'row')){
+
+                          $this->response([
+                              'status' => FALSE,
+                              "message" => "Entered Username. already exist.Please change username."],
+                              REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+
+                    }
+
+                    else{
+
 
                     $data = array(
                           'username' => $username,
                           'email' => $email,
-                          'password' =>  password_hash($phone,PASSWORD_DEFAULT),
+                          // 'password' =>  password_hash($phone,PASSWORD_DEFAULT),
                           'firstname' => $fname,
                           'lastname' => $lname,
                           'phone' => $phone,
@@ -281,14 +316,12 @@ class User extends REST_Controller{
                       );
               
                
-                $conEmail['conditions'] = array(
-                          'email' => $email,
-                ); 
+             
  
              
              if($u_row=$this->Crud_model->update($this->table,$data,$conEmail)){
                                   // Set the response and exit
-                 $user_row=$this->Crud_model->getRows($this->table,$conEmail,'row');
+                
 
 
 
@@ -326,19 +359,26 @@ class User extends REST_Controller{
                         
                         $this->response([
                               "status" => TRUE,
-                              "message" => "Users Added successfully.",
+                              "message" => "Users Updated successfully.",
                               "data"=>$u_row
                           ], REST_Controller::HTTP_OK);
                 
                       }
+                    
+
                       else{
                           // Set the response and exit
                         $this->response([
                               'status' => FALSE,
-                              "message" => "Users not Added ."],
+                              "message" => "Users not Updated ."],
                               REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
                           
                       }
+
+                    }
+
+                }
+
 
          }
          else{
@@ -399,7 +439,92 @@ class User extends REST_Controller{
     }
 
 
+ public function update_user_password_post($value='')
+{
+          $id = $this->session->userdata('id');
+         $old_password = $this->security->xss_clean($this->post("old_password"));
+         $new_password = $this->security->xss_clean($this->post("new_password"));
+         $confirm_password = $this->security->xss_clean($this->post("confirm_password"));
+         
+        if(!empty($id) && is_numeric($id) && !empty($old_password) && !empty($new_password) && !empty($confirm_password)){
 
+          if($new_password == $confirm_password){
+  
+              $con['conditions'] = array(
+                  'id' => $id
+              );
+                
+            $userCount = $this->Crud_model->getRows($this->table,$con,'row');
+            
+                if($userCount){
+
+                    //old password verification
+                    if (password_verify($old_password,$userCount->password)) {
+                        # code...
+                    
+                  // Set the response and exit
+                            $customer = array(
+                          
+                            "password" => password_hash($new_password,PASSWORD_DEFAULT)
+                          );
+                          // Check if the user data is inserted
+                          if($this->Crud_model->update($this->table,$customer,$con)){
+                                
+                                  $this->response([
+                                      "status" => TRUE,
+                                      "message" => "Password Updated successfully.",
+                                      "data"=>$u_row
+                                  ], REST_Controller::HTTP_OK);
+                          }
+                    
+                          else{
+                              // Set the response and exit
+                           $this->response([
+                                  'status' => FALSE,
+                                  "message" => "Failed to change Password."],
+                                  REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+              
+                          }
+                 }
+                
+                 else{
+                       $this->response([
+                              'status' => FALSE,
+                              "message" => "Invalid Old Password."],
+                              REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+              
+                 }
+              }
+            
+              else{
+                   $this->response([
+                  'status' => FALSE,
+                  "message" => "Users not Found ."],
+                  REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+                
+              }
+
+            }
+          
+            else{
+                $this->response([
+                  'status' => FALSE,
+                  "message" => "New and Confirm Password doesnot match."],
+                  REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+              
+            }
+        }
+
+        else{
+            $this->response([
+                  'status' => FALSE,
+                  "message" => "Invalid Data."],
+                  REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+              
+        }
+
+
+}
 
 
 }

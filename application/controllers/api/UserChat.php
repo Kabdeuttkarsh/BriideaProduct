@@ -6,6 +6,24 @@ class UserChat extends REST_Controller{
     public function __construct() {
         parent::__construct();
         $this->table ='messages';
+
+         // Start---- Code for changing last online status ////
+
+        $conEmail['conditions'] = array(
+            'id' => $this->session->userdata('id'),
+        ); 
+        $check=$this->Crud_model->getRows('users',$conEmail,'row');
+
+        if($check->last_online_at!=date('Y-m-d H:i:s')) {
+           
+            $data = array(
+                'last_online_at' => date('Y-m-d H:i:s'),
+            );
+
+            $u_row=$this->Crud_model->update('users',$data,$conEmail);
+        }
+      
+    // End---- Code for changing last online status ////
     }
 
     public function showUserListforChat_get($value='')
@@ -75,44 +93,63 @@ class UserChat extends REST_Controller{
     }
 
 
-    public function row_get($value='')
+    public function row_get($value='',$start='',$limit='')
     {
         // code...
          $receiver_id = $this->security->xss_clean($this->get("id"));
+         $start = $this->security->xss_clean($this->get("start"));
+         // $limit = $this->security->xss_clean($this->get("limit"));
 
          $sender_id =  $this->session->userdata('id');
         
-         if(!empty($sender_id)){
+           if(!empty($sender_id)){
 
             if(!empty($receiver_id)){
+
+            $sql =$this->db->query("SELECT * FROM (SELECT * FROM messages WHERE $sender_id IN (sender_message_id,receiver_message_id) AND  $receiver_id IN (sender_message_id,receiver_message_id) ORDER BY message_id DESC LIMIT $start,50) AS messages ORDER BY message_id ASC");
+                $array=$sql->result();
+
+                // if($array==NULL || empty($array)){
+                   
+                //     $sql =$this->db->query("SELECT * FROM (SELECT * FROM messages WHERE $sender_id IN (sender_message_id,receiver_message_id) AND  $receiver_id IN (sender_message_id,receiver_message_id) ORDER BY message_id DESC) AS messages ORDER BY message_id ASC");
+                //      $array=$sql->result();
+
+                // }
+                // echo "<pre>";
+                // print_r($array);
+                //  die();
                  
-                    $option = array(
-                        'select' => 'messages.*',
-                        'table' =>'messages',
+                 //    $option = array(
+                 //        'select' => 'messages.*',
+                 //        'table' =>'messages',
                      
-                        'where' =>array(
-                                        'sender_message_id'     => $sender_id,
-                                        'receiver_message_id'   => $receiver_id,
-                                        'is_deleted'=>0
-                                        ),   
+                 //        'where' =>array(
+                 //                        'sender_message_id'     => $sender_id,
+                 //                        'receiver_message_id'   => $receiver_id,
+                 //                        'is_deleted'=>0
+                 //                        ),  
+                 //     //  'limit'=>array('5'=>'0'),
+                 //        'order'=>array('message_id'=>'DESC')
+                    
 
-                    );
+                 //    );
 
 
-                 $sent_row=$this->Crud_model->commonGet($option);
+                 // $sent_row=$this->Crud_model->commonGet($option);
 
-                  $option = array(
-                        'select' => 'messages.*',
-                        'table' =>'messages',
+                 //  $option = array(
+                 //        'select' => 'messages.*',
+                 //        'table' =>'messages',
                      
-                        'where' =>array(
-                                        'sender_message_id'     => $receiver_id,
-                                        'receiver_message_id'   => $sender_id
-                                        ),   
+                 //        'where' =>array(
+                 //                        'sender_message_id'     => $receiver_id,
+                 //                        'receiver_message_id'   => $sender_id
+                 //                        ),   
+                 //       // 'limit'=>array('5'=>'0'),
+                 //        'order'=>array('message_id'=>'DESC')
+                 //    );
 
-                    );
-
-                 $receive_row=$this->Crud_model->commonGet($option);
+                 // $receive_row=$this->Crud_model->commonGet($option);
                  
                  $conSender['conditions'] = array(
                           'id' => $sender_id ,
@@ -125,20 +162,42 @@ class UserChat extends REST_Controller{
                 ); 
 
                  $receiver_data_row = $this->Crud_model->getRows('users',$conReceiver,'row'); 
+ 
+                 $now=new DateTime(date('Y-m-d H:i:s'));
 
-                 if($sent_row || $receive_row){
-                          
 
-                          $messages= array_merge($sent_row,$receive_row);
-                         
-                          $messgaes_1 = array_column($messages, 'message_id');
+                 if(date('Y-m-d')==date('Y-m-d',strtotime($receiver_data_row->last_online_at))) {
+
+                    $interval = $now->diff(new DateTime($receiver_data_row->last_online_at));
+                    if($interval->format('%i')>1){
+
+                      $elapsed = $interval->format('%h hours %i minutes %s seconds');
+
+                    }else{
+                         $elapsed ="online";
+                    }
+                   
+                 }
+                 else{
+                    
+                     $elapsed = $receiver_data_row->last_online_at;
+
+                 }
+            
+
+                $receiver_data_row->last_online_at=$elapsed;
+                 // if($sent_row || $receive_row){
+                 if($array ){        
+
+                          // $messages= array_merge($sent_row,$receive_row);
+                          // $messgaes_1 = array_column($messages, 'message_id');
                           
-                          array_multisort($messgaes_1, SORT_ASC, $messages);
+                          // array_multisort($messgaes_1, SORT_ASC, $messages);
 
                             $this->response([
                                               "status" => TRUE,
                                               "message" => "Old Chat Found.",
-                                              "data"=> $messages,
+                                              "data"=> $array,
                                               "sender_data_row"=> $sender_data_row,
                                               "receiver_data_row"=> $receiver_data_row,
                                           ], REST_Controller::HTTP_OK); 

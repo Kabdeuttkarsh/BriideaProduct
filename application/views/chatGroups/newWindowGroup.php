@@ -320,20 +320,165 @@
     }
 }
 
+#contextMenu {
+  position: absolute;
+  display: none;
+}
+
+
+#contextMenuGroup {
+  position: absolute;
+  display: none;
+}
+
 
 </style>
+<script type="text/javascript">
+    $(function() {
+
+
+
+        var id = '';
+        var delivery_time ='';
+        var seen_time = '';
+        var $contextMenu = $("#contextMenu");
+
+    $("body").on("contextmenu", "#UserSentMsg,#GroupSentMsg", function(e) {
+
+          type = $(this).attr('type');
+          id = $(this).attr('data');
+     
+          if(type=="UserChat") {
+
+              delivery_time = $(this).attr('delivery_time');
+              seen_time = $(this).attr('seen_time');
+            
+
+
+             convertedDate=dateChangeFormat(delivery_time);
+             convertedSeenDate=dateChangeFormat(seen_time);
+
+                
+             if(delivery_time!=null){
+                $('#delivery_time').html("Delivery :- "+convertedDate);
+             }
+             else{
+                $('#delivery_time').html("Delivery :- -");
+             }
+
+             if(seen_time!=null){
+                $('#seen_time').html("Seen :- "+convertedSeenDate);
+             }
+             else{
+                $('#seen_time').html("Seen :- -");
+             }
+             if(id!=null){
+                $('#msg_delete').html('<a tabindex="-1" href="javascript:;" class="item-deleteUserMsg" data="'+id+'">Delete Message</a>');
+                // 
+             }
+             
+      
+          }
+
+          if(type=="GroupChat"){
+
+             $.ajax({
+                type: 'ajax',
+                method: 'get',
+                url: '<?php echo base_url(); ?>api/ChatGroup_Messages/message_info_row',
+                data:{'id': id},  
+                async: false,
+                dataType: 'json',
+                success: function(response){
+                    var seen_status_html="Seen Info<br>";
+                    var delivery_status_html="Delivery Info<br>";
+
+                    var seen_status=response.seen_status;
+                    var delivery_status=response.delivery_status;
+                     
+                    if(response.status){
+
+                        for (var i = 0; i < delivery_status.length; i++) {
+
+                             convertedDate=dateChangeFormat(delivery_status[i].delivery_time);
+                            convertedSeenDate=dateChangeFormat(seen_status[i].seen_time);
+
+                            delivery_status_html+=delivery_status[i].firstname+' '+ delivery_status[i].lastname+'-'+ convertedDate+'<br>';
+
+                        }
+
+                            for (var i = 0; i < seen_status.length; i++) {
+                            
+                            seen_status_html+=seen_status[i].firstname+' '+ seen_status[i].lastname+'-'+ convertedSeenDate+'<br>';
+
+                        }
+
+                        $('#delivery_time').html(delivery_status_html);
+                        $('#seen_time').html(seen_status_html);
+
+                    }
+
+                    else{
+
+                        $('#delivery_time').html('');
+                        $('#seen_time').html('');
+
+                    }
+
+                        if(id!=null){
+                            $('#msg_delete').html('<a tabindex="-1" href="javascript:;" class="item-deleteUserMsg" data="'+id+'">Delete Message</a>');
+                            // 
+                         }
+                        
+                },
+                  error: function(response){
+               
+                       var data =JSON.parse(response.responseText);
+                       toastr.error(data.message);
+                }
+            });
+
+
+
+         
+          }
+      
+         $contextMenu.css({
+              display: "block",
+              left: e.pageX-150,
+              top: e.pageY-100
+         });
+     
+         return false;
+    });
+
+    $('html').click(function() {
+         $contextMenu.hide();
+    });
+  
+  $("#contextMenu li a").click(function(e){
+
+    $contextMenu.css({
+              display: "block",
+              left: e.pageX-150,
+              top: e.pageY-100
+         });    
+    var  f = $(this);
+  
+  });
+
+
+
+});
+</script>
 
 <div class="content-wrapper" id="mainDiv">
 
         <div class="card chat-app">
             <div id="plist" class="people-list">
                 <div class="form-group">
-                  
-                  <!--   <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fa fa-search"></i></span>
-                  </div> -->
-                   
-                    <input type="text" class="form-control" placeholder="Search...">
+             
+                  <input type="text" class="form-control" placeholder="Search User or Group" name="UserSearch" id="UserSearch"> 
                 </div>
 
                 <!-- <ul class="list-unstyled chat-list mt-2 mb-0" style="overflow-y: auto;"> -->
@@ -357,9 +502,64 @@
 <!-- </div> -->
     <!-- </section> -->
 
+<div class="modal fade" id="UserInfoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header modal-title">User Info
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+         
+      </div>
+      <div class="modal-body" id="modal-body">
+     
+
+      </div>
+      <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+       
+      </div>
+    </div>
+  </div>
 </div>
+
+<div id="contextMenu" class="dropdown clearfix">
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+      <li><a tabindex="-1" href="#" id="delivery_time"></a>
+      </li>
+        <li class="divider"></li> 
+      <li><a tabindex="-1" href="#" id="seen_time"></a>
+      </li>
+     
+      <li class="divider"></li> 
+      <li id="msg_delete">
+      </li>
+    </ul>
+</div>
+
+
+<div id="contextMenuGroup" class="dropdown clearfix">
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+      <li><a tabindex="-1" href="#" id="delivery_time"></a>
+      </li>
+      <li><a tabindex="-1" href="#" id="seen_time"></a>
+      </li>
+     
+      <li class="divider"></li> 
+      <li id="msg_delete">
+      </li>
+    </ul>
+</div>
+
+</div>
+
+
 <script type="text/javascript">
 var cht_messages='';
+var grp_cht_messages='';
+var appended_cht_messages='';
+var chat_messages_length='';
+
+var group_chat_messages_length='';
+
 var chat_open_of_user='';
 
 var chat_open_group='';
@@ -520,7 +720,6 @@ showGroupListforChat();
 
 }
 
-
 $('#mainDiv').on('click', '.item-OpenChatWindow12', function(){
     // alert("id");
 
@@ -533,20 +732,32 @@ $('#mainDiv').on('click', '.item-OpenChatWindow12', function(){
         type: 'ajax',
         method: 'get',
         url: '<?php echo base_url(); ?>api/UserChat/row',
-        data:{'id': id},  
+        data:{'id': id,'start':0},  
         async: false,
         dataType: 'json',
         success: function(response){
-
-             sendSeenReceiptToSenderForUserChat(id);
-
+             appended_cht_messages='';
             cht_messages=response.data;
+              if(cht_messages){
+
+                if(cht_messages[cht_messages.length-1].is_seen==0){
+
+                  sendSeenReceiptToSenderForUserChat(id);
+
+                }
+
+              }
+
+            receiver_data_row=response.receiver_data_row;
+            if(cht_messages){
+               chat_messages_length=Number(cht_messages.length); 
+            }
+            
             var html="";
              
             if(response.status){
 
-                html=showWindow12(firstname,lastname,id,cht_messages);
-               
+                html=showWindow12(firstname,lastname,id,cht_messages,receiver_data_row.last_online_at);
 
                 $('#ShowChatPerson').html(html);
             
@@ -554,7 +765,7 @@ $('#mainDiv').on('click', '.item-OpenChatWindow12', function(){
 
             else{
 
-                  html=showWindow12(firstname,lastname,id,cht_messages=null);
+                  html=showWindow12(firstname,lastname,id,cht_messages=null,receiver_data_row.last_online_at);
 
                 
                    $('#ShowChatPerson').html(html);
@@ -565,7 +776,10 @@ $('#mainDiv').on('click', '.item-OpenChatWindow12', function(){
            
            $('#showNewMsgDiv_'+id).html('');
            var objDiv = document.getElementById("chatHistoryMessage");
-           objDiv.scrollTop = objDiv.scrollHeight;
+           if(objDiv){
+             objDiv.scrollTop = objDiv.scrollHeight;
+           }
+          
            
 
         },
@@ -579,6 +793,8 @@ $('#mainDiv').on('click', '.item-OpenChatWindow12', function(){
 });
 
 
+
+
 $('#mainDiv').on('click', '.item-OpenGroupChatWindow12', function(){
     // alert("id");
     chat_open_of_user='';
@@ -588,13 +804,18 @@ $('#mainDiv').on('click', '.item-OpenGroupChatWindow12', function(){
         type: 'ajax',
         method: 'get',
         url: '<?php echo base_url(); ?>api/ChatGroup_Messages/row',
-        data:{'id': id},  
+        data:{'id': id,'start':0},  
         async: false,
         dataType: 'json',
         success: function(response){
-            
+             appended_cht_messages='';
            // sendSeenReceiptToSenderForGroupChat(id);
             var grp_cht_messages=response.data;
+
+             if(grp_cht_messages){
+               group_chat_messages_length=Number(grp_cht_messages.length); 
+            }
+
             group_row=response.group_row;
             var html="";
 
@@ -627,7 +848,9 @@ $('#mainDiv').on('click', '.item-OpenGroupChatWindow12', function(){
             }
              $('#showGroupNewMsgDiv_'+id).html('');
              var objDiv = document.getElementById("chatHistoryMessage");
+             if(objDiv){
              objDiv.scrollTop = objDiv.scrollHeight;
+           }
            
            
         },
@@ -643,8 +866,7 @@ $('#mainDiv').on('click', '.item-OpenGroupChatWindow12', function(){
 
 
 
-function showWindow12(firstname,lastname,id,messages) {
-
+function showWindow12(firstname,lastname,id,messages,last_online_at) {
 
     var html='';
       
@@ -652,21 +874,20 @@ function showWindow12(firstname,lastname,id,messages) {
                     '<div class="row">'+
                        ' <div class="col-lg-6">'+
 
-                            
-                                ' <a href="javascript:void(0);" class="btn btn-dark btn-backToChat" style="float: left; margin-right: 5px;" >'+
-                                   ' <i class="fa fa-arrow-left" aria-hidden="true"></i>'+
-                                ' </a>'+
-                            
-
-                           ' <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">'+
+                           ' <a href="javascript:void(0);" class="showUserInfoModal" data-toggle="modal" data='+id+'>'+
                                ' <img src="http://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar" style="width:50px; height:50px;">'+
                            ' </a>'+
 
-                           ' <div class="chat-about">'+
-                                '<p>'+firstname+' '+lastname+'</p>'+
+                           '<div class="chat-about">'+
+                                '<p>'+firstname+' '+lastname+'</p>';
                               
-                               ' <small>Last seen: 2 hours ago</small>'+
-                          '  </div>'+
+                                if(last_online_at=='online'){
+                                    html+=' <small class="online">Online</small>';
+                                }else{
+                                   html+=' <small>Last seen: '+last_online_at+'</small>';
+                                }
+                              
+                          html+='</div>'+
                      '</div>'+
                        ' <div class="col-lg-6 hidden-sm text-right">'+
                            ' <a href="javascript:void(0);" class="btn btn-success"><i class="fa fa-camera"></i></a>'+
@@ -680,18 +901,23 @@ function showWindow12(firstname,lastname,id,messages) {
             if(messages){
 
                html+='<div class="chat-history" id="chatHistoryMessage">'+
-                
-                  '<ul class="m-b-0">';
-                 
+                        '<p style="text-align:center;"><a href="javascript:;" class="load-previous-user-messages" data="'+id+'"> Load Previous Messages</a></p>'+
+                    
+                  '<div id="append-newly-loaded-user-messages"></div>'+
+              
+                  '<ul class="m-b-0" id="prev_msgs">';
+           
 
                      for (var i = 0; i < messages.length; i++) {
-                          
+
+                            var changed_dateFormat=dateChangeFormat(messages[i].message_time);
+
                           if(messages[i].sender_message_id==<?php echo $this->session->userdata('id')?>)  {
-                            
-                            
-                            html+= '<li class="clearfix">'+
+                             
+
+                            html+= '<li class="clearfix" id="sent_msg_'+messages[i].message_id+'">'+
                                     '<div class="message-data text-right">'+
-                                        '<span class="message-data-time">'+messages[i].message_time;
+                                        '<span class="message-data-time">'+changed_dateFormat;
 
                                          if (messages[i].is_sent==0) {
                                              html+= ' <i class="fa fa-clock-o fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
@@ -700,7 +926,7 @@ function showWindow12(firstname,lastname,id,messages) {
                                         
                                          
                                             if (messages[i].is_sent==1 && messages[i].is_delivered==1 && messages[i].is_seen==0) {
-                                                html+= ' <i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i><i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
+                                                html+= '<i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i><i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
                                             }
                                             else if(messages[i].is_seen==1 && messages[i].is_sent==1 && messages[i].is_delivered==1){
                                                 html+= ' <i class="fa fa-eye fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
@@ -713,10 +939,10 @@ function showWindow12(firstname,lastname,id,messages) {
                                          
                                          }
                                         
-                                        html+= ' </span>'+
+                                        html+= '</span>'+
 
                                   '  </div>'+
-                                  '  <div class="message other-message float-right">'+messages[i].message+'</div>'+
+                                  '  <div data="'+messages[i].message_id+'" delivery_time="'+messages[i].delivery_time+'" seen_time="'+messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat" >'+messages[i].message+'</div>'+
                            
                                ' </li>';
                             
@@ -724,9 +950,9 @@ function showWindow12(firstname,lastname,id,messages) {
                     
                             else{
                             
-                              html+=' <li class="clearfix">'+
+                              html+=' <li class="clearfix" id="sent_msg_'+messages[i].message_id+'">'+
                                     '<div class="message-data">'+
-                                        '<span class="message-data-time">'+messages[i].message_time;
+                                        '<span class="message-data-time">'+changed_dateFormat;
 
                                          // if (messages[i].is_sent==0) {
                                          //     html+= ' <i class="fa fa-clock-o fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
@@ -734,7 +960,7 @@ function showWindow12(firstname,lastname,id,messages) {
                                          // else{
                                         
                                          
-                                         //    if (messages[i].is_sent==1 && messages[i].is_delivered==1 && messages[i].is_seen==0) {
+                                         //  if (messages[i].is_sent==1 && messages[i].is_delivered==1 && messages[i].is_seen==0) {
                                          //        html+= ' <i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i><i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
                                          //    }
                                          //    else if(messages[i].is_seen==1 && messages[i].is_sent==1 && messages[i].is_delivered==1){
@@ -777,15 +1003,19 @@ function showWindow12(firstname,lastname,id,messages) {
                       '</div>'+
                      ' <div class="col-lg-1">'+
 
-                       // ' <button type="button" id="btnSendMessageNew12" class="btn btn-info" ><i class="fa fa-send"></i></button>'+
-                     
-                       '<a href="javascript:;" class="btn btn-primary btn-sm btnSendMessageNew">Send</a>'+
+                       // '<button id="btnSendMessageNew" class="btn btn-info" ><i class="fa fa-send"></i></button>';
+     
+                      '<a href="javascript:;" class="btn btn-primary btn-sm btnSendMessageNew">Send</a>';
 
-                     ' </div>'+
+
+                     html+='</div>'+
                 '  </div>'+
                  '</div>';
+
+
   return html;
 }
+
 
 function showGroupChatWindow12(chat_group_name,id,messages) {
 
@@ -796,11 +1026,6 @@ function showGroupChatWindow12(chat_group_name,id,messages) {
                     '<div class="row">'+
                        ' <div class="col-lg-6">'+
 
-                            
-                                ' <a href="javascript:void(0);" class="btn btn-dark btn-backToChat" style="float: left; margin-right: 5px;" >'+
-                                   ' <i class="fa fa-arrow-left" aria-hidden="true"></i>'+
-                                ' </a>'+
-                            
 
                            ' <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">'+
                                ' <img src="http://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">'+
@@ -823,22 +1048,28 @@ function showGroupChatWindow12(chat_group_name,id,messages) {
             
             if(messages){
 
-               html+='<div class="chat-history" id="chatHistoryMessage">'+
+           
+                 html+='<div class="chat-history" id="chatHistoryMessage">'+
+                        '<p style="text-align:center;"><a href="javascript:;" class="load-previous-group-messages" data="'+id+'"> Load Previous Messages</a></p>'+
+                    
+                  '<div id="append-newly-loaded-group-messages"></div>'+
                 
-                  '<ul class="m-b-0">';
+                  '<ul class="m-b-0" id="prev_msgs">';
                  
 
                      for (var i = 0; i < messages.length; i++) {
-                          
+
+                           var changed_dateFormat=dateChangeFormat(messages[i].group_message_time);
+
                           if(messages[i].group_message_sender_id==<?php echo $this->session->userdata('id')?>)  {
                             
                             
                             html+= '<li class="clearfix">'+
                                     '<div class="message-data text-right">'+
-                                        '<span class="message-data-time">'+messages[i].firstname+' '+messages[i].lastname+'-'+messages[i].group_message_time+'</span>'+
+                                        '<span class="message-data-time">'+messages[i].firstname+' '+messages[i].lastname+'-'+changed_dateFormat+'</span>'+
                                      
                                   '  </div>'+
-                                  '  <div class="message other-message float-right">'+messages[i].group_message+'</div>'+
+                                  '  <div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+messages[i].group_messages_id+'">'+messages[i].group_message+'</div>'+
                                ' </li>';
                             
                             }
@@ -847,7 +1078,7 @@ function showGroupChatWindow12(chat_group_name,id,messages) {
                             
                               html+=' <li class="clearfix">'+
                                     '<div class="message-data">'+
-                                        '<span class="message-data-time">'+messages[i].firstname+' '+messages[i].lastname+'-'+messages[i].group_message_time+'</span>'+
+                                          '<span class="message-data-time">'+messages[i].firstname+' '+messages[i].lastname+'-'+changed_dateFormat+'</span>'+
                                   '  </div>'+
                                    ' <div class="message my-message">'+messages[i].group_message+'</div>  '+                                  
                                ' </li> ';
@@ -885,7 +1116,6 @@ function showGroupChatWindow12(chat_group_name,id,messages) {
                  '</div>';
   return html;
 }
-
 
 
 $('#mainDiv').on('click', '.btnSendMessageNew', function(){
@@ -1011,24 +1241,28 @@ function  refreshChatNew(id,firstname,lastname) {
         type: 'ajax',
         method: 'get',
         url: '<?php echo base_url(); ?>api/UserChat/row',
-        data:{'id': id},  
+        data:{'id': id,'start':0},  
         async: false,
         dataType: 'json',
         success: function(response){
-
-
+             appended_cht_messages='';
             cht_messages=response.data;
+            
+            chat_messages_length=Number(cht_messages.length);
+
             sender_data_row=response.sender_data_row;
             receiver_data_row=response.receiver_data_row;
-          
-             sendSeenReceiptToSenderForUserChat(receiver_data_row.id);
-
+            
+            // if(cht_messages[chat_messages_length-1].sender_message_id!="<?php echo $this->session->userdata('id')?>"){
+               // sendSeenReceiptToSenderForUserChat(receiver_data_row.id);
+           // }
+             
             var html="";
              
             if(response.status){
 
 
-                html=showWindow12(receiver_data_row.firstname,receiver_data_row.lastname,receiver_data_row.id,cht_messages);
+                html=showWindow12(receiver_data_row.firstname,receiver_data_row.lastname,receiver_data_row.id,cht_messages,receiver_data_row.last_online_at);
                
                   $('#ShowChatPerson').html(html);
               
@@ -1036,14 +1270,16 @@ function  refreshChatNew(id,firstname,lastname) {
 
             else{
 
-                  html=showWindow12(receiver_data_row.firstname,receiver_data_row.lastname,receiver_data_row.id,null);
+                  html=showWindow12(receiver_data_row.firstname,receiver_data_row.lastname,receiver_data_row.id,null,receiver_data_row.last_online_at);
 
                 
                    $('#ShowChatPerson').html(html);
             }
                $('#showNewMsgDiv_'+id).html('');
                var objDiv = document.getElementById("chatHistoryMessage");
-               objDiv.scrollTop = objDiv.scrollHeight;
+             if(objDiv){
+             objDiv.scrollTop = objDiv.scrollHeight;
+           }
            
            
         },
@@ -1063,11 +1299,16 @@ function  refreshGroupChatNew(id,grp_id) {
         type: 'ajax',
         method: 'get',
         url: '<?php echo base_url(); ?>api/ChatGroup_Messages/row',
-        data:{'id': grp_id},  
+        data:{'id': grp_id,'start':0},  
         async: false,
         dataType: 'json',
         success: function(response){
-            var grp_cht_messages=response.data;
+        appended_cht_messages='';
+           var grp_cht_messages=response.data;
+
+            appended_cht_messages='';
+            group_chat_messages_length=Number(grp_cht_messages.length);
+
             group_row=response.group_row;
             var html="";
 
@@ -1096,7 +1337,9 @@ function  refreshGroupChatNew(id,grp_id) {
             }
             $('#showGroupNewMsgDiv_'+grp_id).html('');
              var objDiv = document.getElementById("chatHistoryMessage");
-               objDiv.scrollTop = objDiv.scrollHeight;
+              if(objDiv){
+             objDiv.scrollTop = objDiv.scrollHeight;
+           }
            
            
         },
@@ -1124,11 +1367,12 @@ function sendSeenReceiptToSenderForUserChat(sender_id) {
             success: function(response){
 
                     if (response.status) {
-                        
+                        return response.status;
+
                     }
 
-
                     else{
+
                        toastr.error(response.message);
                     }
                     
@@ -1159,7 +1403,7 @@ function sendSeenReceiptToSenderForGroupChat(group_id) {
             success: function(response){
 
                     if (response.status) {
-                        
+                         return response.status;
                     }
 
 
@@ -1178,5 +1422,327 @@ function sendSeenReceiptToSenderForGroupChat(group_id) {
         });
     }
 }
+
+</script>
+
+<script>
+    
+
+$('#mainDiv').on('click', '.load-previous-user-messages', function(){
+
+    var id = $(this).attr('data');
+  
+    $.ajax({
+        type: 'ajax',
+        method: 'get',
+        url: '<?php echo base_url(); ?>api/UserChat/row',
+        data:{'id': id,'start':chat_messages_length} ,  
+        async: false,
+        dataType: 'json',
+        success: function(response){
+
+            // if(cht_messages){
+            //     cht_messages.concat(response.data);
+            // }
+            // else{
+               cht_messages=response.data;
+
+                if(appended_cht_messages){
+                      cht_messages=cht_messages.concat(appended_cht_messages);
+                }
+                    appended_cht_messages=cht_messages;
+            
+            // }
+
+            
+            chat_messages_length=Number(chat_messages_length)+50;
+
+        
+            var html='<ul class="m-b-0" id="prev_msgs">';
+             
+            if(response.status){
+
+                for (var i = 0; i < cht_messages.length; i++) {
+
+                    var changed_dateFormat=dateChangeFormat(cht_messages[i].message_time);
+
+                    if(cht_messages[i].sender_message_id==<?php echo $this->session->userdata('id')?>)  {
+                            
+                            html+= '<li class="clearfix" id="sent_msg_'+cht_messages[i].message_id+'">'+
+                                    '<div class="message-data text-right">'+
+                                        '<span class="message-data-time">'+changed_dateFormat+'</span>';
+
+                                         if (cht_messages[i].is_sent==0) {
+                                             html+= ' <i class="fa fa-clock-o fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
+                                         }
+                                         else{
+                                        
+                                         
+                                            if (cht_messages[i].is_sent==1 && cht_messages[i].is_delivered==1 && cht_messages[i].is_seen==0) {
+                                                html+= '<i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i><i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
+                                            }
+                                            else if(cht_messages[i].is_seen==1 && cht_messages[i].is_sent==1 && cht_messages[i].is_delivered==1){
+                                                html+= ' <i class="fa fa-eye fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
+                                            }
+                                            else{
+
+                                                html+= ' <i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
+
+                                            }
+                                         
+                                         }
+                                        
+                                        html+= '</span>'+
+
+                                  '  </div>'+
+                                  '  <div data="'+cht_messages[i].message_id+'" delivery_time="'+cht_messages[i].delivery_time+'" seen_time="'+cht_messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat" >'+cht_messages[i].message+'</div>'+
+                           
+                               ' </li>';
+                            
+                            }
+                    
+                            else{
+                            
+                              html+=' <li class="clearfix" id="sent_msg_'+cht_messages[i].message_id+'">'+
+                                    '<div class="message-data">'+
+                                        '<span class="message-data-time">'+changed_dateFormat+'</span>';
+
+                                        html+='</span>'+
+                                  '  </div>'+
+                                   ' <div class="message my-message">'+cht_messages[i].message+'</div>  '+                                  
+                               ' </li> ';
+                            
+                             }
+                     
+                        }
+                        html+='</ul>';
+
+
+                     $('#append-newly-loaded-user-messages').html(html);
+                    
+                 
+            }
+   
+        },
+          error: function(response){       
+               // var data =JSON.parse(response.responseText);
+               // toastr.error(data.message);
+        }
+    });
+
+
+});
+
+
+
+
+$('#mainDiv').on('click', '.load-previous-group-messages', function(){
+
+    var id = $(this).attr('data');
+   $.ajax({
+        type: 'ajax',
+        method: 'get',
+        url: '<?php echo base_url(); ?>api/ChatGroup_Messages/row',
+        data:{'id': id,'start':group_chat_messages_length},  
+        async: false,
+        dataType: 'json',
+        success: function(response){
+            
+           // sendSeenReceiptToSenderForGroupChat(id);
+            
+            grp_cht_messages=response.data;
+
+                if(appended_cht_messages){
+                      grp_cht_messages=grp_cht_messages.concat(appended_cht_messages);
+                }
+            appended_cht_messages=grp_cht_messages;
+
+           group_chat_messages_length=Number(group_chat_messages_length)+50;
+
+             var html='<ul class="m-b-0" id="prev_msgs">';
+
+       
+            if(response.status){
+
+
+                     for (var i = 0; i < grp_cht_messages.length; i++) {
+
+             convertedDate=dateChangeFormat(grp_cht_messages[i].group_message_time);
+            
+
+             if(grp_cht_messages[i].group_message_sender_id==<?php echo $this->session->userdata('id')?>)  {
+                            
+                            
+                            html+= '<li class="clearfix">'+
+                                    '<div class="message-data text-right">'+
+                                        '<span class="message-data-time">'+grp_cht_messages[i].firstname+' '+grp_cht_messages[i].lastname+'-'+convertedDate+'</span>'+
+
+                                      
+                                     
+                                  '  </div>'+
+                                  '  <div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+grp_cht_messages[i].group_messages_id+'">'+grp_cht_messages[i].group_message+'</div>'+
+                               ' </li>';
+                            
+                            }
+                    
+                            else{
+                            
+                              html+=' <li class="clearfix">'+
+                                    '<div class="message-data">'+
+                                        '<span class="message-data-time">'+grp_cht_messages[i].firstname+' '+grp_cht_messages[i].lastname+'-'+convertedDate+'</span>'+
+                                  '  </div>'+
+                                   ' <div class="message my-message">'+grp_cht_messages[i].group_message+'</div>  '+                                  
+                               ' </li> ';
+                            
+                             }
+
+                        }
+
+                   html+='</ul>';
+                     $('#append-newly-loaded-group-messages').html(html);
+
+            }
+
+           
+        },
+          error: function(response){
+       
+               var data =JSON.parse(response.responseText);
+               toastr.error(data.message);
+        }
+    });
+
+
+});
+
+
+$('#mainDiv').on('click', '.showUserInfoModal', function(){
+
+   var id = $(this).attr('data');
+
+
+       $.ajax({
+        type: 'ajax',
+        method: 'get',
+        url: '<?php echo base_url(); ?>api/User/row',
+        data:{'id': id},  
+        async: false,
+        dataType: 'json',
+        success: function(response){
+            var html='';
+            if(response.status){
+            data=response.data;
+                html+='<table class="table table-striped">'+
+                '<thead>'+
+                  '<tr>'+
+                    '<th>Firstname</th>'+
+                    '<td>'+data.firstname+'</td>'+
+                  ' </tr>'+
+                    '<tr>'+
+                    '<th>Lastname</th>'+
+                    '<td>'+data.lastname+'</td>'+
+                  ' </tr>'+
+                  '<tr>'+
+                    '<th>Email</th>'+
+                    '<td>'+data.email+'</td>'+
+                  ' </tr>'+
+
+                  '<tr>'+
+                    '<th>Gender</th>';
+                    if(data.gender==1){
+                        var gender='Male';
+                    }else{
+                         var gender='Female';
+                    }
+                    html+= '<td>'+gender+'</td>'+
+                  ' </tr>'+
+                ' </thead>'+
+             
+
+              '</table>';
+      
+             $('#modal-body').html(html);
+
+            }
+  
+
+
+        },
+          error: function(response){
+               var data =JSON.parse(response.responseText);
+               toastr.error(data.message);
+        }
+    });
+
+   $('#UserInfoModal').modal('show');
+
+
+});
+
+
+function dateChangeFormat(date_time) {
+    // body...
+
+  var delivery_message_time=new Date(date_time);
+              var delivery_to_date=new Date();
+
+              var del_date_seperated=delivery_message_time.toLocaleDateString('en-GB');
+             
+              if(delivery_to_date.toLocaleDateString('en-GB')==del_date_seperated){
+                var del_today='Today, ';
+              }
+              else{
+                var del_today=del_date_seperated+', ' ;
+              }
+
+              var del_hours = delivery_message_time.getHours();
+              var del_min = delivery_message_time.getMinutes();
+              var del_ampm = del_hours >= 12 ? 'pm' : 'am';
+              del_hours = del_hours % 12;
+              del_hours = del_hours ? del_hours : 12; // the hour '0' should be '12'
+              del_min = del_min < 10 ? '0'+del_min : del_min;
+              var delStrTime = del_hours + ':' + del_min + ' ' + del_ampm;
+
+              return del_today+delStrTime;
+
+}
+
+
+    $("#UserSearch").keyup(function() {
+         var filter = $(this).val();
+         count = 0;
+         $('#showUserListforChat12 ul a').each(function() {
+
+
+        // If the list item does not contain the text phrase fade it out
+        if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+          $(this).hide();  // MY CHANGE
+
+          // Show the list item if the phrase matches and increase the count by 1
+        } else {
+          $(this).show(); // MY CHANGE
+          count++;
+        }
+
+      });
+
+        $('#showGroupListforChat12 ul a').each(function() {
+
+
+        // If the list item does not contain the text phrase fade it out
+        if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+          $(this).hide();  // MY CHANGE
+
+          // Show the list item if the phrase matches and increase the count by 1
+        } else {
+          $(this).show(); // MY CHANGE
+          count++;
+        }
+
+      });
+
+
+    });
+
 
 </script>

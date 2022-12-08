@@ -6,7 +6,7 @@ var Connection = (function(){
 
     this.open = false;
 
-    this.socket = new WebSocket("wss://" + url);
+    this.socket = new WebSocket("ws://" + url);
     this.setupConnectionEvents();
   }
 

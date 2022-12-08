@@ -6,28 +6,50 @@ class ChatGroup_Messages extends REST_Controller{
     public function __construct() {
         parent::__construct();
         $this->table ='group_messages';
+
+         // Start---- Code for changing last online status ////
+
+        $conEmail['conditions'] = array(
+            'id' => $this->session->userdata('id'),
+        ); 
+        $check=$this->Crud_model->getRows('users',$conEmail,'row');
+
+        if($check->last_online_at!=date('Y-m-d H:i:s')) {
+           
+            $data = array(
+                'last_online_at' => date('Y-m-d H:i:s'),
+            );
+
+            $u_row=$this->Crud_model->update('users',$data,$conEmail);
+        }
+      
+    // End---- Code for changing last online status ////
     }
 
-    public function row_get($value='')
+    public function row_get($value='',$start='',$limit='')
     {
         // code...
          $group_id = $this->security->xss_clean($this->get("id"));
+         $start = $this->security->xss_clean($this->get("start"));
 
          $sender_id =  $this->session->userdata('id');
         
          if(!empty($sender_id)){
 
             if(!empty($group_id)){
+
                  
                     $option = array(
                         'select' => 'group_messages.*,users.*',
                         'table' => 'group_messages',
                         'join' => array(array('users' => 'users.id = group_messages.group_message_sender_id')),
                         'where' =>array(
-                                        'group_messages.group_id'     => $group_id,
+                                        'group_messages.group_id'  => $group_id,
                                         'group_messages.is_active'   => 1,
                                         'group_messages.is_deleted'=>0
                                         ),   
+                        'order'=>array('group_messages_id'=>'DESC'),
+                         'limit'=>array('50'=>$start),
 
                     );
 
@@ -44,7 +66,6 @@ class ChatGroup_Messages extends REST_Controller{
                 $groups_row=$this->Crud_model->getRows('chat_groups',$conGroup,'row');
            
                  if($sent_row){
-
 
                             $this->response([
 
@@ -453,7 +474,109 @@ class ChatGroup_Messages extends REST_Controller{
 
     }
 
-     
+
+    public function message_info_row_get($value='')
+    {
+       $group_message_id = $this->security->xss_clean($this->get("id"));
+
+       if($group_message_id){
+
+           $con['conditions']=array(
+             'group_messages_id'=>$group_message_id,
+             'group_message_sender_id'=>$this->session->userdata('id'),
+           );
+
+           if($group_messages_info=$this->Crud_model->getRows('group_messages',$con,'row')){
+
+            $delivered_to=json_decode($group_messages_info->delivered_to);
+            $seen_by=json_decode($group_messages_info->seen_by);
+            
+            if($delivered_to){
+
+             foreach ($delivered_to as $delivered_to_key => $delivered_to_value) {
+               
+                $conUser['conditions']=array(
+                    'id'=>$delivered_to_value->user_id,
+                );
+                $user_info=$this->Crud_model->getRows('users',$conUser,'row');
+
+                $delivered_to_value->firstname=$user_info->firstname;
+                $delivered_to_value->lastname=$user_info->lastname;
+
+                   if($delivered_to_value->is_delivered==0){
+                           $conLatest['conditions']=array(
+                                    'group_message_id'=>$group_message_id,
+                                    'user_id'=>$delivered_to_value->user_id,
+                            );
+                           $latest_deliver_info=$this->Crud_model->getRows('delivery_temp_table',$conLatest,'row');
+                           if($latest_deliver_info){
+
+                             $delivered_to_value->is_delivered=1;
+                             $delivered_to_value->delivery_time=$latest_deliver_info->time;
+                          
+                           }
+                           else{
+                             $delivered_to_value->is_delivered='-';
+                             $delivered_to_value->delivery_time='-';
+                           }
+                    }
+
+                    else{
+                     $delivered_to_value->is_delivered=$delivered_to_value->is_delivered;
+                     $delivered_to_value->delivery_time=$delivered_to_value->delivery_time;
+                    }
+                    
+
+                }
+          
+
+            }
+
+            if($seen_by){
+                foreach ($seen_by as $seen_by_key => $seen_by_value) {
+                    $conUser['conditions']=array(
+                    'id'=>$seen_by_value->user_id,
+                );
+                    $user_info=$this->Crud_model->getRows('users',$conUser,'row');
+
+                    $seen_by_value->firstname=$user_info->firstname;
+                    $seen_by_value->lastname=$user_info->lastname;
+                }
+            }
+
+
+
+                         $this->response([
+                                    "status" => TRUE,
+                                    "message" => "Message Info.",
+                                    "delivery_status"=>$delivered_to,
+                                    "seen_status"=>$seen_by,
+                                ], REST_Controller::HTTP_OK );
+
+
+
+           }
+         
+           else{
+                 $this->response([
+                  'status' => FALSE,
+                  "message" => "Message Info Not Found. Please Try Again"
+                   ], REST_Controller::HTTP_BAD_REQUEST);
+           }
+
+       }
+
+       else{
+
+             $this->response([
+                  'status' => FALSE,
+                  "message" => "Message ID Not Found. Please Try Again"
+                   ], REST_Controller::HTTP_BAD_REQUEST);
+       }
+
+    }
+
+
     }
 
 

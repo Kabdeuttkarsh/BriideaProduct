@@ -50,7 +50,7 @@
 
     <form action="" id="LoginForm">
       <div class="form-group has-feedback">
-        <input type="email" class="form-control" name="email" id="email" placeholder="Email" autocomplete="off">
+        <input type="email" class="form-control" name="email" id="email" placeholder="Email/Mobile No." autocomplete="off">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">

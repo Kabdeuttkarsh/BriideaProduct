@@ -15,7 +15,7 @@ username.addEventListener("keypress", function(evt){
   this.style.display = "none";
   chatcontainer.style.display = "block";
 
-  conn = new Connection(name, "chatwindow", "159.65.150.190:2000");
+  conn = new Connection(name, "chatwindow", "192.168.1.15:2000");
 });
 
 messagebox.addEventListener("keypress", function(e){

@@ -124,12 +124,25 @@
     <li><a href="<?php echo base_url('ChatGroups/newWindowGroup') ?>"><i class="fa fa-comment"></i> <span>Chat</span></a></li>
 
 
-    <li><a href="<?php echo base_url('auth/logout') ?>"><i class="fa fa-power-off"></i> <span>Logout</span></a></li>
+            <li class="treeview" id="ProfileMainNav">
+              <a href="#">
+                <i class="fa fa-user"></i>
+                <span>Profile</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li id="manageProfileSubMenu"><a href="<?php echo base_url('Profile') ?>"><i class="fa fa-user"></i> Profile</a></li>
+
+                  <li><a href="<?php echo base_url('auth/logout') ?>"><i class="fa fa-power-off"></i> <span>Logout</span></a></li>
+              
+              </ul>
+            </li>
+       
    
-
-
-
-
+  
+   
       </ul>
     </section>
     <!-- /.sidebar -->

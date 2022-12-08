@@ -19,7 +19,7 @@
                     success: function(response){
 
                             if (response.status) {
-                                
+                                 return response.status;
                             }
                             else{
                                toastr.error(response.message);
@@ -50,7 +50,7 @@
                     success: function(response){
 
                             if (response.status) {
-                                
+                                 return response.status;
                             }
                             else{
                                toastr.error(response.message);
@@ -67,6 +67,7 @@
                 });
             }
     }
+    
 </script>
 
 <script type="text/javascript">
@@ -140,9 +141,9 @@
 
                     // send Delivery Report to Sender if receiver Online
 
-                    sendDeliveryReceiptToSenderForUserChat(data.data.message_id);
+                     sendDeliveryReceiptToSenderForUserChat(data.data.message_id);
 
-                    if('<?php echo $this->session->userdata('sess_page') ?>'=='Chat_Window' ||'<?php echo  $this->session->userdata('sess_page') ?>'=='Group_Chat_Window')
+                 if('<?php echo $this->session->userdata('sess_page') ?>'=='Chat_Window' ||'<?php echo  $this->session->userdata('sess_page') ?>'=='Group_Chat_Window')
 
                     {
 
@@ -151,13 +152,15 @@
                         if(chat_open_of_user==data.data.sender_message_id){
 
 
-                            refreshChatNew(data.data.sender_message_id,data.firstnameSend,data.lastnameSend);
+                           refreshChatNew(data.data.sender_message_id,data.firstnameSend,data.lastnameSend);
+                           
+                            sendSeenReceiptToSenderForUserChat(data.data.sender_message_id);
 
                         }
                         
                         else{
 
-                            // $('#showNewMsgDiv_'+data.data.sender_message_id).html('<i class="fa fa-circle offline"> New</i>');
+                          // $('#showNewMsgDiv_'+data.data.sender_message_id).html('<i class="fa fa-circle offline"> New</i>');
 
                             toastr.info('You have new Message from '+data.sender_first_name+' ' +data.sender_last_name);
                         }
@@ -182,12 +185,11 @@
                 
                 if(data.data.sender_message_id==<?php echo $this->session->userdata('id')?>){
                  
-                   sendDeliveryReceiptToSenderForUserChat(data.data.message_id);
-                   // showWindow12(data.firstnameSend,data.lastnameSend,data.data.receiver_id,cht_messages);
+                   // sendDeliveryReceiptToSenderForUserChat(data.data.message_id);
+                    showUserListforChat();
+                   
+                    refreshChatNew(data.receiver_id,data.firstnameSend,data.lastnameSend);
                     
-                     showUserListforChat();
-
-                     refreshChatNew(data.receiver_id,data.firstnameSend,data.lastnameSend);
                 
                 }           
                  
@@ -242,7 +244,7 @@
         
         }
 
-     
+
         
       },
     

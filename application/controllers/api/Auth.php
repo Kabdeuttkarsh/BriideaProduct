@@ -21,12 +21,26 @@ class Auth extends REST_Controller{
 
 
             if (!empty($email) && !empty($password) ){
-                    # code...
+
+              if(is_numeric($email)){
                    $con['conditions'] = array(
+                          'phone' => $email,
+                          'is_active' => 1,
+                          'is_deleted' => 0
+                      );
+              }else{
+                  $con['conditions'] = array(
                           'email' => $email,
                           'is_active' => 1,
                           'is_deleted' => 0
                       );
+              }
+                    # code...
+                      // $con['conditions'] = array(
+                      //     'email' => $email,
+                      //     'is_active' => 1,
+                      //     'is_deleted' => 0
+                      // );
 
                  if($users_row=$this->Crud_model->getRows($this->table,$con,'row')){
                               // Set the response and exit
@@ -57,7 +71,7 @@ class Auth extends REST_Controller{
                             'group_name' => $user_group->group_name,
                             'permission' => $user_group->permission,
                             'company_id' => $users_row->company_id,
-                            'LoginAfterLogout' => 1,
+                            'LoginAfterLogout' => TRUE,
                             
                       );
                       $this->session->set_userdata($logged_in_sess);
@@ -96,7 +110,7 @@ class Auth extends REST_Controller{
                       // Set the response and exit
                     $this->response([
                           'status' => FALSE,
-                          "message" => "Please Check Email or else Signup as new Account."],
+                          "message" => "Please Check Email/Phone No. or else Signup as new Account."],
                           REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
                       
                   }
