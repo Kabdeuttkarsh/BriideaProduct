@@ -13,7 +13,7 @@
     background: #fff;
     transition: .5s;
     border: 0;
-    margin-bottom: 30px;
+/*    margin-bottom: 30px;*/
     border-radius: .55rem;
     position: relative;
     width: 100%;
