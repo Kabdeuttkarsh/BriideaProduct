@@ -351,17 +351,17 @@ s0.parentNode.insertBefore(s1,s0);
 var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
 </script>
 
-  <footer class="main-footer">
+ <!--  <footer class="main-footer">
     <div class="pull-right hidden-xs">
       <b>Version</b> 1.1.0
     </div>
     <strong>&copy; 2022 |</strong> All rights
     reserved and Developed by <a href="https://briidea.in/" target="_BLANK">Briidea Innoventures LLP</a>
-  </footer>
+  </footer> -->
 
   <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
-  <div class="control-sidebar-bg"></div>
+  <!-- <div class="control-sidebar-bg"></div> -->
 </div>
 <!-- ./wrapper -->
 
