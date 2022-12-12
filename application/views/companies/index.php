@@ -6,11 +6,11 @@
     <section class="content-header">
       <h1>
         Manage
-        <small>Companies</small>
+        <small>Branches</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Companies</li>
+        <li class="active">Branches</li>
       </ol>
     </section>
 
@@ -21,14 +21,14 @@
         <div class="col-md-12 col-xs-12">
 
           <?php if(in_array('createCompany', $user_permission)): ?>
-             <button type="button" id="addCompany" class="btn btn-success item-addCompany" data-toggle="modal" data-target="#exampleModalCenter"> Add Company</button>
+             <button type="button" id="addCompany" class="btn btn-success item-addCompany" data-toggle="modal" data-target="#exampleModalCenter"> Add Branch</button>
             <br /> <br />
           <?php endif; ?>
 
 
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Manage Companies</h3>
+              <h3 class="box-title">Manage Branches</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -36,7 +36,7 @@
                 <thead>
                 <tr>
                   <th>#</th>
-                  <th>Company Name</th>
+                  <th>Branch Name</th>
                   
 
                   <?php if(in_array('updateCompany', $user_permission) || in_array('deleteCompany', $user_permission)): ?>
@@ -105,19 +105,16 @@
                   
                       html+='<td>';
                       
-                       if(jQuery.inArray("updateCompany", user_permission) ) {
-                        // if($.inArray("updateUser", user_permission) !== -1 ) {
+                      <?php if(in_array('updateCompany', $user_permission) ){ ?>
                         
                          html+='<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].id+'" style="margin:10px;"><i class="fa fa-edit"></i></a>';
                       
-                      }
-                    
-                        if(jQuery.inArray("deleteCompany", user_permission) ) {
-                              // if($.inArray("deleteUser", user_permission) !== -1 ) {
-                                
+                        <?php  } ?>
+                      
+                       <?php if( in_array('deleteCompany', $user_permission)){ ?>
                          html+='<a href="javascript:;" class="btn btn-danger item-delete" data="'+data[i].id+'"><i class="fa fa-trash"></i></a>';
                             
-                       }
+                          <?php  } ?>
 
                        html+='</td></tr>';
 

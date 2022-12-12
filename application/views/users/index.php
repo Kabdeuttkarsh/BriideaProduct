@@ -65,7 +65,7 @@
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header modal-title">Add User</h5>
+      <div class="modal-header modal-title">Add User
          <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
          
       </div>
@@ -78,12 +78,15 @@
                   <label for="email">Email</label>
                   <div class="row">
                       <div class="col-lg-10">
+
+                        <input type="hidden" class="form-control" id="id" name="id"  autocomplete="off">
+                        
                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" autocomplete="off">
                   
-                      </div>
-                      <div class="col-lg-2">
+                      <!-- </div> -->
+                      <!-- <div class="col-lg-2">
                         <button type="button" id="verifyEmailOTP" class="btn btn-info item-verifyEmailOTP" > Verify Email</button>
-                      </div>
+                      </div> -->
                   </div>
                  </div>
 
@@ -152,14 +155,7 @@
                          <label for="username">Username</label>
                   <input type="text" class="form-control" id="username" name="username" placeholder="Username" autocomplete="off">
                       </div>
-                     <!--  <div class="col-lg-4">
-                           <label for="password">Password</label>
-                  <input type="password" class="form-control" id="password" name="password" placeholder="Password" autocomplete="off">
-                      </div>
-                       <div class="col-lg-4">
-                          <label for="cpassword">Confirm password</label>
-                       <input type="password" class="form-control" id="cpassword" name="cpassword" placeholder="Confirm Password" autocomplete="off">
-                      </div> -->
+                   
                     </div>
                 
                 </div>
@@ -172,6 +168,22 @@
          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" id="btnSave" class="btn btn-primary">Save changes</button>
       </div>
+      
+
+
+<div id="reset_modal">      
+
+  <div class="modal-header modal-title12">Reset User Password</div>
+       <div class="modal-body" id="PasswordResetDiv"></div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" id="btnResetPassword" class="btn btn-primary">Save changes</button>
+      </div>
+
+</div>
+
+     
     </div>
   </div>
 </div>
@@ -244,11 +256,12 @@
 
 
     $('#addUser').click(function(){
-         
+         // $('#reset_modal').html('');
           $('#myformUser')[0].reset();
+
           $('#btnSave').html('Submit');
           $('#exampleModalCenter').find('.modal-title').text('Add User');
-          $('#myformUser').attr('action','<?php echo base_url(); ?>api/User/update');
+          $('#myformUser').attr('action','<?php echo base_url(); ?>api/User/insert');
           showDesignationData();
           showCompanyData();
 
@@ -266,11 +279,7 @@
        {
 
             sendEmail(email);
-
-        
-          
-        
-       
+ 
         }
 
     });
@@ -283,7 +292,7 @@
   showUserData();
 
   var user_permission = <?php echo json_encode($user_permission); ?>;
-   $("#btnSave").prop("disabled", true);
+   // $("#btnSave").prop("disabled", true);
   var designations='';
   var companies='';
 
@@ -311,19 +320,19 @@
                       html+='<td>'+data[i].designation_name+'</td>';
                       html+='<td>';
                       
-                       if(jQuery.inArray("updateUser", user_permission) ) {
-                        // if($.inArray("updateUser", user_permission) !== -1 ) {
+                       <?php if(in_array('updateUser', $user_permission)){ ?>
                         
                          html+='<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].user_id+'" style="margin:10px;"><i class="fa fa-edit"></i></a>';
-                      
-                      }
+
+
+                      <?php  } ?>
                     
-                        if(jQuery.inArray("deleteUser", user_permission) ) {
-                              // if($.inArray("deleteUser", user_permission) !== -1 ) {
+                           <?php if(in_array('deleteUser', $user_permission)){ ?>
+                           
                                 
                          html+='<a href="javascript:;" class="btn btn-danger item-delete" data="'+data[i].user_id+'"><i class="fa fa-trash"></i></a>';
                             
-                       }
+                     <?php  } ?>
 
                        html+='</td></tr>';
 
@@ -342,14 +351,45 @@
 
       //edit
 $('#UserData').on('click', '.item-edit', function(){
+  var id = $(this).attr('data');
+    var html='<form id="myformUserPasswordReset" action="">'+
+         '<div class="box-body">'+
+           '<div class="form-group">'+
+            ' <div class="row">'+
+                ' <div class="col-lg-4">'+
+
+                      ' <input type="hidden" class="form-control" id="user_id_reset" name="user_id_reset" value="'+id+'" placeholder="Confirm Password" autocomplete="off">'+
+
+
+                '    <label for="password">New Password</label>'+
+
+
+                     ' <input type="password" class="form-control" id="password" name="password" placeholder="New Password" autocomplete="off">'+
+                        ' </div>'+
+                         '  <div class="col-lg-4">'+
+                             ' <label for="cpassword">Confirm password</label>'+
+                        
+                          ' <input type="password" class="form-control" id="cpassword" name="cpassword" placeholder="Confirm Password" autocomplete="off">'+
+                '      </div> '+
+                 
+               '     </div>'+
+                
+            '    </div>'+
+   
+            '  </div>'+
+         '</form>';
+
+    $('#PasswordResetDiv').html(html);
+
+
      $("#btnSave").prop("disabled", false);
      $("#verifyEmailOTP").prop("disabled", true);
-     $("#email").prop("disabled", true);
+     // $("#email").prop("disabled", true);
     
      // $("#password").prop("disabled", true);
      // $("#cpassword").prop("disabled", true);
    
-    var id = $(this).attr('data');
+  
     $('#exampleModalCenter').modal('show');
      $('#btnSave').html('Update');
     $('#exampleModalCenter').find('.modal-title').text('Edit User Details');
@@ -366,6 +406,7 @@ $('#UserData').on('click', '.item-edit', function(){
         success: function(response){
            data=response.data;
 
+                $('input[name=id]').val(data.user_id);
                 $('input[name=email]').val(data.email);
                 $('input[name=email1]').val(data.email);      
                 $('input[name=fname]').val(data.firstname);
@@ -470,7 +511,7 @@ $('#btnSave').click(function(){
    var data = $('#myformUser').serialize();
   
    var username = $('input[name=username]').val();
-   var email1 = $('input[name=email1]').val();
+   var email1 = $('input[name=email]').val();
    // var password = $('input[name=password]').val();
    // var cpassword = $('input[name=cpassword]').val();
    var fname = $('input[name=fname]').val();
@@ -484,9 +525,7 @@ $('#btnSave').click(function(){
     if (fname=='') {
        toastr.error("Please Enter First Name");
     }
-    else if(email1==''){
-       toastr.error("Please Enter Email");
-    }
+  
      else if(lname==''){
        toastr.error("Please Enter Last Name");
     }
@@ -513,7 +552,6 @@ $('#btnSave').click(function(){
        
     // }
      
- 
  
 else{
 
@@ -642,6 +680,70 @@ function sendEmail(email) {
 
 }
 
+
+
+
+$('#btnResetPassword').click(function(){
+
+
+   var url = $('#myformUserPasswordReset').attr('action');
+   var PasswordResetdata = $('#myformUserPasswordReset').serialize();
+
+   var password = $('input[name=password]').val();
+   var cpassword = $('input[name=cpassword]').val();
+ 
+
+    if (password=='') {
+       toastr.error("Please Enter New Password");
+    }
+    else   if (cpassword=='') {
+       toastr.error("Please Enter Confirm Password");
+    }
+
+
+else{
+
+      if(password!=cpassword){
+           toastr.error("New and Confirm Password Does not match");
+      
+      }
+      
+      else{
+
+        $.ajax({
+            type: 'ajax',
+            method:'post',
+            url: '<?php echo base_url("api/User/user_reset_password/");?>',
+            data: PasswordResetdata,
+            async: false,
+            dataType: 'json',
+            success: function(response){
+
+                   $('#myformUserPasswordReset')[0].reset();
+                   $('#exampleModalCenter').modal('hide');
+
+                    if (response.status) {
+                     toastr.success(response.message);
+                    }
+                    else{
+                       toastr.error(response.message);
+                    }
+                    
+                    showUserData();
+            },
+
+          error: function(response){
+                   var data =JSON.parse(response.responseText);
+                   toastr.error(data.message);
+            }
+
+        });
+
+      }
+ 
+
+    }
+});
 
 
 </script>

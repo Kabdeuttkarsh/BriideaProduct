@@ -353,5 +353,33 @@ class Crud_model extends CI_Model
 
             }
 
+
+            public function count_all_entries($value='')
+            {
+                
+                $sql = "SELECT COUNT(*) AS users_count FROM users 
+                WHERE is_active= ? AND is_deleted=? AND is_verified=?";
+                $query = $this->db->query($sql, array(1,0,1));
+                $data['users_count'] = $query->row()->users_count;
+
+                $sql = "SELECT COUNT(*) AS company_count FROM company 
+                WHERE is_active= ? AND is_deleted=? AND is_verified=?";
+                $query = $this->db->query($sql, array(1,0,1));
+                $data['company_count'] = $query->row()->company_count;
+
+                $sql = "SELECT COUNT(*) AS designation_count FROM designations 
+                WHERE is_active= ? AND is_deleted=?";
+                $query = $this->db->query($sql, array(1,0));
+                $data['designation_count'] = $query->row()->designation_count;
+
+
+                $sql = "SELECT COUNT(*) AS chat_groups_count FROM chat_groups    
+                WHERE is_active= ? AND is_deleted=?";
+                $query = $this->db->query($sql, array(1,0));
+                $data['chat_groups_count'] = $query->row()->chat_groups_count;
+
+                return $data;
+            }
+
 }
 ?>

@@ -56,7 +56,7 @@
         
         <!-- <li class="header">Settings</li> -->
         <?php if(in_array('createCompany', $user_permission) || in_array('updateCompany', $user_permission) || in_array('viewCompany', $user_permission) || in_array('deleteCompany', $user_permission)): ?>
-          <li id="companyMainNav"><a href="<?php echo base_url('Companies/') ?>"><i class="fa fa-simplybuilt"></i> <span>Companies</span></a></li>
+          <li id="companyMainNav"><a href="<?php echo base_url('Companies/') ?>"><i class="fa fa-simplybuilt"></i> <span>Branches</span></a></li>
         <?php endif; ?>
 
             <!-- <li class="header">Settings</li> -->

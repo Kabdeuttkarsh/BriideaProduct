@@ -113,7 +113,7 @@
 
                <div class="form-group">
                   <label for="email">Email</label>
-                 
+                      <input type="hidden" class="form-control" id="id" name="id"  autocomplete="off">
                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" autocomplete="off">
                   
                     
@@ -287,7 +287,7 @@
 $('#UserData').on('click', '.item-edit', function(){
     $("#btnSave").prop("disabled", false);
     $("#verifyEmailOTP").prop("disabled", true);
-    $("#email").prop("disabled", true);
+   // $("#email").prop("disabled", true);
  
     var id = $(this).attr('data');
     $('#exampleModalCenter').modal('show');
@@ -305,6 +305,7 @@ $('#UserData').on('click', '.item-edit', function(){
         success: function(response){
            data=response.data;
 
+                $('input[name=id]').val(data.user_id);
                 $('input[name=email]').val(data.email);
                 $('input[name=email1]').val(data.email);      
                 $('input[name=fname]').val(data.firstname);

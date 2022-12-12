@@ -7,7 +7,7 @@ class UserChat extends REST_Controller{
         parent::__construct();
         $this->table ='messages';
 
-         // Start---- Code for changing last online status ////
+      // Start---- Code for changing last online status ////
 
         $conEmail['conditions'] = array(
             'id' => $this->session->userdata('id'),
@@ -29,14 +29,14 @@ class UserChat extends REST_Controller{
     public function showUserListforChat_get($value='')
     {
         
-        if($this->session->userdata('email')){
+        if($this->session->userdata('id')){
 
                  $conUser['conditions']=array(
                             'id!='=> $this->session->userdata('id'),
                             'is_active' => 1,
                             'is_deleted' => 0,
                             'is_verified' => 1,
-                            'company_id'=>$this->session->userdata('company_id'),
+                            // 'company_id'=>$this->session->userdata('company_id'),
                         );
                  if($UserList=$this->Crud_model->getRows('users',$conUser,'result')){
 
@@ -390,7 +390,7 @@ class UserChat extends REST_Controller{
 
     public function checkForNewUserMessages_get($value='')
     {
-        if($this->session->userdata('email')){
+        if($this->session->userdata('id')){
 
             $con['conditions']=array(
                  'receiver_message_id' =>$this->session->userdata('id'),
@@ -436,6 +436,91 @@ class UserChat extends REST_Controller{
                    ], REST_Controller::HTTP_BAD_REQUEST);
         }
     }
+
+
+
+
+public function uploadFilesUserChat_post($value='')
+{
+
+        $id = $this->session->userdata('id');
+        $receiver_id = $this->security->xss_clean($this->post("receiver_id"));
+      //  $new_message_with_files = $this->security->xss_clean($this->post("new_message_with_files"));
+    //    $files_array=array();
+        if (!empty($receiver_id))  {
+ 
+                $config['upload_path']   = './uploads/user_chat_files/'; 
+                $config['allowed_types'] = 'gif|jpg|png|mp4|xlsx|xls|csv|pdf|docx|txt'; 
+                $config['max_size']      = 30000;
+                $new_name = time().$_FILES["file"]['name'];
+                $new_name=str_replace(" ","_",$new_name);
+                $config['file_name'] = $new_name;
+                $ext = pathinfo($new_name, PATHINFO_EXTENSION);
+
+                $this->load->library('upload', $config);
+             
+                if($this->upload->do_upload('file')){
+                    
+                    $data = array(
+                         'message' => NULL,
+                         'receiver_message_id' => $receiver_id,
+                         'sender_message_id' => $this->session->userdata('id'),
+                         'is_sent' => 1,
+                         'message_file' => $new_name,
+                         'message_file_extension' => $ext,
+                    );
+
+                    $branches_row=$this->Crud_model->insert($this->table,$data);
+                    $conNew['conditions'] = array(
+                         'message_id' => $branches_row,
+                      ); 
+
+                    $new_message_row=$this->Crud_model->getRows($this->table,$conNew,'row');   
+
+                    $conEmail['conditions'] = array(
+                              'id' => $receiver_id,
+                    ); 
+
+                    $receiver_row=$this->Crud_model->getRows('users',$conEmail,'row');   
+                    
+                    $conSender['conditions'] = array(
+                              'id' => $this->session->userdata('id'),
+                    );
+
+                     $sender_row=$this->Crud_model->getRows('users',$conSender,'row');   
+                     
+                     $new_message_row->sender_first_name=$sender_row->firstname;
+                     $new_message_row->sender_last_name=$sender_row->lastname;
+                                      // Set the response and exit
+                            $this->response([
+                                  "status" => TRUE,
+                                  "message" => "Message Sent Successfully.",
+                                  "data"=>$new_message_row,
+                                  "is_receiver_online" => $receiver_row->is_online
+                              ], REST_Controller::HTTP_OK );
+                }
+                   
+                else{
+
+                        // Set the response and exit
+                        $this->response([
+                              'status' => FALSE,
+                              "message" => "File not sent."],
+                              REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+                          
+                 }
+
+             }
+             else{
+                     $this->response([
+                              'status' => FALSE,
+                              "message" => "Please Fill Complete Information."],
+                              REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+
+             }
+
+    
+}
 
 }
 

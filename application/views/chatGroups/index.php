@@ -72,7 +72,7 @@
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header">Add Chat Group
+      <div class="modal-header modal-title">Add Chat Group
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -95,7 +95,7 @@
                   <label for="exampleFormControlSelect2">Group Members</label>
                   
                   
-              <div id="showListGroupMembers"></div>
+                  <div id="showListGroupMembers"></div>
                
                 </div>
 
@@ -126,17 +126,21 @@
      $.ajax({
 
                 type: 'ajax',
-                url: "<?php echo base_url() ?>api/User/showUserListforChat/",
+                url: "<?php echo base_url() ?>api/UserChat/showUserListforChat/",
                 async: false,
                 method:'get',
                 dataType: 'json',
                 success: function(response) {
                     // body...
-                    data=response.data;
+                    data=response.new_chat;
+                    
+
                    var html='<select class="form-control select_group" style="width:100%;" id="group_members" name="group_members[]" multiple="multiple">';
                     for (var i = 0; i < data.length; i++) {
                       html+='<option value="'+data[i].id+'">'+data[i].firstname+' '+data[i].lastname+'</option>';
                     }
+
+
                 html+='</select>';
                     $('#showListGroupMembers').html(html);
                 },
@@ -146,6 +150,8 @@
                         }
              
             });
+
+
          $(".select_group").select2();
       });
     
@@ -278,5 +284,97 @@
 
   }
 
+
+        //edit
+$('#ChatGroupData').on('click', '.item-edit', function(){
+  var id = $(this).attr('data');
+  
+    $('#exampleModalCenter').modal('show');
+    $('#btnSave').html('Update');
+    $('#exampleModalCenter').find('.modal-title').text('Edit Chat Group Details');
+    $('#myformChatGroup').attr('action','<?php echo base_url(); ?>api/ChatGroup/update');
+    $('#exampleModalCenter').find('.modal-title').text('Update Chat Group');
+    $.ajax({
+        type: 'ajax',
+        method: 'get',
+        url: '<?php echo base_url(); ?>api/ChatGroup/row',
+        data:{'id': id},  
+        async: false,
+        dataType: 'json',
+        success: function(response){
+         
+           if(response.status){
+              data=response.data;
+                $('input[name=id]').val(data.group_id);
+                $('input[name=chat_group_name]').val(data.chat_group_name);
+                $('textarea[name=group_description]').val(data.group_description);    
+                var usersNew=showUserList();
+                const idArray =[];
+                if(group_members=response.group_members) {
+                  var html='<select class="form-control select_group" style="width:100%;" id="group_members" name="group_members[]" multiple="multiple">';
+                 
+                    for (var i = 0; i < group_members.length; i++) {
+                      idArray.push(group_members[i].id);
+                    
+                      // for (var i = 0; i < data.length; i++) {
+                       html+='<option selected value="'+group_members[i].id+'">'+group_members[i].firstname+' '+group_members[i].lastname+'</option>';
+                      // }
+
+                    }
+
+                    if(usersNew){
+
+                      for (var i = 0; i < usersNew.length; i++) {
+                         if(!idArray.includes(usersNew[i].id)){
+                             html+='<option value="'+usersNew[i].id+'">'+usersNew[i].firstname+' '+usersNew[i].lastname+'</option>';
+                         }
+                      }
+
+                    }
+
+                     html+='</select>';
+                      $('#showListGroupMembers').html(html);
+                } 
+             
+           }
+
+        },
+          error: function(response){
+               var data =JSON.parse(response.responseText);
+               toastr.error(data.message);
+        }
+    });
+
+     $(".select_group").select2();
+
+});
+
+
+
+
+function showUserList(argument) {
+  // body...
+      $.ajax({
+
+                type: 'ajax',
+                url: "<?php echo base_url() ?>api/UserChat/showUserListforChat/",
+                async: false,
+                method:'get',
+                dataType: 'json',
+                success: function(response) {
+                    // body...
+                    data=response.new_chat;
+              
+                },
+                 error: function(response){
+                       var data =JSON.parse(response.responseText);
+                       toastr.error(data.message);
+                }
+             
+            });
+
+      return data;
+
+}
 
 </script>

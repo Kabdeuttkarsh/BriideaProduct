@@ -1,3 +1,9 @@
+<link href='https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/dropzone.css' type='text/css' rel='stylesheet'>
+
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/dropzone.js' type='text/javascript'></script>
+
+
 <style type="text/css">
     body{
     background-color: #f4f7f6;
@@ -35,7 +41,7 @@
 }
 
 .chat{
-    min-height: 500px;
+    min-height: 100%;
 }
 
 .chat-app .chat-list {
@@ -372,10 +378,10 @@
              else{
                 $('#seen_time').html("Seen :- -");
              }
-             if(id!=null){
-                $('#msg_delete').html('<a tabindex="-1" href="javascript:;" class="item-deleteUserMsg" data="'+id+'">Delete Message</a>');
-                // 
-             }
+             // if(id!=null){
+             //    $('#msg_delete').html('<a tabindex="-1" href="javascript:;" class="item-deleteUserMsg" data="'+id+'">Delete Message</a>');
+             //    // 
+             // }
              
       
           }
@@ -399,16 +405,27 @@
                     if(response.status){
 
                         for (var i = 0; i < delivery_status.length; i++) {
+                            
+                            if(delivery_status[i].is_delivered==1){
 
-                             convertedDate=dateChangeFormat(delivery_status[i].delivery_time);
-                            convertedSeenDate=dateChangeFormat(seen_status[i].seen_time);
-
+                                    convertedDate=dateChangeFormat(delivery_status[i].delivery_time);
+                                 }else{
+                                    convertedDate='-';
+                                 }
+                           
                             delivery_status_html+=delivery_status[i].firstname+' '+ delivery_status[i].lastname+'-'+ convertedDate+'<br>';
 
                         }
 
                             for (var i = 0; i < seen_status.length; i++) {
+
+                                if(seen_status[i].seen_time!=null){
+                                     convertedSeenDate=dateChangeFormat(seen_status[i].seen_time);
+                                 }else{
+                                     convertedSeenDate='-';
+                                 }
                             
+
                             seen_status_html+=seen_status[i].firstname+' '+ seen_status[i].lastname+'-'+ convertedSeenDate+'<br>';
 
                         }
@@ -425,10 +442,10 @@
 
                     }
 
-                        if(id!=null){
-                            $('#msg_delete').html('<a tabindex="-1" href="javascript:;" class="item-deleteUserMsg" data="'+id+'">Delete Message</a>');
-                            // 
-                         }
+                        // if(id!=null){
+                        //     $('#msg_delete').html('<a tabindex="-1" href="javascript:;" class="item-deleteUserMsg" data="'+id+'">Delete Message</a>');
+                        //     // 
+                        //  }
                         
                 },
                   error: function(response){
@@ -520,6 +537,73 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="multifileuploadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header modal-title">Files Upload
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+         
+      </div>
+      <div class="modal-body" id="modal-body">
+
+             <form action="<?php echo base_url('api/UserChat/uploadFilesUserChat'); ?>" class="dropzone" id="MessWithFile">
+                  <input type="hidden" id="receiver_id" name="receiver_id" />
+
+                <input type="hidden" name="firstname" value="" id="firstname" class="form-control" placeholder="Enter text here..."> 
+                
+                <input type="hidden" name="lastname" value="" id="lastname" class="form-control" placeholder="Enter text here..."> 
+
+                  <div class="form-group">
+                   <input type="text" name="new_message_with_files" id="new_message_with_files" class="form-control" placeholder="Enter text here..."/> 
+                 </div>
+             </form> 
+      </div>
+      <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <input type="button" class="btn btn-info" id='uploadfiles' value='Upload Files' >
+   
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="multifileuploadModalGroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+     
+      <div class="modal-header modal-title">Files Upload
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+      </div>
+     
+      <div class="modal-body" id="modal-body">
+
+            <form action="<?php echo base_url('api/ChatGroup_Messages/uploadFilesGroupChat'); ?>" class="dropzone" id="MessWithFileGroupChat">
+                
+                <input type="hidden" id="group_id" name="group_id" />
+
+                <input type="hidden" name="chat_group_name" value="" id="chat_group_name" class="form-control" placeholder="Enter text here..."> 
+                
+                <div class="form-group">
+                   <input type="text" name="new_message_with_files_group" id="new_message_with_files_group" class="form-control" placeholder="Enter text here..."/> 
+                </div>
+
+             </form> 
+      </div>
+
+      <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         <input type="button" class="btn btn-info" id='uploadfilesGroup' value='Upload Files' >
+   
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <div id="contextMenu" class="dropdown clearfix">
     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
@@ -809,7 +893,7 @@ $('#mainDiv').on('click', '.item-OpenGroupChatWindow12', function(){
         dataType: 'json',
         success: function(response){
              appended_cht_messages='';
-           // sendSeenReceiptToSenderForGroupChat(id);
+             // sendSeenReceiptToSenderForGroupChat(id);
             var grp_cht_messages=response.data;
 
              if(grp_cht_messages){
@@ -890,10 +974,10 @@ function showWindow12(firstname,lastname,id,messages,last_online_at) {
                           html+='</div>'+
                      '</div>'+
                        ' <div class="col-lg-6 hidden-sm text-right">'+
-                           ' <a href="javascript:void(0);" class="btn btn-success"><i class="fa fa-camera"></i></a>'+
-                          '  <a href="javascript:void(0);" class="btn btn-primary"><i class="fa fa-image"></i></a>'+
-                           ' <a href="javascript:void(0);" class="btn btn-info"><i class="fa fa-cogs"></i></a>'+
-                         '   <a href="javascript:void(0);" class="btn btn-warning"><i class="fa fa-question"></i></a>'+
+                           // ' <a href="javascript:void(0);" class="btn btn-success"><i class="fa fa-camera"></i></a>'+
+                          '<a href="javascript:;" class="btn btn-primary item-file-upload-user-chat" data="'+id+'" firstname="'+firstname+'" lastname="'+lastname+'"><i class="fa fa-file"></i></a>'+
+                         //   ' <a href="javascript:void(0);" class="btn btn-info"><i class="fa fa-cogs"></i></a>'+
+                         // '   <a href="javascript:void(0);" class="btn btn-warning"><i class="fa fa-question"></i></a>'+
                        ' </div>'+
                   '  </div>'+
               '  </div>';
@@ -941,10 +1025,33 @@ function showWindow12(firstname,lastname,id,messages,last_online_at) {
                                         
                                         html+= '</span>'+
 
-                                  '  </div>'+
-                                  '  <div data="'+messages[i].message_id+'" delivery_time="'+messages[i].delivery_time+'" seen_time="'+messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat" >'+messages[i].message+'</div>'+
+                                  '  </div>';
+
+                                  if(messages[i].message!=null){
+                                    html+='<div data="'+messages[i].message_id+'" delivery_time="'+messages[i].delivery_time+'" seen_time="'+messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat" >'+messages[i].message+'</div>';
+                                  }
+
+
+                                 if(messages[i].message_file!=null){
+
+                                    html+='<div data="'+messages[i].message_id+'" delivery_time="'+messages[i].delivery_time+'" seen_time="'+messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat" >';
+                                   
+                                        if(messages[i].message_file_extension=="gif" ||
+                                           messages[i].message_file_extension=="jpg" || 
+                                           messages[i].message_file_extension=="png")  {
+                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'"><img src="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'"width="50" height="50" /></a>';
+                                        }
+                                        else{
+                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'">'+messages[i].message_file+'</a>';
+                                        }
+                                     
+
+                                    html+'</div>';
+
+                                  }
+                                 
                            
-                               ' </li>';
+                              html+='</li>';
                             
                             }
                     
@@ -954,31 +1061,32 @@ function showWindow12(firstname,lastname,id,messages,last_online_at) {
                                     '<div class="message-data">'+
                                         '<span class="message-data-time">'+changed_dateFormat;
 
-                                         // if (messages[i].is_sent==0) {
-                                         //     html+= ' <i class="fa fa-clock-o fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
-                                         // }
-                                         // else{
-                                        
-                                         
-                                         //  if (messages[i].is_sent==1 && messages[i].is_delivered==1 && messages[i].is_seen==0) {
-                                         //        html+= ' <i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i><i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
-                                         //    }
-                                         //    else if(messages[i].is_seen==1 && messages[i].is_sent==1 && messages[i].is_delivered==1){
-                                         //        html+= ' <i class="fa fa-eye fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
-                                         //    }
-                                         //    else{
-
-                                         //        html+= ' <i class="fa fa-check fa-2xs" aria-hidden="true" style="opacity: 0.25;"></i>';
-
-                                         //    }
-                                         
-                                         // }
-                                         
  
                                         html+='</span>'+
-                                  '  </div>'+
-                                   ' <div class="message my-message">'+messages[i].message+'</div>  '+                                  
-                               ' </li> ';
+                                  '  </div>';
+
+                                    if(messages[i].message!=null){
+                                         html+=' <div class="message my-message">'+messages[i].message+'</div>';    
+                                    }
+                                    
+                                    if(messages[i].message_file!=null){
+                                          html+=' <div class="message my-message">';
+                                             if(messages[i].message_file_extension=="gif" ||
+                                               messages[i].message_file_extension=="jpg" || 
+                                               messages[i].message_file_extension=="png")  {
+                                            
+                                               html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'"><img src="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'" alt="Girl in a jacket" width="50" height="50" /></a>';
+
+                                            }
+                                          
+                                           else{
+                                                  html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'">'+messages[i].message_file+'</a>';
+                                            }
+                                          html+='</div>';    
+
+                                    }
+                                                                
+                                html+='</li> ';
                             
                              }
                      
@@ -986,6 +1094,10 @@ function showWindow12(firstname,lastname,id,messages,last_online_at) {
                           html+=' </ul></div>';
                         
                     }
+
+                  else{
+                    html+='<div class="chat-history" id="chatHistoryMessage"><p style="text-align:center;">No Previous Chat History. Start New Chat</p></div>';
+                  }
 
 
               html+='<div class="form-group">'+
@@ -1034,15 +1146,17 @@ function showGroupChatWindow12(chat_group_name,id,messages) {
                            ' <div class="chat-about">'+
                                 '<p>'+chat_group_name+'</p>'+
                               
-                               ' <small>Last seen: 2 hours ago</small>'+
+                               // ' <small>Last seen: 2 hours ago</small>'+
                           '  </div>'+
                      '</div>'+
-                       ' <div class="col-lg-6 hidden-sm text-right">'+
-                           ' <a href="javascript:void(0);" class="btn btn-success"><i class="fa fa-camera"></i></a>'+
-                          '  <a href="javascript:void(0);" class="btn btn-primary"><i class="fa fa-image"></i></a>'+
-                           ' <a href="javascript:void(0);" class="btn btn-info"><i class="fa fa-cogs"></i></a>'+
-                         '   <a href="javascript:void(0);" class="btn btn-warning"><i class="fa fa-question"></i></a>'+
-                       ' </div>'+
+
+                     '<div class="col-lg-6 hidden-sm text-right">'+
+                           // ' <a href="javascript:void(0);" class="btn btn-success"><i class="fa fa-camera"></i></a>'+
+                          '<a href="javascript:void(0);" class="btn btn-primary item-file-upload-group-chat" data="'+id+'" chat_group_name="'+chat_group_name+'"><i class="fa fa-file"></i></a>'+
+                         //   ' <a href="javascript:void(0);" class="btn btn-info"><i class="fa fa-cogs"></i></a>'+
+                         // '   <a href="javascript:void(0);" class="btn btn-warning"><i class="fa fa-question"></i></a>'+
+                     '</div>'+
+
                   '  </div>'+
               '  </div>';
             
@@ -1063,14 +1177,38 @@ function showGroupChatWindow12(chat_group_name,id,messages) {
 
                           if(messages[i].group_message_sender_id==<?php echo $this->session->userdata('id')?>)  {
                             
-                            
-                            html+= '<li class="clearfix">'+
+                            html+='<li class="clearfix">'+
+                                   
                                     '<div class="message-data text-right">'+
                                         '<span class="message-data-time">'+messages[i].firstname+' '+messages[i].lastname+'-'+changed_dateFormat+'</span>'+
+                                    '</div>';
+
+                                 if(messages[i].group_message!=null){
+                                   
+                                   html+='<div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+messages[i].group_messages_id+'">'+messages[i].group_message+'</div>';
+                                  }
+
+                                 if(messages[i].group_message_file!=null){
+
+                                    html+='<div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+messages[i].group_messages_id+'">';
+                                   
+                                        if(messages[i].group_message_extension=="gif" ||
+                                           messages[i].group_message_extension=="jpg" || 
+                                           messages[i].group_message_extension=="png")  {
+                                          
+                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'"><img src="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'"width="50" height="50" /></a>';
+                                        }
+                                        else{
+                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'">'+messages[i].group_message_file+'</a>';
+                                        }
                                      
-                                  '  </div>'+
-                                  '  <div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+messages[i].group_messages_id+'">'+messages[i].group_message+'</div>'+
-                               ' </li>';
+
+                                    html+'</div>';
+
+                                  }
+                                
+
+                               html+=' </li>';
                             
                             }
                     
@@ -1079,9 +1217,33 @@ function showGroupChatWindow12(chat_group_name,id,messages) {
                               html+=' <li class="clearfix">'+
                                     '<div class="message-data">'+
                                           '<span class="message-data-time">'+messages[i].firstname+' '+messages[i].lastname+'-'+changed_dateFormat+'</span>'+
-                                  '  </div>'+
-                                   ' <div class="message my-message">'+messages[i].group_message+'</div>  '+                                  
-                               ' </li> ';
+                                  '  </div>';
+                                
+                                  if(messages[i].group_message!=null){
+                                  
+                                   html+=' <div class="message my-message">'+messages[i].group_message+'</div>  ';
+                                  }
+
+                                  if(messages[i].group_message_file!=null){
+                                          html+=' <div class="message my-message">';
+                                             if(messages[i].group_message_extension=="gif" ||
+                                               messages[i].group_message_extension=="jpg" || 
+                                               messages[i].group_message_extension=="png")  {
+                                            
+                                               html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'"><img src="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'" width="50" height="50" /></a>';
+
+                                            }
+                                          
+                                           else{
+                                                  html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'">'+messages[i].group_message_file+'</a>';
+                                            }
+
+                                          html+='</div>';    
+
+                                    }
+
+
+                               html+=' </li> ';
                             
                              }
 
@@ -1090,6 +1252,11 @@ function showGroupChatWindow12(chat_group_name,id,messages) {
                           html+=' </ul></div>';
                         
                     }
+
+
+                  else{
+                    html+='<div class="chat-history" id="chatHistoryMessage"><p style="text-align:center;">No Previous Chat History. Start New Chat</p></div>';
+                  }
 
 
               html+='<div class="form-group">'+
@@ -1205,8 +1372,6 @@ $('#mainDiv').on('click', '.btnGroupSendMessageNew', function(){
 
                     if (response.status) {
                        var message_row=response.data;
-
-                       //var grp_members=response.grp_members;
 
                        var typeData = {broadType : Broadcast.POST, chatType:"GroupChat", data : message_row, grp_id:grp_id,chat_group_name:chat_group_name};
 
@@ -1454,7 +1619,6 @@ $('#mainDiv').on('click', '.load-previous-user-messages', function(){
             
             // }
 
-            
             chat_messages_length=Number(chat_messages_length)+50;
 
         
@@ -1494,10 +1658,35 @@ $('#mainDiv').on('click', '.load-previous-user-messages', function(){
                                         
                                         html+= '</span>'+
 
-                                  '  </div>'+
-                                  '  <div data="'+cht_messages[i].message_id+'" delivery_time="'+cht_messages[i].delivery_time+'" seen_time="'+cht_messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat" >'+cht_messages[i].message+'</div>'+
+                                  '  </div>';
+
+                                  
+                             if(cht_messages[i].message!=null){
+
+                                    html+='<div data="'+cht_messages[i].message_id+'" delivery_time="'+cht_messages[i].delivery_time+'" seen_time="'+cht_messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat" >'+cht_messages[i].message+'</div>';
+                                  }
+
+
+                                 if(cht_messages[i].message_file!=null){
+
+                                    html+='<div data="'+cht_messages[i].message_id+'" delivery_time="'+cht_messages[i].delivery_time+'" seen_time="'+cht_messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat" >';
+                                   
+                                        if(cht_messages[i].message_file_extension=="gif" ||
+                                           cht_messages[i].message_file_extension=="jpg" || 
+                                           cht_messages[i].message_file_extension=="png")  {
+                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'"><img src="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'"width="50" height="50" /></a>';
+                                        }
+                                        else{
+                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'">'+cht_messages[i].message_file+'</a>'
+                                        }
+                                     
+
+                                    html+='</div>';
+
+                                  }
+
                            
-                               ' </li>';
+                               html+= ' </li>';
                             
                             }
                     
@@ -1508,9 +1697,32 @@ $('#mainDiv').on('click', '.load-previous-user-messages', function(){
                                         '<span class="message-data-time">'+changed_dateFormat+'</span>';
 
                                         html+='</span>'+
-                                  '  </div>'+
-                                   ' <div class="message my-message">'+cht_messages[i].message+'</div>  '+                                  
-                               ' </li> ';
+                                  '  </div>';
+
+                                  
+                                    if(cht_messages[i].message!=null){
+                                         html+=' <div class="message my-message">'+cht_messages[i].message+'</div>';    
+                                    }
+                                    
+                                    if(cht_messages[i].message_file!=null){
+                                          html+=' <div class="message my-message">';
+                                             if(cht_messages[i].message_file_extension=="gif" ||
+                                               cht_messages[i].message_file_extension=="jpg" || 
+                                               cht_messages[i].message_file_extension=="png")  {
+                                            
+                                               html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'"><img src="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'" alt="Girl in a jacket" width="50" height="50" /></a>';
+
+                                            }
+                                          
+                                           else{
+                                                  html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'">'+cht_messages[i].message_file+'</a>'
+                                            }
+                                          html+='</div>';    
+
+                                    }
+
+
+                               html+= ' </li> ';
                             
                              }
                      
@@ -1538,7 +1750,7 @@ $('#mainDiv').on('click', '.load-previous-user-messages', function(){
 
 $('#mainDiv').on('click', '.load-previous-group-messages', function(){
 
-    var id = $(this).attr('data');
+   var id = $(this).attr('data');
    $.ajax({
         type: 'ajax',
         method: 'get',
@@ -1571,17 +1783,41 @@ $('#mainDiv').on('click', '.load-previous-group-messages', function(){
             
 
              if(grp_cht_messages[i].group_message_sender_id==<?php echo $this->session->userdata('id')?>)  {
-                            
-                            
+                           
                             html+= '<li class="clearfix">'+
                                     '<div class="message-data text-right">'+
                                         '<span class="message-data-time">'+grp_cht_messages[i].firstname+' '+grp_cht_messages[i].lastname+'-'+convertedDate+'</span>'+
 
                                       
                                      
-                                  '  </div>'+
-                                  '  <div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+grp_cht_messages[i].group_messages_id+'">'+grp_cht_messages[i].group_message+'</div>'+
-                               ' </li>';
+                                  '</div>';
+
+                                if(grp_cht_messages[i].group_message!=null){
+                                   
+                                   html+='<div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+grp_cht_messages[i].group_messages_id+'">'+grp_cht_messages[i].group_message+'</div>';
+                                  }
+
+                                 if(grp_cht_messages[i].group_message_file!=null){
+
+                                    html+='<div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+grp_cht_messages[i].group_messages_id+'">';
+                                   
+                                        if(grp_cht_messages[i].group_message_extension=="gif" ||
+                                           grp_cht_messages[i].group_message_extension=="jpg" || 
+                                           grp_cht_messages[i].group_message_extension=="png")  {
+                                          
+                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'"><img src="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'"width="50" height="50" /></a>';
+                                        }
+                                        else{
+                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'">'+grp_cht_messages[i].group_message_file+'</a>';
+                                        }
+                                     
+
+                                    html+'</div>';
+
+                                  }
+
+                              html+=  '</li>';
+
                             
                             }
                     
@@ -1590,9 +1826,34 @@ $('#mainDiv').on('click', '.load-previous-group-messages', function(){
                               html+=' <li class="clearfix">'+
                                     '<div class="message-data">'+
                                         '<span class="message-data-time">'+grp_cht_messages[i].firstname+' '+grp_cht_messages[i].lastname+'-'+convertedDate+'</span>'+
-                                  '  </div>'+
-                                   ' <div class="message my-message">'+grp_cht_messages[i].group_message+'</div>  '+                                  
-                               ' </li> ';
+                                  '  </div>';
+
+
+                                  if(grp_cht_messages[i].group_message!=null){
+                                  
+                                   html+=' <div class="message my-message">'+grp_cht_messages[i].group_message+'</div>  ';
+                                  }
+
+                                  if(grp_cht_messages[i].group_message_file!=null){
+                                          html+=' <div class="message my-message">';
+                                             if(grp_cht_messages[i].group_message_extension=="gif" ||
+                                               grp_cht_messages[i].group_message_extension=="jpg" || 
+                                               grp_cht_messages[i].group_message_extension=="png")  {
+                                            
+                                               html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'"><img src="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'" width="50" height="50" /></a>';
+
+                                            }
+                                          
+                                           else{
+                                                  html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'">'+grp_cht_messages[i].group_message_file+'</a>';
+                                            }
+
+                                          html+='</div>';    
+
+                                    }
+
+
+                             html+=   ' </li> ';
                             
                              }
 
@@ -1743,6 +2004,279 @@ function dateChangeFormat(date_time) {
 
 
     });
+
+
+$('#mainDiv').on('click', '.item-file-upload-user-chat', function(){
+    
+    $('#MessWithFile')[0].reset();
+   
+    var id = $(this).attr('data');
+    var firstname = $(this).attr('firstname');
+    var lastname = $(this).attr('lastname');
+  
+    $('#multifileuploadModal').modal('show');
+    $('input[name=receiver_id]').val(id);
+    $('input[name=firstname]').val(firstname);
+    $('input[name=lastname]').val(lastname);
+
+});
+
+$('#mainDiv').on('click', '.item-file-upload-group-chat', function(){
+    
+    $('#MessWithFileGroupChat')[0].reset();
+
+    var id = $(this).attr('data');
+    var chat_group_name = $(this).attr('chat_group_name');
+    
+    $('#multifileuploadModalGroup').modal('show');
+    $('input[name=group_id]').val(id);
+    $('input[name=chat_group_name]').val(chat_group_name);
+ 
+});
+
+</script>
+
+
+<script type="text/javascript">
+    
+   Dropzone.autoDiscover = false;
+   var myDropzone = new Dropzone(".dropzone", { 
+
+   autoProcessQueue: false,
+   parallelUploads: 30,
+   
+   init: function () {
+
+           this.on('success', function(file,resp){
+
+            var receiver_id=$('input[name=receiver_id]').val();
+            var typed_message=$('input[name=new_message_with_files]').val();
+            var firstnameSend=$('input[name=firstname]').val();
+            var lastnameSend=$('input[name=lastname]').val();
+
+           
+            var message_row=resp.data;
+            var is_receiver_online=resp.is_receiver_online;
+
+            var typeData = {broadType : Broadcast.POST, chatType:"OneToOneChat",data : message_row, receiver_id:receiver_id,firstnameSend:firstnameSend,lastnameSend:lastnameSend,cht_messages:'',sender_first_name:message_row.sender_first_name,sender_last_name:message_row.sender_last_name,is_receiver_online:is_receiver_online};
+
+            conn.sendMsg(typeData); 
+        });
+
+        
+    this.on("complete", function (file) {
+
+      if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+
+             myDropzone.removeAllFiles( true );
+
+            var receiver_id=$('input[name=receiver_id]').val();
+            var typed_message=$('input[name=new_message_with_files]').val();
+            var firstnameSend=$('input[name=firstname]').val();
+            var lastnameSend=$('input[name=lastname]').val();
+
+            $.ajax({
+
+                type: 'ajax',
+                method:'post',
+                url: '<?php echo base_url();?>api/UserChat/sendUserMessage',
+                data: {'typed_message':typed_message,'receiver_id':receiver_id},
+                async: false,
+                dataType: 'json',
+                success: function(response){
+
+                        if (response.status) {
+
+
+                          // $('#MessWithFile')[0].reset();
+                           $('#multifileuploadModal').modal('hide');
+                           var message_row=response.data;
+                           var sender_id_n=response.sender_id_n;
+                           var is_receiver_online=response.is_receiver_online;
+                           
+                           var typeData = {broadType : Broadcast.POST, chatType:"OneToOneChat",data : message_row, receiver_id:receiver_id,firstnameSend:firstnameSend,lastnameSend:lastnameSend,cht_messages:'',sender_first_name:message_row.sender_first_name,sender_last_name:message_row.sender_last_name,is_receiver_online:is_receiver_online};
+
+                           conn.sendMsg(typeData);
+                         
+
+                        }
+                        else{
+                           toastr.error(response.message);
+                        }
+                        
+                     
+                },
+
+              error: function(response){
+                       // var data =JSON.parse(response.responseText);
+                       // toastr.error(data.message);
+                }
+
+            });
+
+      }
+
+    //  $('#MessWithFile')[0].reset();
+    });
+  }
+
+});
+
+$('#uploadfiles').click(function(){
+      
+   myDropzone.processQueue();
+});
+
+
+   var myDropzone1 = new Dropzone("#MessWithFileGroupChat", { 
+
+   autoProcessQueue: false,
+   parallelUploads: 30,
+   
+   init: function () {
+
+        this.on('success', function(file,resp){
+
+            var group_id=$('input[name=group_id]').val();
+            var new_message_with_files_group=$('input[name=new_message_with_files_group]').val();
+            var chat_group_name=$('input[name=chat_group_name]').val();
+         
+            var message_row=resp.data;
+            
+            var typeData = {broadType : Broadcast.POST, chatType:"GroupChat", data : message_row, grp_id:group_id,chat_group_name:chat_group_name};
+
+            conn.sendMsg(typeData);
+        });
+
+        
+    this.on("complete", function (file) {
+
+      if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+           
+            myDropzone1.removeAllFiles( true );
+          
+            var group_id=$('input[name=group_id]').val();
+            var new_message_with_files_group=$('input[name=new_message_with_files_group]').val();
+            var chat_group_name=$('input[name=chat_group_name]').val();
+            
+           $.ajax({
+            type: 'ajax',
+            method:'post',
+            url: '<?php echo base_url();?>api/ChatGroup_Messages/sendGroupMessage',
+            data: {'typed_grp_message':new_message_with_files_group,'grp_id':group_id},
+            async: false,
+            dataType: 'json',
+            success: function(response){
+
+                    if (response.status) {
+                       var message_row=response.data;
+                        $('#multifileuploadModalGroup').modal('hide');
+                       //var grp_members=response.grp_members;
+
+                       var typeData = {broadType : Broadcast.POST, chatType:"GroupChat", data : message_row, grp_id:group_id,chat_group_name:chat_group_name};
+
+                         conn.sendMsg(typeData);
+                   
+
+                    }
+                    else{
+                       toastr.error(response.message);
+                    }
+                    
+                 
+            },
+
+          error: function(response){
+                   // var data =JSON.parse(response.responseText);
+                   // toastr.error(data.message);
+            }
+
+         });
+
+
+      }
+
+    });
+  }
+
+});
+
+$('#uploadfilesGroup').click(function(){
+     myDropzone1.processQueue();
+});
+
+</script>
+
+<script type="text/javascript">
+
+var loginche="<?php echo $this->session->userdata('LoginAfterLogout')?>";
+if (loginche) {
+  checkForNewUserMessages();
+  checkForNewGroupMessages();
+}
+  function checkForNewUserMessages(){
+         $.ajax({
+        type: 'ajax',
+        method: 'get',
+        url: '<?php echo base_url(); ?>api/UserChat/checkForNewUserMessages',
+        async: false,
+        dataType: 'json',
+        success: function(response){
+        
+            var html="";
+             
+            if(response.status){
+
+               toastr.info('You have new One To One Messages. Please Check it.');
+
+
+            }
+
+            else{
+    
+            }
+           
+        },
+          error: function(response){
+       
+               // var data =JSON.parse(response.responseText);
+               // toastr.error(data.message);
+        }
+    });
+
+  }
+
+
+  function checkForNewGroupMessages(){
+         $.ajax({
+        type: 'ajax',
+        method: 'get',
+        url: '<?php echo base_url(); ?>api/ChatGroup_Messages/checkForNewGroupMessages',
+        async: false,
+        dataType: 'json',
+        success: function(response){
+        
+            var html="";
+             
+            if(response.status){
+
+               toastr.info('You have new Group Messages. Please Check it.');
+            }
+
+            else{
+    
+            }
+           
+        },
+          error: function(response){
+       
+               // var data =JSON.parse(response.responseText);
+               // toastr.error(data.message);
+        }
+    });
+
+  }
+
 
 
 </script>

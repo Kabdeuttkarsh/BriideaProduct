@@ -46,6 +46,12 @@ class Dashboard extends Admin_Controller
 
 
 		$this->data['page_title'] = 'Dashboard';
+		$data=$this->Crud_model->count_all_entries();
+		
+		foreach ($data as $key => $value) {
+			$this->data[$key]=$value;
+		}
+		
 		$this->render_template('dashboard', $this->data);
 		// code...
 		

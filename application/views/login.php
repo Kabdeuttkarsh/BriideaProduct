@@ -33,13 +33,17 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="icon">
-    <i class="ionicons ion-android-people"></i>
+    <img style="width: auto;height: 100px;" src="<?php echo base_url('uploads/temp_logo_bg.png');?>">
+    <!-- <i class="ionicons ion-android-people"></i> -->
   </div>
   <div class="login-logo">
-    <a href="#">Briidea Innoventures LLP <br><b> Real Time Chat System </b></a>
+    <a href="https://briidea.in/" target="_BLANK" style="font-size: 20px;">Product By Briidea Innoventures LLP <br>
+      <!-- <b>Ensure Chat</b> -->
+    </a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
+
     <p class="login-box-msg">Please login to start </p>
 
     <?php echo validation_errors(); ?>  
@@ -68,9 +72,11 @@
         <!-- /.col -->
         <div class="col-xs-4">
           <button type="button" id="btnLogin" class="btn btn-success btn-block btn-flat">Log In</button>
+         
         </div>
         <!-- /.col -->
       </div>
+       <a href="javascript:;" class="item-forgetPassword">Forget Password ?</a>
     </form>
 
   </div>
@@ -79,6 +85,30 @@
 <!-- /.login-box -->
 
 <!-- jQuery 3 -->
+
+
+<div class="modal fade" id="ForgetPasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header modal-title">Forget Password 
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+         
+      </div>
+      <div class="modal-body" id="modal-body">
+          <label for="phone">Phone</label>
+            <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" autocomplete="off">
+        
+
+      </div>
+      <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Send OTP</button>
+       
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <style>
   .icon {
@@ -130,7 +160,7 @@ else{
         success: function(response){
             if(response.status){
               toastr.success(response.message);
-              window.location.replace("<?php echo base_url('Dashboard'); ?>");
+              window.location.replace("<?php echo base_url('ChatGroups/newWindowGroup'); ?>");
           
             }
         },
@@ -144,6 +174,16 @@ else{
 
 </script>
 
+
+<script type="text/javascript">
+  $('#LoginForm').on('click', '.item-forgetPassword', function(){
+      $('#ForgetPasswordModal').modal('show');
+
+
+  });
+
+
+</script>
 
 </body>
 </html>

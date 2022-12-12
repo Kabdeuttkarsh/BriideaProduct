@@ -26,14 +26,14 @@
             <!-- small box -->
             <div class="small-box bg-yellow">
               <div class="inner">
-                <h3>10</h3>
+                <h3><?php echo $users_count;?></h3>
 
                 <p>System Users</p>
               </div>
               <div class="icon">
                 <i class="ion ion-android-people"></i>
               </div>
-              <a href="<?php echo base_url('users/') ?>" class="small-box-footer">More Info <i class="fa fa-arrow-circle-right"></i></a>
+              <a href="<?php echo base_url('User/') ?>" class="small-box-footer">More Info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -41,16 +41,48 @@
             <!-- small box -->
             <div class="small-box bg-purple">
               <div class="inner">
-                <h3>5</h3>
+                <h3><?php echo $company_count;?></h3>
 
-                <p>Available Companies</p>
+                <p>Available Branches</p>
               </div>
               <div class="icon">
                 <i class="ion ion-android-home"></i>
               </div>
-              <a href="<?php echo base_url('stores/') ?>" class="small-box-footer">More Info <i class="fa fa-arrow-circle-right"></i></a>
+              <a href="<?php echo base_url('Companies/') ?>" class="small-box-footer">More Info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
           </div>
+
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+              <div class="inner">
+                <h3><?php echo $designation_count;?></h3>
+
+                <p>Available Designations</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-android-people"></i>
+              </div>
+              <a href="<?php echo base_url('Designations/') ?>" class="small-box-footer">More Info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
+
+           <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-blue">
+              <div class="inner">
+                <h3><?php echo $chat_groups_count;?></h3>
+
+                <p>Available Chat Groups</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-android-people"></i>
+              </div>
+              <a href="<?php echo base_url('ChatGroups/') ?>" class="small-box-footer">More Info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+
           <!-- ./col -->
         </div>
         <!-- /.row -->
@@ -62,6 +94,7 @@
   </div>
   <!-- /.content-wrapper -->
 
+
   <script type="text/javascript">
     $(document).ready(function() {
       $("#dashboardMainMenu").addClass('active');
@@ -70,7 +103,8 @@
 
 <script type="text/javascript">
 
-if (<?php echo $this->session->userdata('LoginAfterLogout')?>) {
+var loginche="<?php echo $this->session->userdata('LoginAfterLogout')?>";
+if (loginche) {
   checkForNewUserMessages();
   checkForNewGroupMessages();
 }

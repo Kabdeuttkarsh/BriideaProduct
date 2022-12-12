@@ -4,7 +4,69 @@
 </div>
 
  -->
- 
+
+ <select id="voices" class="form-select bg-secondary text-light" hidden></select>
+ <script type="text/javascript">
+     let speech = new SpeechSynthesisUtterance();
+     // let speech = new SpeechSynthesisUtterance();
+     speech.lang = "en";
+      speech.rate = 1;
+     speech.volume = 1;
+     speech.pitch = 1;
+  
+  let voices = [];
+  window.speechSynthesis.onvoiceschanged = () => {
+      voices = window.speechSynthesis.getVoices();
+       speech.voice = voices[0];
+       let voiceSelect = document.querySelector("#voices");
+       voices.forEach((voice, i) => (voiceSelect.options[i] = new Option(voice.name, i)));
+        speech.voice = voices[10];
+
+ };
+
+    // document.querySelector("#rate").addEventListener("input", () => {
+    //   const rate = document.querySelector("#rate").value;
+    //   speech.rate = rate;
+    //   document.querySelector("#rate-label").innerHTML = rate;
+    // });
+
+    // document.querySelector("#volume").addEventListener("input", () => {
+    //   const volume = document.querySelector("#volume").value;
+    //   speech.volume = volume;
+    //   document.querySelector("#volume-label").innerHTML = volume;
+    // });
+
+    // document.querySelector("#pitch").addEventListener("input", () => {
+    //   const pitch = document.querySelector("#pitch").value;
+    //   speech.pitch = pitch;
+    //   document.querySelector("#pitch-label").innerHTML = pitch;
+    // });
+
+    // document.querySelector("#voices").addEventListener("change", () => {
+    //   speech.voice = voices[document.querySelector("#voices").value];
+
+    //   // alert(document.querySelector("#voices").value);
+    // });
+
+    // document.querySelector("#start").addEventListener("click", () => {
+    //   speech.text = document.querySelector("textarea").value;
+    //   window.speechSynthesis.speak(speech);
+    // });
+
+    // document.querySelector("#pause").addEventListener("click", () => {
+    //   window.speechSynthesis.pause();
+    // });
+
+    // document.querySelector("#resume").addEventListener("click", () => {
+    //   window.speechSynthesis.resume();
+    // });
+
+    // document.querySelector("#cancel").addEventListener("click", () => {
+    //   window.speechSynthesis.cancel();
+    // });
+ </script>
+
+
 <script type="text/javascript">
     function sendDeliveryReceiptToSenderForGroup(message_id,user_id,grp_id) {
 
@@ -162,6 +224,9 @@
 
                           // $('#showNewMsgDiv_'+data.data.sender_message_id).html('<i class="fa fa-circle offline"> New</i>');
 
+                            speech.text = 'You have new Message from '+data.sender_first_name+' ' +data.sender_last_name;
+                           window.speechSynthesis.speak(speech);
+
                             toastr.info('You have new Message from '+data.sender_first_name+' ' +data.sender_last_name);
                         }
                              
@@ -169,6 +234,10 @@
 
                     else{
                         // $('#showNewMsgDiv_'+data.data.sender_message_id).html('<i class="fa fa-circle offline"> New</i>');
+
+
+                            speech.text = 'You have new Message from '+data.sender_first_name+' ' +data.sender_last_name;
+                           window.speechSynthesis.speak(speech);
                         
                            toastr.info('You have new Message from '+data.sender_first_name+' ' +data.sender_last_name);
                         }
@@ -227,12 +296,18 @@
                         }
                         else{
                           
+
+                            speech.text = 'You have new Message from Group '+data.chat_group_name;
+                           window.speechSynthesis.speak(speech);
                            toastr.info('You have new Message from '+data.chat_group_name);
                         }
                      
                     }
                     
                     else{
+
+                         speech.text = 'You have new Message from Group '+data.chat_group_name;
+                           window.speechSynthesis.speak(speech);
                        
                            toastr.info('You have new Message from '+data.chat_group_name);
                     }
@@ -260,6 +335,18 @@
 </script>
 
 <script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/63930414daff0e1306dbb942/1gjr4fsek';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+
+<script type="text/javascript">
   
 var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
 </script>
@@ -268,8 +355,8 @@ var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT)
     <div class="pull-right hidden-xs">
       <b>Version</b> 1.1.0
     </div>
-    <strong>&copy; 2021 - <?php echo date('Y'); ?> |</strong> All rights
-    reserved and Developed by <a href="" target="_BLANK">Uttkarsh Kabde</a>
+    <strong>&copy; 2022 |</strong> All rights
+    reserved and Developed by <a href="https://briidea.in/" target="_BLANK">Briidea Innoventures LLP</a>
   </footer>
 
   <!-- Add the sidebar's background. This div must be placed

@@ -139,47 +139,7 @@
                     
                     </tbody>
                   </table>
-                 
-                  <label for="permission">Chat Permissions</label>
-                  
-                  <table class="table table-responsive table-hover">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>Send</th>
-                        <th>Edit</th>
-                        <th>View</th>
-                        <th>Delete</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-
-                       <tr>
-                        <td>One to One</td>
-                        <td><input type="checkbox" name="permission[]" id="permission" value="createOnetoOneChat"class="type_checkbox"></td>
-                        <td><input type="checkbox" name="permission[]" id="permission" value="updateOnetoOneChat"class="type_checkbox"></td>
-                        <td><input type="checkbox" name="permission[]" id="permission" value="viewOnetoOneChat"class="type_checkbox"></td>
-                        <td><input type="checkbox" name="permission[]" id="permission" value="deleteOnetoOneChat"class="type_checkbox"></td>
-                      </tr>
-
-                      <tr>
-                        <td>Group</td>
-                        <td><input type="checkbox" name="permission[]" id="permission" value="createGroupChat"class="type_checkbox"></td>
-                        <td><input type="checkbox" name="permission[]" id="permission" value="updateGroupChat"class="type_checkbox"></td>
-                        <td><input type="checkbox" name="permission[]" id="permission" value="viewGroupChat"class="type_checkbox"></td>
-                        <td><input type="checkbox" name="permission[]" id="permission" value="deleteGroupChat"class="type_checkbox"></td>
-                      </tr>
-
-                      <tr>
-                        <td>BroadCast</td>
-                        <td><input type="checkbox" name="permission[]" id="permission" value="createBroadCastChat"class="type_checkbox"></td>
-                        <td><input type="checkbox" name="permission[]" id="permission" value="updateBroadCastChat"class="type_checkbox"></td>
-                        <td><input type="checkbox" name="permission[]" id="permission" value="viewBroadCastChat"class="type_checkbox"></td>
-                        <td><input type="checkbox" name="permission[]" id="permission" value="deleteBroadCastChat"class="type_checkbox"></td>
-                      </tr>
-
-                    </tbody>
-                  </table>
+                
                 </div>
 
 
@@ -263,18 +223,18 @@ var user_permission = <?php echo json_encode($user_permission); ?>;
              
                       html+='<td>';
                       
-                      if(jQuery.inArray("updateDesignation", user_permission) ) {
+                   <?php if(in_array('updateDesignation', $user_permission)){ ?>
 
                         
                          html+='<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].id+'" style="margin:10px;"><i class="fa fa-edit"></i></a>';
                       
-                      }
+                 <?php  } ?>
                     
-                       if(jQuery.inArray("deleteDesignation", user_permission) ) {
+                     <?php if(in_array('deleteDesignation', $user_permission)){ ?>
 
                          html+='<a href="javascript:;" class="btn btn-danger item-delete" data="'+data[i].id+'"><i class="fa fa-trash"></i></a>';
                             
-                       }
+                           <?php  } ?>
 
                        html+='</td></tr>';
 
