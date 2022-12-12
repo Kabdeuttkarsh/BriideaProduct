@@ -20,8 +20,6 @@ class Crud_model extends CI_Model
 
             $sql_last_mes_row = $this->db->query("SELECT * FROM messages WHERE message_id=$value->message_id AND is_deleted=0");
             $message_info=$sql_last_mes_row->row();
-
-
      
             $value->message_id=$message_info->message_id;
             $value->message=$message_info->message;
@@ -33,10 +31,11 @@ class Crud_model extends CI_Model
             $value->sender_message_id=$message_info->sender_message_id; 
             $value->receiver_message_id=$message_info->receiver_message_id; 
 
-                $sql_sender_row = $this->db->query("SELECT id,username,firstname,lastname,is_online FROM users WHERE id=$value->sender_message_id");
+                $sql_sender_row = $this->db->query("SELECT id,company_id,username,firstname,lastname,is_online FROM users WHERE id=$value->sender_message_id");
                 $sender_info=$sql_sender_row->row();
                 
-                $sql_receiver_row = $this->db->query("SELECT id,username,firstname,lastname,is_online FROM users WHERE id=$value->receiver_message_id");
+                $sql_receiver_row = $this->db->query("SELECT id,company_id,username,firstname,lastname,is_online FROM users WHERE id=$value->receiver_message_id");
+
                 $receiver_info=$sql_receiver_row->row();
 
                 if($value->sender_message_id!=$user_id){
@@ -45,6 +44,7 @@ class Crud_model extends CI_Model
                     $value->firstname=$sender_info->firstname;
                     $value->lastname=$sender_info->lastname;
                     $value->is_online=$sender_info->is_online;
+                    $value->company_id=$sender_info->company_id;
 
                 }
                 else{
@@ -52,7 +52,7 @@ class Crud_model extends CI_Model
                     $value->id=$value->receiver_message_id;
                     $value->firstname=$receiver_info->firstname;
                     $value->lastname=$receiver_info->lastname;
-                    $value->is_online=$receiver_info->is_online;
+                    $value->company_id=$receiver_info->company_id;
                 }
 
                 if(!in_array($value->id,$ids)){
@@ -63,12 +63,31 @@ class Crud_model extends CI_Model
 
 
             $sql_count_unseen_msg = $this->db->query("SELECT count(*) AS unseen_msgs FROM messages WHERE receiver_message_id=$user_id AND sender_message_id=$value->id AND is_deleted=0 AND is_delivered=1 AND is_seen=0");
+
             $count_unseenmessage_info=$sql_count_unseen_msg->row();
            
             if($count_unseenmessage_info){
                 $value->count_unseenmessage_info=$count_unseenmessage_info->unseen_msgs;
             }else{
                 $value->count_unseenmessage_info=0;
+            }
+
+            $sql_company_info = $this->db->query("SELECT * FROM company WHERE id= $value->company_id");
+
+            $company_info=$sql_company_info->row();
+
+            if($company_info){
+                $value->company_name=$company_info->company_name;
+                $value->address=$company_info->address;
+            }
+
+            $sql_designation_info = $this->db->query("SELECT user_group.*,designations.id,designations.designation_name FROM user_group JOIN designations ON designations.id = user_group.group_id WHERE user_id= $value->id ");
+
+            $designation_info=$sql_designation_info->row();
+
+            if($designation_info){
+                $value->designation_name=$designation_info->designation_name;
+               
             }
 
         
@@ -147,8 +166,8 @@ class Crud_model extends CI_Model
 
 
 
-	 
-	function getRows($table,$params = array(),$record){
+     
+    function getRows($table,$params = array(),$record){
 
       $this->db->from($table);
       //fetch data by conditions
@@ -158,36 +177,36 @@ class Crud_model extends CI_Model
           }
       }
     
-	    $data=$this->db->get();
-	    if ($data->num_rows()>0) {
-	    	
-	    	if ($record=='row') {
-	    		# code...
-	    		return $data->row();
-	    	}
-	    	else{
-	    		return $data->result();
-	    	}
-	        
-	    }
-	    else
-	    {
-	      return false;
-	    }
+        $data=$this->db->get();
+        if ($data->num_rows()>0) {
+            
+            if ($record=='row') {
+                # code...
+                return $data->row();
+            }
+            else{
+                return $data->result();
+            }
+            
+        }
+        else
+        {
+          return false;
+        }
   
   }
 
-	public function insert($table,$data = array()){
+    public function insert($table,$data = array()){
     $this->db->insert($table, $data);
-	    if ($this->db->affected_rows() >0) {
-	    # code...
-	      return $this->db->insert_id();
-	    }
-	    else{
+        if ($this->db->affected_rows() >0) {
+        # code...
+          return $this->db->insert_id();
+        }
+        else{
 
-	     return false;
+         return false;
 
-	    }
+        }
 
   }
 

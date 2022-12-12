@@ -73,8 +73,6 @@
     border-radius: 50%
 }
 
-
-
 .chat-app .chat-list1 {
     height: 150px;  
     overflow-x: auto;
@@ -676,7 +674,7 @@ showGroupListforChat();
                             
                              '<img src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"  style="width:25px; height:25px;">'+
                                 '<div class="about">'+
-                                '<div class="name"> '+data[i].firstname+' '+data[i].lastname;
+                                '<div class="name">'+data[i].firstname+' '+data[i].lastname+'<br><p class="offline" style="color:blue; font-size:10px;">'+data[i].designation_name+' - '+data[i].address+'</p>';
                         
                             if(data[i].count_unseenmessage_info>0){
                             
@@ -702,7 +700,7 @@ showGroupListforChat();
                                 
                                  '<img src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"  style="width:25px; height:25px;">'+
                                     '<div class="about">'+
-                                    '<div class="name"> '+new_chat[j].firstname+' '+new_chat[j].lastname;
+                                    '<div class="name">'+new_chat[j].firstname+' '+new_chat[j].lastname+'<br><p class="offline" style="color:blue; font-size:10px;">'+new_chat[j].designation_name+' - '+new_chat[j].address+'</p>';
                      
                                      html2+='</div>'+
                                   '</li></a>';
