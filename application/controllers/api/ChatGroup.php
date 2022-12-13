@@ -343,6 +343,8 @@ class ChatGroup extends REST_Controller{
                             $conCheck['conditions']=array(
                                  'group_id'=>$id,
                                  'user_id'=>$group_members[$i],
+                                 'is_active'=>1,
+                                 'is_deleted'=>0,
                             );
 
                            if($company_row=$this->Crud_model->getRows('group_user_mapping', $conCheck,'row')){
@@ -351,7 +353,6 @@ class ChatGroup extends REST_Controller{
                            }
 
                            else{
-
 
                               $grop_mem_data = array(
                                   'group_id' => $id,
