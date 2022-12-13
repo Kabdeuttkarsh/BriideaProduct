@@ -308,7 +308,7 @@ class ChatGroup extends REST_Controller{
                                     print_r($company_row_remove_value->user_id);
                                 if (in_array($company_row_remove_value->user_id,$group_members))
                                   {
-                                 
+                                   print_r($company_row_remove_value->user_id);
                                   }
                                 else
                                   {
