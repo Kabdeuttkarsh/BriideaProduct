@@ -339,9 +339,6 @@
 </style>
 <script type="text/javascript">
     $(function() {
-
-
-
         var id = '';
         var delivery_time ='';
         var seen_time = '';
@@ -635,6 +632,9 @@
 
 
 <script type="text/javascript">
+
+var input_new_message='';
+var input_new_group_message='';
 var cht_messages='';
 var grp_cht_messages='';
 var appended_cht_messages='';
@@ -672,7 +672,7 @@ showGroupListforChat();
 
                       html+='<a href="javascript:;"  class="item-OpenChatWindow12" data="'+data[i].id+'" firstname="'+data[i].firstname+'"  lastname="'+data[i].lastname+'"><li class="clearfix">'+
                             
-                             '<img src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"  style="width:25px; height:25px;">'+
+                             '<img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"  style="width:25px; height:25px;">'+
                                 '<div class="about">'+
                                 '<div class="name">'+data[i].firstname+' '+data[i].lastname+'<br><p class="offline" style="color:blue; font-size:10px;">'+data[i].designation_name+' - '+data[i].address+'</p>';
                         
@@ -698,7 +698,7 @@ showGroupListforChat();
 
                              html2+='<a href="javascript:;"  class="item-OpenChatWindow12" data="'+new_chat[j].id+'" firstname="'+new_chat[j].firstname+'"  lastname="'+new_chat[j].lastname+'"><li class="clearfix">'+
                                 
-                                 '<img src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"  style="width:25px; height:25px;">'+
+                                 '<img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"  style="width:25px; height:25px;">'+
                                     '<div class="about">'+
                                     '<div class="name">'+new_chat[j].firstname+' '+new_chat[j].lastname+'<br><p class="offline" style="color:blue; font-size:10px;">'+new_chat[j].designation_name+' - '+new_chat[j].address+'</p>';
                      
@@ -746,7 +746,7 @@ showGroupListforChat();
                     
 
                               html+='<a href="javascript:;"  class="item-OpenGroupChatWindow12" data="'+data[i].group_id+'"><li class="clearfix">'+
-                                     '<img src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"   style="width:25px; height:25px;">'+
+                                     '<img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"   style="width:25px; height:25px;">'+
                                         '<div class="about">'+
                                         '<div class="name">'+data[i].chat_group_name+'</div>';
 
@@ -773,7 +773,7 @@ showGroupListforChat();
                     
 
                               html2+='<a href="javascript:;"  class="item-OpenGroupChatWindow12" data="'+new_group[i].group_id+'"><li class="clearfix">'+
-                                     '<img src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"   style="width:25px; height:25px;">'+
+                                     '<img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar"   style="width:25px; height:25px;">'+
                                         '<div class="about">'+
                                         '<div class="name">'+new_group[i].chat_group_name+'</div>';
                                          
@@ -841,9 +841,16 @@ $('#mainDiv').on('click', '.item-OpenChatWindow12', function(){
 
                 html=showWindow12(firstname,lastname,id,cht_messages,receiver_data_row.last_online_at);
 
+              
+
                 $('#ShowChatPerson').html(html);
-            
-            }
+                input_new_message = document.getElementById("new_message");
+                input_new_message.addEventListener("keypress", function(event) {
+                  if (event.key === "Enter") {
+                     btnSendUserMessageByEnter();
+                  }
+                });
+              }
 
             else{
 
@@ -851,13 +858,18 @@ $('#mainDiv').on('click', '.item-OpenChatWindow12', function(){
 
                 
                    $('#ShowChatPerson').html(html);
-                
-        
-               
+                     input_new_message = document.getElementById("new_message");
+                        input_new_message.addEventListener("keypress", function(event) {
+                        if (event.key === "Enter") {
+                                 btnSendUserMessageByEnter();
+                          }
+                        });
             }
            
            $('#showNewMsgDiv_'+id).html('');
            var objDiv = document.getElementById("chatHistoryMessage");
+       
+              
            if(objDiv){
              objDiv.scrollTop = objDiv.scrollHeight;
            }
@@ -914,6 +926,13 @@ $('#mainDiv').on('click', '.item-OpenGroupChatWindow12', function(){
                 html=showGroupChatWindow12(group_row.chat_group_name,id,grp_cht_messages);
                
                 $('#ShowChatPerson').html(html);
+
+                input_new_group_message = document.getElementById("new_message_group");
+                input_new_group_message.addEventListener("keypress", function(event) {
+                        if (event.key === "Enter") {
+                            btnSendGroupMessageByEnter();
+                          }
+                        });
             
 
             }
@@ -925,6 +944,13 @@ $('#mainDiv').on('click', '.item-OpenGroupChatWindow12', function(){
                   html=showGroupChatWindow12(group_row.chat_group_name,id,grp_cht_messages);
                   
                   $('#ShowChatPerson').html(html);
+
+               input_new_group_message = document.getElementById("new_message_group");
+                input_new_group_message.addEventListener("keypress", function(event) {
+                        if (event.key === "Enter") {
+                            btnSendGroupMessageByEnter();
+                          }
+                        });
             
                
             }
@@ -957,7 +983,7 @@ function showWindow12(firstname,lastname,id,messages,last_online_at) {
                        ' <div class="col-lg-6">'+
 
                            ' <a href="javascript:void(0);" class="showUserInfoModal" data-toggle="modal" data='+id+'>'+
-                               ' <img src="http://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar" style="width:50px; height:50px;">'+
+                               ' <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar" style="width:50px; height:50px;">'+
                            ' </a>'+
 
                            '<div class="chat-about">'+
@@ -1138,7 +1164,7 @@ function showGroupChatWindow12(chat_group_name,id,messages) {
 
 
                            ' <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">'+
-                               ' <img src="http://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">'+
+                               ' <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">'+
                            ' </a>'+
 
                            ' <div class="chat-about">'+
@@ -1286,114 +1312,14 @@ function showGroupChatWindow12(chat_group_name,id,messages) {
 $('#mainDiv').on('click', '.btnSendMessageNew', function(){
     // $('#btnSendMessageNew12').click(function(){
 
-    var typed_message = $('input[name=new_message]').val();
-    var receiver_id = $('input[name=receiver_id]').val();
-    var firstnameSend = $('input[name=firstname]').val();
-    var lastnameSend = $('input[name=lastname]').val();
-   
-    if(typed_message==''){
-        toastr.error("Please Enter message and then send");
-    }  
-
-    else if (receiver_id=='') {
-            toastr.error("Please try again");
-    }
-
-    else{
-
-
-
-        $.ajax({
-            type: 'ajax',
-            method:'post',
-            url: '<?php echo base_url();?>api/UserChat/sendUserMessage',
-            data: {'typed_message':typed_message,'receiver_id':receiver_id},
-            async: false,
-            dataType: 'json',
-            success: function(response){
-
-                    if (response.status) {
-                       var message_row=response.data;
-                       var sender_id_n=response.sender_id_n;
-                       var is_receiver_online=response.is_receiver_online;
-                       
-                       var typeData = {broadType : Broadcast.POST, chatType:"OneToOneChat",data : message_row, receiver_id:receiver_id,firstnameSend:firstnameSend,lastnameSend:lastnameSend,cht_messages:cht_messages,sender_first_name:message_row.sender_first_name,sender_last_name:message_row.sender_last_name,is_receiver_online:is_receiver_online};
-
-                       conn.sendMsg(typeData);
-                     
-
-                    }
-                    else{
-                       toastr.error(response.message);
-                    }
-                    
-                 
-            },
-
-          error: function(response){
-                   // var data =JSON.parse(response.responseText);
-                   // toastr.error(data.message);
-            }
-
-        });
-
-    }
-
+       btnSendUserMessageByEnter();
 
 });
 
 
 
 $('#mainDiv').on('click', '.btnGroupSendMessageNew', function(){
-    var typed_grp_message = $('input[name=new_message_group]').val();
-    var grp_id = $('input[name=group_id]').val();
-    var chat_group_name = $('input[name=chat_group_name]').val();
-
-    if(typed_grp_message==''){
-        toastr.error("Please Enter message and then send");
-    }  
-
-    else if (grp_id=='') {
-            toastr.error("Please try again");
-    }
-
-    else{
-
-        $.ajax({
-            type: 'ajax',
-            method:'post',
-            url: '<?php echo base_url();?>api/ChatGroup_Messages/sendGroupMessage',
-            data: {'typed_grp_message':typed_grp_message,'grp_id':grp_id},
-            async: false,
-            dataType: 'json',
-            success: function(response){
-
-                    if (response.status) {
-                       var message_row=response.data;
-
-                       var typeData = {broadType : Broadcast.POST, chatType:"GroupChat", data : message_row, grp_id:grp_id,chat_group_name:chat_group_name};
-
-                         conn.sendMsg(typeData);
-                   
-                     
-
-                    }
-                    else{
-                       toastr.error(response.message);
-                    }
-                    
-                 
-            },
-
-          error: function(response){
-                   // var data =JSON.parse(response.responseText);
-                   // toastr.error(data.message);
-            }
-
-        });
-
-    }
-
+     btnSendGroupMessageByEnter();
 });
 
 
@@ -1428,7 +1354,13 @@ function  refreshChatNew(id,firstname,lastname) {
                 html=showWindow12(receiver_data_row.firstname,receiver_data_row.lastname,receiver_data_row.id,cht_messages,receiver_data_row.last_online_at);
                
                   $('#ShowChatPerson').html(html);
-              
+                 input_new_message = document.getElementById("new_message");
+                  input_new_message.addEventListener("keypress", function(event) {
+                        if (event.key === "Enter") {
+                            btnSendUserMessageByEnter();
+                          }
+                        });
+
             }
 
             else{
@@ -1437,12 +1369,19 @@ function  refreshChatNew(id,firstname,lastname) {
 
                 
                    $('#ShowChatPerson').html(html);
+                      input_new_message = document.getElementById("new_message");
+                       input_new_message.addEventListener("keypress", function(event) {
+                        if (event.key === "Enter") {
+                          btnSendUserMessageByEnter();
+                          }
+                        });
             }
                $('#showNewMsgDiv_'+id).html('');
                var objDiv = document.getElementById("chatHistoryMessage");
+              
              if(objDiv){
-             objDiv.scrollTop = objDiv.scrollHeight;
-           }
+                     objDiv.scrollTop = objDiv.scrollHeight;
+              }
            
            
         },
@@ -1487,6 +1426,12 @@ function  refreshGroupChatNew(id,grp_id) {
                 html=showGroupChatWindow12(group_row.chat_group_name,grp_id,grp_cht_messages);
 
                $('#ShowChatPerson').html(html);
+                input_new_group_message = document.getElementById("new_message_group");
+                input_new_group_message.addEventListener("keypress", function(event) {
+                        if (event.key === "Enter") {
+                            btnSendGroupMessageByEnter();
+                          }
+                        });
              
 
             }
@@ -1496,6 +1441,12 @@ function  refreshGroupChatNew(id,grp_id) {
                   html=showGroupChatWindow12(group_row.chat_group_name,grp_id,null);
          
                    $('#ShowChatPerson').html(html);
+                input_new_group_message = document.getElementById("new_message_group");
+                input_new_group_message.addEventListener("keypress", function(event) {
+                        if (event.key === "Enter") {
+                            btnSendGroupMessageByEnter();
+                          }
+                        });
                
             }
             $('#showGroupNewMsgDiv_'+grp_id).html('');
@@ -2276,5 +2227,114 @@ if (loginche) {
   }
 
 
+  function btnSendUserMessageByEnter(argument) {
+         // $('#btnSendMessageNew12').click(function(){
+
+    var typed_message = $('input[name=new_message]').val();
+    var receiver_id = $('input[name=receiver_id]').val();
+    var firstnameSend = $('input[name=firstname]').val();
+    var lastnameSend = $('input[name=lastname]').val();
+   
+    if(typed_message==''){
+        toastr.error("Please Enter message and then send");
+    }  
+
+    else if (receiver_id=='') {
+            toastr.error("Please try again");
+    }
+
+    else{
+
+
+        $.ajax({
+            type: 'ajax',
+            method:'post',
+            url: '<?php echo base_url();?>api/UserChat/sendUserMessage',
+            data: {'typed_message':typed_message,'receiver_id':receiver_id},
+            async: false,
+            dataType: 'json',
+            success: function(response){
+
+                    if (response.status) {
+                       var message_row=response.data;
+                       var sender_id_n=response.sender_id_n;
+                       var is_receiver_online=response.is_receiver_online;
+                       
+                       var typeData = {broadType : Broadcast.POST, chatType:"OneToOneChat",data : message_row, receiver_id:receiver_id,firstnameSend:firstnameSend,lastnameSend:lastnameSend,cht_messages:cht_messages,sender_first_name:message_row.sender_first_name,sender_last_name:message_row.sender_last_name,is_receiver_online:is_receiver_online};
+
+                       conn.sendMsg(typeData);
+                     
+
+                    }
+                    else{
+                       toastr.error(response.message);
+                    }
+                    
+                 
+            },
+
+          error: function(response){
+                   // var data =JSON.parse(response.responseText);
+                   // toastr.error(data.message);
+            }
+
+        });
+
+    }
+
+  }
+
+  function btnSendGroupMessageByEnter(argument) {
+
+       var typed_grp_message = $('input[name=new_message_group]').val();
+        var grp_id = $('input[name=group_id]').val();
+        var chat_group_name = $('input[name=chat_group_name]').val();
+
+        if(typed_grp_message==''){
+            toastr.error("Please Enter message and then send");
+        }  
+
+        else if (grp_id=='') {
+                toastr.error("Please try again");
+        }
+
+        else{
+
+            $.ajax({
+                type: 'ajax',
+                method:'post',
+                url: '<?php echo base_url();?>api/ChatGroup_Messages/sendGroupMessage',
+                data: {'typed_grp_message':typed_grp_message,'grp_id':grp_id},
+                async: false,
+                dataType: 'json',
+                success: function(response){
+
+                        if (response.status) {
+                           var message_row=response.data;
+
+                           var typeData = {broadType : Broadcast.POST, chatType:"GroupChat", data : message_row, grp_id:grp_id,chat_group_name:chat_group_name};
+
+                             conn.sendMsg(typeData);
+                       
+                         
+
+                        }
+                        else{
+                           toastr.error(response.message);
+                        }
+                        
+                     
+                },
+
+              error: function(response){
+                       // var data =JSON.parse(response.responseText);
+                       // toastr.error(data.message);
+                }
+
+            });
+
+        }
+
+  }
 
 </script>
