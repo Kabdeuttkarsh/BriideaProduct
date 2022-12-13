@@ -320,6 +320,29 @@
                       html+='<td>'+data[i].designation_name+'</td>';
                       html+='<td>';
                       
+                      if(<?php echo $this->session->userdata('group_id')?>!=1) {
+
+                        if(<?php echo $this->session->userdata('company_id')?>==data[i].company_id){
+
+                            <?php if(in_array('updateUser', $user_permission)){ ?>
+                        
+                               html+='<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].user_id+'" style="margin:10px;"><i class="fa fa-edit"></i></a>';
+
+
+                            <?php  } ?>
+                          
+                                <?php if(in_array('deleteUser', $user_permission)){ ?>
+                                 
+                                      
+                               html+='<a href="javascript:;" class="btn btn-danger item-delete" data="'+data[i].user_id+'"><i class="fa fa-trash"></i></a>';
+                                  
+                           <?php  } ?>
+                        }
+
+                     }
+
+                     else{
+
                        <?php if(in_array('updateUser', $user_permission)){ ?>
                         
                          html+='<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].user_id+'" style="margin:10px;"><i class="fa fa-edit"></i></a>';
@@ -327,12 +350,13 @@
 
                       <?php  } ?>
                     
-                           <?php if(in_array('deleteUser', $user_permission)){ ?>
+                          <?php if(in_array('deleteUser', $user_permission)){ ?>
                            
                                 
                          html+='<a href="javascript:;" class="btn btn-danger item-delete" data="'+data[i].user_id+'"><i class="fa fa-trash"></i></a>';
                             
                      <?php  } ?>
+                     }
 
                        html+='</td></tr>';
 
@@ -393,7 +417,8 @@ $('#UserData').on('click', '.item-edit', function(){
     $('#exampleModalCenter').modal('show');
      $('#btnSave').html('Update');
     $('#exampleModalCenter').find('.modal-title').text('Edit User Details');
-    $('#myformUser').attr('action','<?php echo base_url(); ?>api/User/update')
+    $('#myformUser').attr('action','<?php echo base_url(); ?>api/User/update');
+   
     showDesignationData();
     showCompanyData();
     $.ajax({
@@ -444,15 +469,31 @@ function showDesignationData(argument) {
                 success: function(response) {
                     // body...
                     data=response.data;
-                  
-                    var html='<select class="form-control" id="designation" name="designation"><option value="">Select Designation</option>';
-                 
+                   if(<?php echo $this->session->userdata('group_id')?>==1){
+                   var html='<select class="form-control" id="designation" name="designation"><option value="">Select Designation</option>';
+                 }else{
+                    var html='<select class="form-control" id="designation" name="designation" disabled="disabled">';
+                 }
 
                     for (var i = 0; i < data.length; i++) {
                       var x=i+1;
+                     if(<?php echo $this->session->userdata('group_id')?>==1){
                         html+='<option value="'+data[i].id+'">'+data[i].designation_name+'</option>';
+                      }
+                      else{
+                        if(<?php echo $this->session->userdata('group_id')?>!=1 && data[i].id==3){
+
+                          html+='<option selected value="'+data[i].id+'">'+data[i].designation_name+'</option>';
+
+                        }
+                        else{
+                           html+='<option selected value="'+data[i].id+'">'+data[i].designation_name+'</option>';
+                        }
+                    
+                      }
                       
                     }
+
                     html+='</select>';
                    $('#designation_div').html(html);
                          },
@@ -481,13 +522,24 @@ function showCompanyData(argument) {
                 success: function(response) {
                     // body...
                     data=response.data;
-                  
-                    var html='<select class="form-control" id="company" name="company"><option value="">Select Company</option>';
-                 
+               
+                    if(<?php echo $this->session->userdata('group_id')?>==1){
+                       var html='<select class="form-control" id="company" name="company"><option value="">Select Company</option>';
+                     }else{
+                        var html='<select class="form-control" id="company" name="company" disabled="disabled">';
+                     }
 
                     for (var i = 0; i < data.length; i++) {
+
                       var x=i+1;
-                        html+='<option value="'+data[i].id+'">'+data[i].company_name+'</option>';
+                      if(<?php echo $this->session->userdata('group_id')?>==1){
+                          html+='<option value="'+data[i].id+'">'+data[i].company_name+'</option>';
+                      }
+                      else{
+                        if(<?php echo $this->session->userdata('company_id')?>==data[i].id){
+                           html+='<option selected value="'+data[i].id+'">'+data[i].company_name+'</option>';
+                        }
+                      }
                       
                     }
                     html+='</select>';
@@ -507,6 +559,9 @@ function showCompanyData(argument) {
 
 
 $('#btnSave').click(function(){
+  document.getElementById('company').disabled=false;
+  document.getElementById('designation').disabled=false;
+
    var url = $('#myformUser').attr('action');
    var data = $('#myformUser').serialize();
   
