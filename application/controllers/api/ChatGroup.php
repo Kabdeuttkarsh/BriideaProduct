@@ -296,7 +296,7 @@ class ChatGroup extends REST_Controller{
             $branches_row=$this->Crud_model->update($this->table,$data,$con);
                                   // Set the response and exit3
 
-                     $conCheckRemove['conditions']=array(
+                      $conCheckRemove['conditions']=array(
                           'group_id'=>$id,
                        );
                       
@@ -304,13 +304,16 @@ class ChatGroup extends REST_Controller{
                             
                             foreach ($company_row_remove as $company_row_remove_key => $company_row_remove_value) {
                                 
+
+                                    print_r($company_row_remove_value->user_id);
                                 if (in_array($company_row_remove_value->user_id,$group_members))
                                   {
                                  
                                   }
                                 else
                                   {
-                                    $conCheckRemoveUser['conditions']=array(
+                                    
+                                     $conCheckRemoveUser['conditions']=array(
                                          'group_id'=>$id,
                                          'user_id'=>$company_row_remove_value->user_id,
                                      );
@@ -324,6 +327,8 @@ class ChatGroup extends REST_Controller{
 
                             }
 
+                            die();
+
 
                        }
 
@@ -336,8 +341,6 @@ class ChatGroup extends REST_Controller{
                             );
 
                            if($company_row=$this->Crud_model->getRows('group_user_mapping', $conCheck,'row')){
-
-
 
 
                            }
