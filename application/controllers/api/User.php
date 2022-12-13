@@ -443,29 +443,29 @@ class User extends REST_Controller{
                         
                         }
 
-                        if($insert_type==2){
+                        // if($insert_type==2){
 
-                            $condition_group['conditions']  = array(
-                                'user_id' => $u_row,
+                        //     $condition_group['conditions']  = array(
+                        //         'user_id' => $u_row,
                                
-                            );
+                        //     );
 
 
-                            $grp_row=$this->Crud_model->getRows('user_group',$condition_group,'row');
+                        //     $grp_row=$this->Crud_model->getRows('user_group',$condition_group,'row');
 
-                            $group_data12 = array(
-                                'group_id' => $designation
-                            );
+                        //     $group_data12 = array(
+                        //         'group_id' => $designation
+                        //     );
                           
-                           $condition_group_update['conditions']  = array(
-                                'user_id' => $u_row,
-                                'id' => $grp_row->id,
+                        //    $condition_group_update['conditions']  = array(
+                        //         'user_id' => $u_row,
+                        //         'id' => $grp_row->id,
                                
-                            );
+                        //     );
 
-                             $u_row=$this->Crud_model->update('user_group',$group_data12,$condition_group_update);
+                        //      $u_row=$this->Crud_model->update('user_group',$group_data12,$condition_group_update);
                        
-                        }
+                        // }
                         
                        
                         $this->response([
