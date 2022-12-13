@@ -301,6 +301,8 @@ class ChatGroup extends REST_Controller{
 
                       $conCheckRemove['conditions']=array(
                           'group_id'=>$id,
+                          'is_active'=>1,
+                          'is_deleted'=>0
                        );
                       
                        if($company_row_remove=$this->Crud_model->getRows('group_user_mapping', $conCheckRemove,'result')){
