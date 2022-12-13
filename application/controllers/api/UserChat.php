@@ -475,6 +475,7 @@ public function uploadFilesUserChat_post($value='')
                 $config['max_size']      = 30000;
                 $new_name = time().$_FILES["file"]['name'];
                 $new_name=str_replace(" ","_",$new_name);
+                $new_name=str_replace(".","_",$new_name);
                 $config['file_name'] = $new_name;
                 $ext = pathinfo($new_name, PATHINFO_EXTENSION);
 
