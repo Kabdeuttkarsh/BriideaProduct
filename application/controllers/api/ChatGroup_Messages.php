@@ -592,8 +592,11 @@ class ChatGroup_Messages extends REST_Controller{
                     $config['allowed_types'] = 'gif|jpg|png|mp4|xlsx|xls|csv|pdf|docx|txt'; 
                     $config['max_size']      = 30000;
                     $new_name = time().$_FILES["file"]['name'];
-                    $new_name=str_replace(" ","_",$new_name);
-                    $new_name=str_replace(".","_",$new_name);
+                    $arr=explode('.', $new_name,2);
+
+                    $arr[0]=str_replace(" ","_",$arr[0]);
+                    $arr[0]=str_replace(".","_",$arr[0]);
+                    $new_name=$arr[0].$arr[1];
                     $config['file_name'] = $new_name;
                     $ext = pathinfo($new_name, PATHINFO_EXTENSION);
 
