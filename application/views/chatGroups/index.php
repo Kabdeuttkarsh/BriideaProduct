@@ -251,7 +251,7 @@
                      //  if(jQuery.inArray("updateGroup", user_permission) ) {
                         // if($.inArray("deleteGroup", user_permission) !== -1 ) {
                         
-                         html+='<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].id+'" style="margin:10px;"><i class="fa fa-edit"></i></a>';
+                         html+='<a href="javascript:;" class="btn btn-info item-edit" data="'+data[i].group_id+'" style="margin:10px;"><i class="fa fa-edit"></i></a>';
                       
                   //    }
 
