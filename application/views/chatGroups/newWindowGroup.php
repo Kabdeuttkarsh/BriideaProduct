@@ -844,6 +844,7 @@ $('#mainDiv').on('click', '.item-OpenChatWindow12', function(){
               
 
                 $('#ShowChatPerson').html(html);
+                document.getElementById("new_message").focus();
                 input_new_message = document.getElementById("new_message");
                 input_new_message.addEventListener("keypress", function(event) {
                   if (event.key === "Enter") {
@@ -858,6 +859,7 @@ $('#mainDiv').on('click', '.item-OpenChatWindow12', function(){
 
                 
                    $('#ShowChatPerson').html(html);
+                    document.getElementById("new_message").focus();
                      input_new_message = document.getElementById("new_message");
                         input_new_message.addEventListener("keypress", function(event) {
                         if (event.key === "Enter") {
@@ -926,7 +928,7 @@ $('#mainDiv').on('click', '.item-OpenGroupChatWindow12', function(){
                 html=showGroupChatWindow12(group_row.chat_group_name,id,grp_cht_messages);
                
                 $('#ShowChatPerson').html(html);
-
+                document.getElementById("new_message_group").focus();
                 input_new_group_message = document.getElementById("new_message_group");
                 input_new_group_message.addEventListener("keypress", function(event) {
                         if (event.key === "Enter") {
@@ -944,7 +946,7 @@ $('#mainDiv').on('click', '.item-OpenGroupChatWindow12', function(){
                   html=showGroupChatWindow12(group_row.chat_group_name,id,grp_cht_messages);
                   
                   $('#ShowChatPerson').html(html);
-
+                document.getElementById("new_message_group").focus();
                input_new_group_message = document.getElementById("new_message_group");
                 input_new_group_message.addEventListener("keypress", function(event) {
                         if (event.key === "Enter") {
@@ -1354,6 +1356,7 @@ function  refreshChatNew(id,firstname,lastname) {
                 html=showWindow12(receiver_data_row.firstname,receiver_data_row.lastname,receiver_data_row.id,cht_messages,receiver_data_row.last_online_at);
                
                   $('#ShowChatPerson').html(html);
+                   document.getElementById("new_message").focus();
                  input_new_message = document.getElementById("new_message");
                   input_new_message.addEventListener("keypress", function(event) {
                         if (event.key === "Enter") {
@@ -1369,6 +1372,7 @@ function  refreshChatNew(id,firstname,lastname) {
 
                 
                    $('#ShowChatPerson').html(html);
+                    document.getElementById("new_message").focus();
                       input_new_message = document.getElementById("new_message");
                        input_new_message.addEventListener("keypress", function(event) {
                         if (event.key === "Enter") {
@@ -1426,6 +1430,7 @@ function  refreshGroupChatNew(id,grp_id) {
                 html=showGroupChatWindow12(group_row.chat_group_name,grp_id,grp_cht_messages);
 
                $('#ShowChatPerson').html(html);
+               document.getElementById("new_message_group").focus();
                 input_new_group_message = document.getElementById("new_message_group");
                 input_new_group_message.addEventListener("keypress", function(event) {
                         if (event.key === "Enter") {
@@ -1441,6 +1446,7 @@ function  refreshGroupChatNew(id,grp_id) {
                   html=showGroupChatWindow12(group_row.chat_group_name,grp_id,null);
          
                    $('#ShowChatPerson').html(html);
+                   document.getElementById("new_message_group").focus();
                 input_new_group_message = document.getElementById("new_message_group");
                 input_new_group_message.addEventListener("keypress", function(event) {
                         if (event.key === "Enter") {
