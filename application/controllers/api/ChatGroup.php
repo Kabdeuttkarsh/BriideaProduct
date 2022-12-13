@@ -140,7 +140,10 @@ class ChatGroup extends REST_Controller{
             
             'where' =>array('chat_groups.is_deleted' => 0,'chat_groups.is_active' => 1,
                             // 'group_user_mapping.user_id' => $this->session->userdata('company_id'),
-                            'group_user_mapping.user_id' => $this->session->userdata('id')),
+                            'group_user_mapping.user_id' =>$this->session->userdata('id'),
+                            'group_user_mapping.is_active' =>1,
+                            'group_user_mapping.is_deleted' =>0,
+                        ),
             );
         
             if(!empty($chatGroup_row=$this->Crud_model->commonGet($option))){
@@ -305,7 +308,7 @@ class ChatGroup extends REST_Controller{
                             foreach ($company_row_remove as $company_row_remove_key => $company_row_remove_value) {
                                 
 
-                                    print_r($company_row_remove_value->user_id);
+                                   
                                 if (in_array($company_row_remove_value->user_id,$group_members))
                                   {
                                    // print_r($company_row_remove_value->user_id);
@@ -357,9 +360,7 @@ class ChatGroup extends REST_Controller{
                           
                               $grop_map_row=$this->Crud_model->insert('group_user_mapping',$grop_mem_data);
                            }
-
-
-                         
+     
                        }
 
                
