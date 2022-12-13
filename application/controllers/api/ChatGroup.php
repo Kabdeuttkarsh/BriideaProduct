@@ -400,6 +400,52 @@ class ChatGroup extends REST_Controller{
     }
 
 
+         public function delete_post($value='')
+    {
+        # code...
+     $id = $this->security->xss_clean($this->post("id"));
+ 
+        if (!empty($id) && is_numeric($id)) {
+            # code...
+    
+          $con['conditions'] = array(
+                  'group_id' => $id,
+                  'is_active' => 1,
+                  'is_deleted' => 0,
+              
+              );
+        $data = array('is_deleted' => 1 ,'is_active'=>0);
+
+         if($branches_row=$this->Crud_model->update($this->table,$data,$con)){
+                      // Set the response and exit
+            $this->response([
+                  "status" => TRUE,
+                  "message" => "Chat Group delete successfully.",
+                  "data"=>$branches_row
+              ], REST_Controller::HTTP_OK);
+    
+          }
+          else{
+              // Set the response and exit
+            $this->response([
+                  'status' => FALSE,
+                  "message" => "Designation not delete ."],
+                  REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+              
+          }
+
+      }
+      else{
+              // Set the response and exit
+            $this->response([
+                  'status' => FALSE,
+                  "message" => "invalid data."
+                   ], REST_Controller::HTTP_BAD_REQUEST);
+              
+          }
+    }
+
+
 }
 
 

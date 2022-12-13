@@ -111,6 +111,26 @@
 </div>
 
 
+<div class="modal fade" id="myModal_for_delete_message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="myModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                
+            </div>
+            <div class="modal-body">
+                Are sure to delete this chat group ?
+             </div>
+            <div class="modal-footer">
+                 <button type="button" class="btn btn-outline-default btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" id="btdelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
   <script type="text/javascript">
     var session_id='<?php echo $this->session->userdata("id")?>';
     $(document).ready(function() {
@@ -267,7 +287,7 @@
                       // if(jQuery.inArray("deleteGroup", user_permission) ) {
                           //   if($.inArray("deleteGroup", user_permission) !== -1 ) {
                                 
-                         html+='<a href="javascript:;" class="btn btn-danger item-delete" data="'+data[i].id+'"><i class="fa fa-trash"></i></a>';
+                         html+='<a href="javascript:;" class="btn btn-danger item-delete" data="'+data[i].group_id+'"><i class="fa fa-trash"></i></a>';
                             
                      //  }
 
@@ -385,5 +405,42 @@ function showUserList(argument) {
       return data;
 
 }
+
+$('#ChatGroupData').on('click', '.item-delete', function(){
+  var id = $(this).attr('data');
+
+     
+    $('#myModal_for_delete_message').find('.modal-title').text('Delete Chat Group');
+    $('#myModal_for_delete_message').modal('show');
+
+    $('#btdelete').unbind().click(function(){
+        $.ajax({
+            type: 'ajax',
+            method: 'post',
+            async: false,
+            url: '<?php echo base_url(); ?>api/ChatGroup/delete/'+id,
+            data: {'id': id},
+            dataType: 'json',
+            success: function(response)
+            {
+                  $('#myModal_for_delete_message').modal('hide');
+                  
+                  toastr.success(response.message);
+                 showChatGroupData();
+            },
+
+               error: function() 
+            {
+              $('#myModal_for_delete_message').modal('hide');
+             
+              toastr.error(response.message);
+               showChatGroupData();
+
+            }
+        });
+
+    });
+
+});
 
 </script>
