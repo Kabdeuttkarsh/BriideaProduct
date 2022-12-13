@@ -591,12 +591,9 @@ class ChatGroup_Messages extends REST_Controller{
                     $config['upload_path']   = './uploads/group_chat_files/'; 
                     $config['allowed_types'] = 'gif|jpg|png|mp4|xlsx|xls|csv|pdf|docx|txt'; 
                     $config['max_size']      = 30000;
-                    $new_name = time().$_FILES["file"]['name'];
-                    $arr=explode('.', $new_name,2);
-
-                    $arr[0]=str_replace(" ","_",$arr[0]);
-                    $arr[0]=str_replace(".","_",$arr[0]);
-                    $new_name=$arr[0].'.'.$arr[1];
+                    $ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
+                    $new_name = time().rand(10,100).'.'.$ext;
+                    $new_name=str_replace(" ","_",$new_name);
                     $config['file_name'] = $new_name;
                     $ext = pathinfo($new_name, PATHINFO_EXTENSION);
 
