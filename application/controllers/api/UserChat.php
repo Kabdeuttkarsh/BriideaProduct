@@ -38,7 +38,28 @@ class UserChat extends REST_Controller{
                             'is_verified' => 1,
                             // 'company_id'=>$this->session->userdata('company_id'),
                         );
-                 if($UserList=$this->Crud_model->getRows('users',$conUser,'result')){
+
+
+                   $option = array(
+                        'select' => 'users.*,user_group.group_id,designations.designation_name,company.company_name,company.address',
+                        'table' => 'users',
+
+                        'join' => array(array('user_group' => 'user_group.user_id = users.id','designations'=>'designations.id =user_group.group_id','company'=>'company.id =users.company_id')),
+
+                        'where' =>array(
+                                        'users.is_active'   => 1,
+                                        'users.is_deleted'=>0,
+                                        'users.is_verified'=>1
+                                        ),   
+                   
+
+                    );
+                     $UserList=$this->Crud_model->commonGet($option);
+                     // echo "<pre>";
+                     // print_r($UserList);
+                     // die();
+
+                 if($UserList){
 
                      if(!empty($us=$this->Crud_model->loadUsersForChat())) {
                         
