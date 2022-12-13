@@ -112,6 +112,7 @@
 
 
   <script type="text/javascript">
+    var session_id='<?php echo $this->session->userdata("id")?>';
     $(document).ready(function() {
     
       $("#groupMainNav").addClass('active');
@@ -137,7 +138,11 @@
 
                    var html='<select class="form-control select_group" style="width:100%;" id="group_members" name="group_members[]" multiple="multiple">';
                     for (var i = 0; i < data.length; i++) {
-                      html+='<option value="'+data[i].id+'">'+data[i].firstname+' '+data[i].lastname+'</option>';
+
+                      if(data[i].id!=session_id) {
+                         html+='<option value="'+data[i].id+'">'+data[i].firstname+' '+data[i].lastname+'</option>';
+                      }
+                     
                     }
 
 
@@ -326,7 +331,11 @@ $('#ChatGroupData').on('click', '.item-edit', function(){
 
                       for (var i = 0; i < usersNew.length; i++) {
                          if(!idArray.includes(usersNew[i].id)){
-                             html+='<option value="'+usersNew[i].id+'">'+usersNew[i].firstname+' '+usersNew[i].lastname+'</option>';
+
+                           if(usersNew[i].id!=session_id) {
+                              html+='<option value="'+usersNew[i].id+'">'+usersNew[i].firstname+' '+usersNew[i].lastname+'</option>';
+                           }
+                            
                          }
                       }
 
