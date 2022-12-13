@@ -478,7 +478,7 @@ public function uploadFilesUserChat_post($value='')
 
                 $arr[0]=str_replace(" ","_",$arr[0]);
                 $arr[0]=str_replace(".","_",$arr[0]);
-                $new_name=$arr[0].$arr[1];
+                $new_name=$arr[0].'.'.$arr[1];
                 $config['file_name'] = $new_name;
                 $ext = pathinfo($new_name, PATHINFO_EXTENSION);
 
