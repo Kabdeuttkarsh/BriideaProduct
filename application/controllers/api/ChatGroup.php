@@ -295,37 +295,8 @@ class ChatGroup extends REST_Controller{
              
             $branches_row=$this->Crud_model->update($this->table,$data,$con);
                                   // Set the response and exit3
-                        for ($i=0; $i < count($group_members); $i++) { 
-                            // code...
-                           
-                            $conCheck['conditions']=array(
-                                 'group_id'=>$id,
-                                 'user_id'=>$group_members[$i],
-                            );
 
-                           if($company_row=$this->Crud_model->getRows('group_user_mapping', $conCheck,'row')){
-
-
-                           }
-
-                           else{
-
-
-                              $grop_mem_data = array(
-                                  'group_id' => $id,
-                                  'user_id' => $group_members[$i],
-                                  'company_id'=>$this->session->userdata('company_id'),
-                                  'added_by'=>$this->session->userdata('id'),
-                                );
-                          
-                              $grop_map_row=$this->Crud_model->insert('group_user_mapping',$grop_mem_data);
-                           }
-
-
-                         
-                       }
-
-                       $conCheckRemove['conditions']=array(
+                     $conCheckRemove['conditions']=array(
                           'group_id'=>$id,
                        );
                       
@@ -355,7 +326,39 @@ class ChatGroup extends REST_Controller{
 
 
                        }
-                
+
+                        for ($i=0; $i < count($group_members); $i++) { 
+                            // code...
+                           
+                            $conCheck['conditions']=array(
+                                 'group_id'=>$id,
+                                 'user_id'=>$group_members[$i],
+                            );
+
+                           if($company_row=$this->Crud_model->getRows('group_user_mapping', $conCheck,'row')){
+
+
+
+
+                           }
+
+                           else{
+
+
+                              $grop_mem_data = array(
+                                  'group_id' => $id,
+                                  'user_id' => $group_members[$i],
+                                  'company_id'=>$this->session->userdata('company_id'),
+                                  'added_by'=>$this->session->userdata('id'),
+                                );
+                          
+                              $grop_map_row=$this->Crud_model->insert('group_user_mapping',$grop_mem_data);
+                           }
+
+
+                         
+                       }
+
                
                       if($grop_map_row || $branches_row){
                        
