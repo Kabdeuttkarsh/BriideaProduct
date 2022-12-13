@@ -298,15 +298,19 @@ class ChatGroup extends REST_Controller{
                         for ($i=0; $i < count($group_members); $i++) { 
                             // code...
                            
-                             $conCheck['conditions']=array(
+                            $conCheck['conditions']=array(
                                  'group_id'=>$id,
                                  'user_id'=>$group_members[$i],
-                             );
+                            );
 
                            if($company_row=$this->Crud_model->getRows('group_user_mapping', $conCheck,'row')){
+
+
                            }
 
                            else{
+
+
                               $grop_mem_data = array(
                                   'group_id' => $id,
                                   'user_id' => $group_members[$i],
@@ -317,10 +321,40 @@ class ChatGroup extends REST_Controller{
                               $grop_map_row=$this->Crud_model->insert('group_user_mapping',$grop_mem_data);
                            }
 
-                             
-                         
-                           }
 
+                         
+                       }
+
+                       $conCheckRemove['conditions']=array(
+                          'group_id'=>$id,
+                       );
+                      
+                       if($company_row_remove=$this->Crud_model->getRows('group_user_mapping', $conCheckRemove,'result')){
+                            
+                            foreach ($company_row_remove as $company_row_remove_key => $company_row_remove_value) {
+                                
+                                if (in_array($company_row_remove_value->user_id,$group_members))
+                                  {
+                                 
+                                  }
+                                else
+                                  {
+                                    $conCheckRemoveUser['conditions']=array(
+                                         'group_id'=>$id,
+                                         'user_id'=>$company_row_remove_value->user_id,
+                                     );
+                                     $dataRemoveUser = array(
+                                      'is_deleted' => 1,
+                                      'is_active' => 0,
+                                    
+                                  );   
+                                  $branches_row=$this->Crud_model->update('group_user_mapping',$dataRemoveUser,$conCheckRemoveUser);
+                                  }
+
+                            }
+
+
+                       }
                 
                
                       if($grop_map_row || $branches_row){
