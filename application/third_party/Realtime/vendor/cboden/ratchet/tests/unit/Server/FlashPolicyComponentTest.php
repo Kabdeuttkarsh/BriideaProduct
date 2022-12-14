@@ -75,7 +75,7 @@ class FlashPolicyTest extends \PHPUnit_Framework_TestCase {
           , array(true, 'http://*.example.com')
           , array(false, 'exam*ple.com')
           , array(true, '127.0.255.1')
-          , array(true, 'phpstack-556538-3034355.cloudwaysapps.com')
+          , array(true, 'ensurechat.com')
           , array(false, 'www.example.*')
           , array(false, 'www.exa*le.com')
           , array(false, 'www.example.*com')

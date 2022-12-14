@@ -12,7 +12,7 @@ abtests:
 	ulimit -n 2048 && php tests/autobahn/bin/fuzzingserver.php 8002 StreamSelect &
 	ulimit -n 2048 && php tests/autobahn/bin/fuzzingserver-noutf8.php 8003 StreamSelect &
 	ulimit -n 2048 && php tests/autobahn/bin/fuzzingserver.php 8004 LibEv &
-	wstest -m testeeserver -w ws://phpstack-556538-3034355.cloudwaysapps.com:8000 &
+	wstest -m testeeserver -w ws://ensurechat.com:8000 &
 	wstest -m fuzzingclient -s tests/autobahn/fuzzingclient-all.json
 	killall php wstest
 

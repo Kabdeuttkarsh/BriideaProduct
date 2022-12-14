@@ -74,7 +74,7 @@ class MyChat implements MessageComponentInterface {
 }
 
     // Run the server application through the WebSocket protocol on port 8080
-    $app = new Ratchet\App('phpstack-556538-3034355.cloudwaysapps.com', 8080);
+    $app = new Ratchet\App('ensurechat.com', 8080);
     $app->route('/chat', new MyChat);
     $app->route('/echo', new Ratchet\Server\EchoServer, array('*'));
     $app->run();
@@ -84,7 +84,7 @@ class MyChat implements MessageComponentInterface {
 
 ```javascript
     // Then some JavaScript in the browser:
-    var conn = new WebSocket('ws://phpstack-556538-3034355.cloudwaysapps.com:8080/echo');
+    var conn = new WebSocket('ws://ensurechat.com:8080/echo');
     conn.onmessage = function(e) { console.log(e.data); };
     conn.send('Hello Me!');
 ```

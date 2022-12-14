@@ -18,7 +18,7 @@ class RequestFactoryTest extends \PHPUnit_Framework_TestCase {
           , 'headers' => array(
                 'Upgrade'    => 'WebSocket'
               , 'Connection' => 'Upgrade'
-              , 'Host'       => 'phpstack-556538-3034355.cloudwaysapps.com:8000'
+              , 'Host'       => 'ensurechat.com:8000'
               , 'Sec-WebSocket-Key1' => '> b3lU Z0 fh f 3+83394 6  (zG4'
               , 'Sec-WebSocket-Key2' => ',3Z0X0677 dV-d [159 Z*4'
             )

@@ -25,7 +25,7 @@ date_default_timezone_set('Asia/Kolkata');
 */
 // defined('BASE_URL') OR define('BASE_URL', (is_https() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']) . '/');
 
-$config['base_url'] = "https://phpstack-556538-3034355.cloudwaysapps.com/BriideaSlack/";
+$config['base_url'] = "https://ensurechat.com/";
 
 /*
 |--------------------------------------------------------------------------
