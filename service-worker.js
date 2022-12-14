@@ -2,9 +2,9 @@ var cacheName = 'v1.0';
 
 var cacheAssets = [
     'index.php',
-    'about.html',
-    '/js/main.js',
-    '/css/style.css'
+    // 'about.html',
+    // '/js/main.js',
+    // '/css/style.css'
 ]
 
 // installation
