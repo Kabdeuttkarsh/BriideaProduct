@@ -100,13 +100,20 @@ class Crud_model extends CI_Model
      public function loadGroupsForChat(){
         $user_id=$this->session->userdata('id');
         $outPutArray = array();
-        $sql = $this->db->query("SELECT a.group_id,a.chat_group_name, t.group_messages_id, MAX(t.group_messages_id) AS group_messages_id 
-            FROM chat_groups AS a INNER JOIN group_messages AS t 
-            ON t.group_id = a.group_id 
+        $sql = "SELECT a.is_active,a.is_deleted,a.group_id,a.chat_group_name,t.group_messages_id, MAX(t.group_messages_id) AS group_messages_id 
+          
+            FROM chat_groups AS a 
+          
+            INNER JOIN group_messages AS t ON t.group_id = a.group_id 
+           WHERE a.is_active= ? AND a.is_deleted= ?
             GROUP BY a.group_id, t.group_id
-            ORDER BY MAX(t.group_messages_id) DESC "); 
-        $array=$sql->result();
-   
+           
+            ORDER BY MAX(t.group_messages_id) DESC"; 
+         $query = $this->db->query($sql, array(1,0));
+        $array=$query->result();
+        // echo "<pre>";
+        // print_r( $array);
+        // die();
         foreach ($array as $key => $value) {
             $value->unseen_msgs=0;
             $con['conditions']=array(
