@@ -1,4 +1,9 @@
-var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
+<?php 
+
+?>
+
+<script type="text/javascript">
+	var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
 
 
   var Connection2 = (function(){
@@ -197,3 +202,5 @@ var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT)
     return Connection2;
 
 })();
+
+</script>
