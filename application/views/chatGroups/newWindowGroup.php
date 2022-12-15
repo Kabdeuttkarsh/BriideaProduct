@@ -2030,7 +2030,6 @@ $('#mainDiv').on('click', '.item-file-upload-group-chat', function(){
             var firstnameSend=$('input[name=firstname]').val();
             var lastnameSend=$('input[name=lastname]').val();
 
-            var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
             $.ajax({
 
                 type: 'ajax',
@@ -2052,14 +2051,7 @@ $('#mainDiv').on('click', '.item-file-upload-group-chat', function(){
                            
                            var typeData = {broadType : Broadcast.POST, chatType:"OneToOneChat",data : message_row, receiver_id:receiver_id,firstnameSend:firstnameSend,lastnameSend:lastnameSend,cht_messages:'',sender_first_name:message_row.sender_first_name,sender_last_name:message_row.sender_last_name,is_receiver_online:is_receiver_online};
 
-                             if(conn){
-                                conn.sendMsg(typeData);   
-                             }
-                             else{
-                                await delay(2000);
-                                conn.sendMsg(typeData);  
-                             }
-                       
+                           conn.sendMsg(typeData);
                          
 
                         }
@@ -2121,8 +2113,7 @@ $('#uploadfiles').click(function(){
             var group_id=$('input[name=group_id]').val();
             var new_message_with_files_group=$('input[name=new_message_with_files_group]').val();
             var chat_group_name=$('input[name=chat_group_name]').val();
-            var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
-
+            
            $.ajax({
             type: 'ajax',
             method:'post',
@@ -2139,14 +2130,7 @@ $('#uploadfiles').click(function(){
 
                        var typeData = {broadType : Broadcast.POST, chatType:"GroupChat", data : message_row, grp_id:group_id,chat_group_name:chat_group_name};
 
-                         if(conn){
-                            conn.sendMsg(typeData);   
-                         }
-                         else{
-                            await delay(2000);
-                            conn.sendMsg(typeData);  
-                         }
-                         
+                         conn.sendMsg(typeData);
                    
 
                     }
@@ -2266,7 +2250,8 @@ if (loginche) {
     }
 
     else{
-         var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
+
+
         $.ajax({
             type: 'ajax',
             method:'post',
@@ -2283,14 +2268,8 @@ if (loginche) {
                        
                        var typeData = {broadType : Broadcast.POST, chatType:"OneToOneChat",data : message_row, receiver_id:receiver_id,firstnameSend:firstnameSend,lastnameSend:lastnameSend,cht_messages:cht_messages,sender_first_name:message_row.sender_first_name,sender_last_name:message_row.sender_last_name,is_receiver_online:is_receiver_online};
 
-                          if(conn){
-                            conn.sendMsg(typeData);   
-                         }
-                         else{
-                            await delay(2000);
-                            conn.sendMsg(typeData);  
-                         }
-                       
+                       conn.sendMsg(typeData);
+                     
 
                     }
                     else{
@@ -2326,7 +2305,6 @@ if (loginche) {
         }
 
         else{
-            var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
 
             $.ajax({
                 type: 'ajax',
@@ -2342,14 +2320,9 @@ if (loginche) {
 
                            var typeData = {broadType : Broadcast.POST, chatType:"GroupChat", data : message_row, grp_id:grp_id,chat_group_name:chat_group_name};
 
-                         if(conn){
-                            conn.sendMsg(typeData);   
-                         }
-                         else{
-                            await delay(2000);
-                            conn.sendMsg(typeData);  
-                         }
+                             conn.sendMsg(typeData);
                        
+                         
 
                         }
                         else{
