@@ -155,6 +155,7 @@
           self.socket.onopen = function(evt) { self.connectionOpen(evt); };
           self.socket.onmessage = function(evt) { self.connectionMessage(evt); };
           self.socket.onclose = function(evt) { self.connectionClose(evt); };
+          alert(self.socket.onclose);
       },
 
       connectionOpen : function(evt){
