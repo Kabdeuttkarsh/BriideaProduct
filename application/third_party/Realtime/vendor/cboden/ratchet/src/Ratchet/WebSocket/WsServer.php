@@ -227,6 +227,7 @@ class WsServer implements HttpServerInterface {
         ));
 
         $conn->send((string)$response);
-        $conn->close();
+      //  $conn->close();
+
     }
 }

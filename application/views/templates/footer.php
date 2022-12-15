@@ -173,14 +173,7 @@
           this.open = false;
           this.addSystemMessage("Disconnected");
            console.log("Disconnected");
-          conn=Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
-          const yourFunction = async () => {
-              await delay(5000);
-              // console.log("Waited 5s");
-
-              // await delay(5000);
-              // console.log("Waited an additional 5s");
-            };
+         
            // connectToServer();
 
       },
