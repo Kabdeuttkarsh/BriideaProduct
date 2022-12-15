@@ -342,7 +342,9 @@
 <script type="text/javascript">
    function connectToServer(){
         var conn1 = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
+        if(conn1){
          conn1.sendMsg("Hii");
+        }
    }
 </script>
 
