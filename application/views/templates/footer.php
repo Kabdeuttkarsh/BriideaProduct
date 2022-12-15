@@ -134,7 +134,7 @@
 
 <script type="text/javascript">
 
-  var Connection2 = (function(){
+  // var Connection2 = (function(){
 
   function Connection2(url) {
 
@@ -338,7 +338,7 @@
 
     return Connection2;
   }
-})();
+// })();
 
 </script>
 
