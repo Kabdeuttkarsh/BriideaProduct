@@ -172,7 +172,7 @@
           this.open = false;
           this.addSystemMessage("Disconnected");
            console.log("Disconnected");
-            
+
       },
 
       sendMsg : function(message){
@@ -351,7 +351,7 @@ s0.parentNode.insertBefore(s1,s0);
 
 <script type="text/javascript">
   
-var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
+//var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
 </script>
 
  <!--  <footer class="main-footer">
