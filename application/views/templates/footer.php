@@ -160,16 +160,18 @@
       connectionOpen : function(evt){
           this.open = true;
           this.addSystemMessage("Connected");
-           console.log("connection Established");
+          console.log("connection Established");
     },
       connectionMessage : function(evt){
           var data = JSON.parse(evt.data);
          //   console.log(data.msg);
           this.addChatMessage(data.msg);
+        console.log("Message Sent");
       },
       connectionClose : function(evt){
           this.open = false;
           this.addSystemMessage("Disconnected");
+           console.log("Disconnected");
       },
 
       sendMsg : function(message){
