@@ -134,10 +134,9 @@
 
 <script type="text/javascript">
 
-  // var Connection2 = (function(){
+    var Connection2 = (function(){
 
-  function Connection2(url) {
-
+    function Connection2(url) {
 
       this.open = false;
 
@@ -145,9 +144,9 @@
       
       this.setupConnectionEvents();
 
-  
+    }
 
-  // Connection2.prototype = {
+    Connection2.prototype = {
     
     setupConnectionEvents : function () {
           var self = this;
@@ -173,9 +172,7 @@
           this.open = false;
           this.addSystemMessage("Disconnected");
            console.log("Disconnected");
-           setTimeout(function() {
-              conn = Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
-            }, 1000);
+          conn=Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
            // connectToServer();
 
       },
@@ -329,18 +326,20 @@
 
 
         
-      } ,
+      },
     
       addSystemMessage : function(msg){
           // this.chatwindow.innerHTML += "<p>" + msg + "</p>";
       }
-    // };
+    };
 
     return Connection2;
-  }
-// })();
+
+})();
 
 </script>
+
+
 
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
