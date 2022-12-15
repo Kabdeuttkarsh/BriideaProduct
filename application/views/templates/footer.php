@@ -173,7 +173,9 @@
           this.open = false;
           this.addSystemMessage("Disconnected");
            console.log("Disconnected");
-         
+           setTimeout(function() {
+                Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
+            }, 2000);
            // connectToServer();
 
       },
