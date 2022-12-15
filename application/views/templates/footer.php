@@ -145,9 +145,9 @@
       
       this.setupConnectionEvents();
 
-    }
+  
 
-  Connection2.prototype = {
+  // Connection2.prototype = {
     
     setupConnectionEvents : function () {
           var self = this;
@@ -329,15 +329,15 @@
 
 
         
-      },
+      } ,
     
       addSystemMessage : function(msg){
           // this.chatwindow.innerHTML += "<p>" + msg + "</p>";
       }
-    };
+    // };
 
     return Connection2;
-
+  }
 })();
 
 </script>
