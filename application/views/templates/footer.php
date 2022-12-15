@@ -134,7 +134,7 @@
 
 <script type="text/javascript">
 
-    var Connection2 = (function(){
+  var Connection2 = (function(){
 
   function Connection2(url) {
 
@@ -174,8 +174,8 @@
           this.addSystemMessage("Disconnected");
            console.log("Disconnected");
            setTimeout(function() {
-                Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
-            }, 2000);
+              conn = Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
+            }, 1000);
            // connectToServer();
 
       },
