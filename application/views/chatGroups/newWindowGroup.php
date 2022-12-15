@@ -2030,6 +2030,7 @@ $('#mainDiv').on('click', '.item-file-upload-group-chat', function(){
             var firstnameSend=$('input[name=firstname]').val();
             var lastnameSend=$('input[name=lastname]').val();
 
+            var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
             $.ajax({
 
                 type: 'ajax',
@@ -2113,7 +2114,7 @@ $('#uploadfiles').click(function(){
             var group_id=$('input[name=group_id]').val();
             var new_message_with_files_group=$('input[name=new_message_with_files_group]').val();
             var chat_group_name=$('input[name=chat_group_name]').val();
-            
+             var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
            $.ajax({
             type: 'ajax',
             method:'post',
@@ -2250,8 +2251,7 @@ if (loginche) {
     }
 
     else{
-
-
+         var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
         $.ajax({
             type: 'ajax',
             method:'post',
@@ -2305,6 +2305,7 @@ if (loginche) {
         }
 
         else{
+            var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
 
             $.ajax({
                 type: 'ajax',
