@@ -341,8 +341,8 @@
 
 <script type="text/javascript">
    function connectToServer(){
-        var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
-         conn.sendMsg("Hii");
+        var conn1 = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
+         conn1.sendMsg("Hii");
    }
 </script>
 
