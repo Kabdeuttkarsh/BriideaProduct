@@ -145,7 +145,7 @@ class WsServer implements HttpServerInterface {
         if ($this->connections->contains($conn)) {
             $decor = $this->connections[$conn];
             $this->connections->detach($conn);
-
+            print_r("Hii");
             $this->component->onClose($decor);
         }
     }
