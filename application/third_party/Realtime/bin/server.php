@@ -13,6 +13,3 @@ $server = IoServer::factory(new HttpServer(new WsServer(new Chat)), 2000);
 $server->run();
 
 ?>
-<script type="text/javascript">
-	alert("running");
-</script>
