@@ -226,8 +226,8 @@ class WsServer implements HttpServerInterface {
           , 'X-Powered-By'          => \Ratchet\VERSION
         ));
 
-        // $conn->send((string)$response);
-        // $conn->close();
+        $conn->send((string)$response);
+        $conn->close();
 
     }
 }
