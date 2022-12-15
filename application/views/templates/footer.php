@@ -155,7 +155,7 @@
           self.socket.onopen = function(evt) { self.connectionOpen(evt); };
           self.socket.onmessage = function(evt) { self.connectionMessage(evt); };
           self.socket.onclose = function(evt) { self.connectionClose(evt); };
-          alert(self.socket.onclose);
+
       },
 
       connectionOpen : function(evt){
@@ -173,6 +173,7 @@
           this.open = false;
           this.addSystemMessage("Disconnected");
            console.log("Disconnected");
+           connectToServer();
 
       },
 
@@ -336,6 +337,12 @@
 
 })();
 
+</script>
+
+<script type="text/javascript">
+   function connectToServer(){
+        var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
+   }
 </script>
 
 <script type="text/javascript">
