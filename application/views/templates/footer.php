@@ -172,7 +172,7 @@
           this.open = false;
           this.addSystemMessage("Disconnected");
            console.log("Disconnected");
-          conn=Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
+          conn=new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
            // connectToServer();
 
       },
