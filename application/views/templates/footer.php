@@ -162,7 +162,7 @@
           this.open = true;
           this.addSystemMessage("Connected");
           console.log("connection Established");
-    },
+       },
       connectionMessage : function(evt){
           var data = JSON.parse(evt.data);
          //   console.log(data.msg);
@@ -342,6 +342,7 @@
 <script type="text/javascript">
    function connectToServer(){
         var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
+         conn.sendMsg("Hii");
    }
 </script>
 

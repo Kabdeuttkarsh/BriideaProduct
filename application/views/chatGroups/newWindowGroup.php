@@ -2320,7 +2320,7 @@ if (loginche) {
 
                            var typeData = {broadType : Broadcast.POST, chatType:"GroupChat", data : message_row, grp_id:grp_id,chat_group_name:chat_group_name};
 
-                             conn.sendMsg(typeData);
+                           conn.sendMsg(typeData);
                        
                          
 
