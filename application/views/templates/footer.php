@@ -172,7 +172,7 @@
           this.open = false;
           this.addSystemMessage("Disconnected");
            console.log("Disconnected");
-             self.socket.onopen = function(evt) { self.connectionOpen(evt); };
+            
       },
 
       sendMsg : function(message){
