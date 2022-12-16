@@ -522,6 +522,15 @@ class User extends REST_Controller{
 
          if($user_row=$this->Crud_model->update($this->table,$data,$conUser)){
                       // Set the response and exit
+
+                $conGroupUserMap['conditions'] = array(
+                  'user_id' => $id,
+                  'is_active' => 1,
+                  'is_deleted' => 0,
+              
+              );
+                 $dataGroupUser = array('is_deleted' => 1 ,'is_active'=>0);
+                 $user_row=$this->Crud_model->update('group_user_mapping',$dataGroupUser,$conGroupUserMap);
             $this->response([
                   "status" => TRUE,
                   "message" => "Users delete successfully.",
@@ -547,6 +556,7 @@ class User extends REST_Controller{
                    ], REST_Controller::HTTP_BAD_REQUEST);
               
           }
+          
     }
 
 

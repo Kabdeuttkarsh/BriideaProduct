@@ -61,6 +61,24 @@
       </div>
       <!-- /.row -->
  
+<div class="modal fade" id="myModal_for_delete_message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="myModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                
+            </div>
+            <div class="modal-body">
+                Are sure to delete this User.
+             </div>
+            <div class="modal-footer">
+                 <button type="button" class="btn btn-outline-default btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" id="btdelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -221,24 +239,6 @@
   </div>
 </div>
 
-<div class="modal fade" id="myModal_for_delete_message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="myModalLabel"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                
-            </div>
-            <div class="modal-body">
-                Are sure to delete this designation.
-             </div>
-            <div class="modal-footer">
-                 <button type="button" class="btn btn-outline-default btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-outline-danger btn-sm" id="btdelete">Delete</button>
-            </div>
-        </div>
-    </div>
-</div>
 
     </section>
     <!-- /.content -->
@@ -799,6 +799,43 @@ else{
  
 
     }
+});
+
+
+
+
+$('#UserData').on('click','.item-delete',function(){
+    var id= $(this).attr('data');
+     
+    $('#myModal_for_delete_message').find('.modal-title').text('Delete User');
+    $('#myModal_for_delete_message').modal('show');
+
+    $('#btdelete').unbind().click(function(){
+        $.ajax({
+            type: 'ajax',
+            method: 'post',
+            async: false,
+            url: '<?php echo base_url(); ?>api/User/delete/'+id,
+            data: {'id': id},
+            dataType: 'json',
+            success: function(response)
+            {
+                  $('#myModal_for_delete_message').modal('hide');
+                  
+                  toastr.success(response.message);
+                  showUserData();
+            },
+
+               error: function() 
+            {
+                $('#myModal_for_delete_message').modal('hide');
+                showUserData();
+                toastr.error(response.message);
+            }
+        });
+
+    });
+
 });
 
 
