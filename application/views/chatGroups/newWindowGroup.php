@@ -354,7 +354,7 @@
               delivery_time = $(this).attr('delivery_time');
               seen_time = $(this).attr('seen_time');
           
-             convertedDate=dateChangeFormat(delivery_time);
+      
              if(seen_time==null || seen_time=="null"){
                 convertedSeenDate="-"
              }
@@ -362,15 +362,17 @@
                convertedSeenDate=dateChangeFormat(seen_time);
              
              }
-             if(delivery_time!=null){
-                $('#delivery_time').html("Delivery :- "+convertedDate);
+             if(delivery_time==null || delivery_time=="null"){
+                     convertedDate="-";
+              
              }
              else{
-                $('#delivery_time').html("Delivery :- -");
+                 convertedDate=dateChangeFormat(delivery_time);
              }
 
 
              // if(seen_time!=null){
+                 $('#delivery_time').html("Delivery :- "+convertedDate);
                  $('#seen_time').html("Seen :- "+convertedSeenDate);
              // }
              // else{
