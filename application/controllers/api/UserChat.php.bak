@@ -129,7 +129,49 @@ class UserChat extends REST_Controller{
 
             $sql =$this->db->query("SELECT * FROM (SELECT * FROM messages WHERE $sender_id IN (sender_message_id,receiver_message_id) AND  $receiver_id IN (sender_message_id,receiver_message_id) ORDER BY message_id DESC LIMIT $start,50) AS messages ORDER BY message_id ASC");
                 $array=$sql->result();
-         
+
+                // if($array==NULL || empty($array)){
+                   
+                //     $sql =$this->db->query("SELECT * FROM (SELECT * FROM messages WHERE $sender_id IN (sender_message_id,receiver_message_id) AND  $receiver_id IN (sender_message_id,receiver_message_id) ORDER BY message_id DESC) AS messages ORDER BY message_id ASC");
+                //      $array=$sql->result();
+
+                // }
+                // echo "<pre>";
+                // print_r($array);
+                //  die();
+                 
+                 //    $option = array(
+                 //        'select' => 'messages.*',
+                 //        'table' =>'messages',
+                     
+                 //        'where' =>array(
+                 //                        'sender_message_id'     => $sender_id,
+                 //                        'receiver_message_id'   => $receiver_id,
+                 //                        'is_deleted'=>0
+                 //                        ),  
+                 //     //  'limit'=>array('5'=>'0'),
+                 //        'order'=>array('message_id'=>'DESC')
+                    
+
+                 //    );
+
+
+                 // $sent_row=$this->Crud_model->commonGet($option);
+
+                 //  $option = array(
+                 //        'select' => 'messages.*',
+                 //        'table' =>'messages',
+                     
+                 //        'where' =>array(
+                 //                        'sender_message_id'     => $receiver_id,
+                 //                        'receiver_message_id'   => $sender_id
+                 //                        ),   
+                 //       // 'limit'=>array('5'=>'0'),
+                 //        'order'=>array('message_id'=>'DESC')
+                 //    );
+
+                 // $receive_row=$this->Crud_model->commonGet($option);
+                 
                  $conSender['conditions'] = array(
                           'id' => $sender_id ,
                  ); 

@@ -38,7 +38,7 @@
                   <th>#</th>
                   <th>Group Name</th>
                   <th>Group Description</th>
-                  <!-- <th>Company Name</th> -->
+                  <th>Company Name</th>
                   <th>Admin</th>
                   
 
@@ -267,7 +267,7 @@
                       html+='<tr><td>'+x+'</td>'+
                                 '<td>'+data[i].chat_group_name+'</td>'+
                                 '<td>'+data[i].group_description+'</td>'+
-                                // '<td>'+data[i].company_name+'</td>'+
+                                '<td>'+data[i].company_name+'</td>'+
                                 '<td>'+data[i].firstname+' '+data[i].lastname+'</td>';
                   
                       html+='<td>';

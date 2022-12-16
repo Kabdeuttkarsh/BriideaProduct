@@ -68,11 +68,10 @@ class Auth extends REST_Controller{
                             'lastname'  => $users_row->lastname,
                             'logged_in' => TRUE,
                             'group_id' => $user_group->group_id,
-                            'group_name' => $user_group->designation_name,
+                            'group_name' => $user_group->group_name,
                             'permission' => $user_group->permission,
                             'company_id' => $users_row->company_id,
                             'LoginAfterLogout' => TRUE,
-                            'company_name' => $user_group->company_name,
                             
                       );
                       $this->session->set_userdata($logged_in_sess);

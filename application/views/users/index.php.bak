@@ -481,14 +481,14 @@ function showDesignationData(argument) {
                         html+='<option value="'+data[i].id+'">'+data[i].designation_name+'</option>';
                       }
                       else{
-                      if(<?php echo $this->session->userdata('group_id')?>!=1 && data[i].id==3){
+                        if(<?php echo $this->session->userdata('group_id')?>!=1 && data[i].id==3){
 
-                          html+='<option selected value="3">'+data[i].designation_name+'</option>';
+                          html+='<option selected value="'+data[i].id+'">'+data[i].designation_name+'</option>';
 
-                         }
-                        // else{
-                        //    html+='<option selected value="'+data[i].id+'">'+data[i].designation_name+'</option>';
-                        // }
+                        }
+                        else{
+                           html+='<option selected value="'+data[i].id+'">'+data[i].designation_name+'</option>';
+                        }
                     
                       }
                       

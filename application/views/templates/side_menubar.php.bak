@@ -127,7 +127,7 @@
             <li class="treeview" id="ProfileMainNav">
               <a href="#">
                 <i class="fa fa-user"></i>
-                <span><?php echo $this->session->userdata('firstname').' '.$this->session->userdata('lastname');?><p style="margin-left:20px; font-size: 10px;"><?php echo $this->session->userdata('group_name').'-'.$this->session->userdata('company_name');?></p></span>
+                <span>Profile</span>
                 <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
                 </span>

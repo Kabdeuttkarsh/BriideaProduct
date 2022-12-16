@@ -233,22 +233,6 @@
                            window.speechSynthesis.speak(speech);
 
                             toastr.info('You have new Message from '+data.sender_first_name+' ' +data.sender_last_name);
-     
-                                   if(Notification.permission==="granted"){
-                                 
-                                        //   showNotification("New Message",'You have new Message from '+data.sender_first_name+' ' +data.sender_last_name);
-                                        }
-                                    else if(Notification.permission==="denied"){
-                                        
-
-                                          Notification.requestPermission().then(
-                                             permission =>{
-                                                if(permission==="granted"){
-                                                 //   showNotification("New Message",'You have new Message from '+data.sender_first_name+' ' +data.sender_last_name);
-                                                }
-                                        });
-
-                                    }
                         }
                              
                     }
@@ -261,21 +245,6 @@
                            window.speechSynthesis.speak(speech);
                         
                            toastr.info('You have new Message from '+data.sender_first_name+' ' +data.sender_last_name);
-
-                            if(Notification.permission==="granted"){
-                                         
-                                       //    showNotification("New Message",'You have new Message from '+data.sender_first_name+' ' +data.sender_last_name);
-                                        }
-                                    else if(Notification.permission==="denied"){
-                                       
-                                          Notification.requestPermission().then(
-                                             permission =>{
-                                                if(permission==="granted"){
-                                             //       showNotification("New Message",'You have new Message from '+data.sender_first_name+' ' +data.sender_last_name);
-                                                }
-                                        });
-
-                                    }
                         }
 
                 
@@ -336,21 +305,6 @@
                             speech.text = 'You have new Message from Group '+data.chat_group_name;
                            window.speechSynthesis.speak(speech);
                            toastr.info('You have new Message from '+data.chat_group_name);
-
-                            if(Notification.permission==="granted"){
-                                      
-                                         //   showNotification("New Message",'You have new Message from '+data.chat_group_name);
-                                        }
-                                    else if(Notification.permission==="denied"){
-                                         
-                                          Notification.requestPermission().then(
-                                             permission =>{
-                                                if(permission==="granted"){
-                                                 //   showNotification("New Message",'You have new Message from '+data.chat_group_name);
-                                                }
-                                        });
-
-                                    }
                         }
                      
                     }
@@ -361,20 +315,6 @@
                            window.speechSynthesis.speak(speech);
                        
                            toastr.info('You have new Message from '+data.chat_group_name);
-                                   if(Notification.permission==="granted"){
-                                       
-                                          // showNotification("New Message",'You have new Message from '+data.chat_group_name);
-                                        }
-                                    else if(Notification.permission==="denied"){
-                                     
-                                          Notification.requestPermission().then(
-                                             permission =>{
-                                                if(permission==="granted"){
-                                              //      showNotification("New Message",'You have new Message from '+data.chat_group_name);
-                                                }
-                                        });
-
-                                    }
                     }
                     
 
@@ -383,7 +323,7 @@
             }
         
         }
-
+        
       },
     
       addSystemMessage : function(msg){
@@ -416,33 +356,17 @@ s0.parentNode.insertBefore(s1,s0);
 var conn = new Connection2(Broadcast.BROADCAST_URL+":"+Broadcast.BROADCAST_PORT);
 </script>
 
-<script>
-
-        function showNotification(message_type,message){
-            const notification =new Notification(message_type,{
-                body:message,
-                icon:"<?php echo base_url('uploads/temp_logo.png');?>"
-
-            });
-
-            notification.onclick=(e) =>{
-                window.location.href="<?php echo base_url('ChatGroups/newWindowGroup');?>"
-            };
-        }
-
-
-</script>
-
-
-<!--   <footer class="main-footer">
+ <!--  <footer class="main-footer">
     <div class="pull-right hidden-xs">
       <b>Version</b> 1.1.0
     </div>
     <strong>&copy; 2022 |</strong> All rights
     reserved and Developed by <a href="https://briidea.in/" target="_BLANK">Briidea Innoventures LLP</a>
-  </footer>
+  </footer> -->
 
-  <div class="control-sidebar-bg"></div> -->
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <!-- <div class="control-sidebar-bg"></div> -->
 </div>
 <!-- ./wrapper -->
 

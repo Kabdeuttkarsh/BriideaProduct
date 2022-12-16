@@ -287,9 +287,8 @@
 $('#UserData').on('click', '.item-edit', function(){
     $("#btnSave").prop("disabled", false);
     $("#verifyEmailOTP").prop("disabled", true);
+   // $("#email").prop("disabled", true);
  
- document.getElementById('phone').disabled=true;
-
     var id = $(this).attr('data');
     $('#exampleModalCenter').modal('show');
     $('#btnSave').html('Update');
@@ -335,8 +334,6 @@ $('#UserData').on('click', '.item-edit', function(){
 
 
 $('#btnSave').click(function(){
-    
- document.getElementById('phone').disabled=false;
    var url = $('#myformUser').attr('action');
    var data = $('#myformUser').serialize();
   
@@ -355,9 +352,9 @@ $('#btnSave').click(function(){
     if (fname=='') {
        toastr.error("Please Enter First Name");
     }
-    // else if(email1==''){
-    //    toastr.error("Please Enter Email");
-    // }
+    else if(email1==''){
+       toastr.error("Please Enter Email");
+    }
      else if(lname==''){
        toastr.error("Please Enter Last Name");
     }
@@ -396,12 +393,9 @@ else{
 
                 if (response.status) {
                  toastr.success(response.message);
-                  showUserData();
-
                 }
                 else{
                    toastr.error(response.message);
-                    showUserData();
                 }
                 
                 showUserData();
@@ -446,7 +440,7 @@ $('#btnsavePassword').click(function(){
                         $('#myformPassword')[0].reset();
                           $('#exampleModalCenterChangePassword').modal('hide');
                           toastr.success(response.message);
-                      showUserData();
+                    
                 }
 
                 
@@ -454,7 +448,7 @@ $('#btnsavePassword').click(function(){
                    toastr.error(response.message);
                 }
                 
-                 showUserData();
+                showallData();
         },
         error: function(response){
                 
