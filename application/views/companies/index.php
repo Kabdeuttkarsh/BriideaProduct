@@ -57,6 +57,62 @@
       </div>
       <!-- /.row -->
  
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header modal-title">Add Branch
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <form id="myformCompany" action="">
+          <input type="hidden" name="id">
+            <div class="form-group">
+              <label for="exampleFormControlSelect2">Branch Name</label>
+              <input type="text" id="company_name" name="company_name" class="form-control" placeholder="Branch Name">
+            </div>
+
+            <div class="form-group">
+              <label for="exampleFormControlSelect2">Branch City</label>
+            <input type="text" id="address" name="address" class="form-control" placeholder="Branch City">
+            </div>
+
+            <div class="form-group">
+              <label for="exampleFormControlSelect2">Branch Phone/Mobile No</label>
+              <input type="text" id="company_phone" name="company_phone" class="form-control" placeholder="Branch Phone/Mobile No.">
+            </div>
+
+
+          </form>
+      </div>
+        <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" id="btnSave" class="btn btn-primary">Save changes</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="myModal_for_delete_message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="myModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                
+            </div>
+            <div class="modal-body">
+                Are sure to delete this Branch ?
+             </div>
+            <div class="modal-footer">
+                 <button type="button" class="btn btn-outline-default btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" id="btdelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
     </section>
@@ -70,7 +126,141 @@
       $("#companyMainNav").addClass('active');
       $("#manageCompanySubNav").addClass('active');
 
+          $('#addCompany').click(function(){
+          $('#myformCompany')[0].reset();
+          $('#btnSave').html('Submit');
+          $('#exampleModalCenter').find('.modal-title').text('Add Branch');
+          $('#myformCompany').attr('action','<?php echo base_url(); ?>api/Company/insert');
+
+      });
+
+
+
+
+      $('#btnSave').click(function(){
+             var url = $('#myformCompany').attr('action');
+             var data = $('#myformCompany').serialize();
+             var chat_group_name = $('input[name=company_name]');
+             var address = $('input[name=address]');
+             var company_phone = $('input[name=company_phone]');
+        
+            
+              if (chat_group_name.val()=='') {
+                 toastr.error("Please Enter Branch Name");
+              }
+              else if(address.val()==''){
+                  toastr.error("Please Enter Branch City");
+              }
+               else if(company_phone.val()==''){
+                   toastr.error("Please Enter Branch Mobile/Phone No.");
+              }
+              else{
+                      $.ajax({
+                          type: 'ajax',
+                          method:'post',
+                          url: url,
+                          data: data,
+                          async: false,
+                          dataType: 'json',
+                          success: function(response){
+
+                                 $('#myformCompany')[0].reset();
+                                 $('#exampleModalCenter').modal('hide');
+
+                                  if (response.status) {
+                                   toastr.success(response.message);
+                                  }
+                                  else{
+                                     toastr.error(response.message);
+                                  }
+                                  
+                                  showCompanyData();
+                          },
+
+                        error: function(response){
+                                 var data =JSON.parse(response.responseText);
+                                 toastr.error(data.message);
+                          }
+
+                      });
+                  }
+               });
+
+
+
+              //edit
+      $('#CompanyData').on('click', '.item-edit', function(){
+           var id = $(this).attr('data');
+          $('#exampleModalCenter').modal('show');
+          $('#btnSave').html('Update');
+          $('#myformCompany').attr('action','<?php echo base_url(); ?>api/Company/update');
+          $('#exampleModalCenter').find('.modal-title').text('Update Company');
+             $.ajax({
+                type: 'ajax',
+                method: 'get',
+                url: '<?php echo base_url(); ?>api/Company/row',
+                data:{'id': id},  
+                async: false,
+                dataType: 'json',
+                success: function(response){
+                 
+                   if(response.status){
+                    if(response.data){
+                      data=response.data;
+                          $('input[name=id]').val(data.id);
+                          $('input[name=company_name]').val(data.company_name);
+                          $('input[name=address]').val(data.address);
+                          $('input[name=company_phone]').val(data.company_phone);   
+                    }
+              
+                   }
+
+                },
+                  error: function(response){
+                       var data =JSON.parse(response.responseText);
+                       toastr.error(data.message);
+                }
+            });
+
+      });
+
+      $('#CompanyData').on('click', '.item-delete', function(){
+          var id = $(this).attr('data');
+  
+            $('#myModal_for_delete_message').find('.modal-title').text('Delete Branch');
+            $('#myModal_for_delete_message').modal('show');
+            $('#btdelete').unbind().click(function(){
+                $.ajax({
+                    type: 'ajax',
+                    method: 'post',
+                    async: false,
+                    url: '<?php echo base_url(); ?>api/Company/delete/'+id,
+                    data: {'id': id},
+                    dataType: 'json',
+                    success: function(response)
+                    {
+                          $('#myModal_for_delete_message').modal('hide');
+                          toastr.success(response.message);
+                          showCompanyData();
+                    },
+
+                       error: function() 
+                    {
+                      $('#myModal_for_delete_message').modal('hide');
+                     
+                       toastr.error(response.message);
+                       showCompanyData();
+
+                    }
+                });
+
+            });
+
+        });
+
     });
+
+
 
 
   </script>
