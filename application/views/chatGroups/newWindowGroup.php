@@ -539,6 +539,26 @@
   </div>
 </div>
 
+
+<div class="modal fade" id="GroupInfoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header modal-title">Group Info
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+         
+      </div>
+      <div class="modal-body" id="modal-bodyGroup">
+     
+
+      </div>
+      <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+       
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="multifileuploadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
@@ -1169,9 +1189,8 @@ function showGroupChatWindow12(chat_group_name,id,messages) {
         html+='<div class="chat-header clearfix">'+
                     '<div class="row">'+
                        ' <div class="col-lg-6">'+
-
-
-                           ' <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">'+
+ 
+                           ' <a href="javascript:void(0);" class="showGroupInfoModal" data-toggle="modal" data='+id+'>'+
                                ' <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">'+
                            ' </a>'+
 
@@ -1897,6 +1916,74 @@ $('#mainDiv').on('click', '.showUserInfoModal', function(){
     });
 
    $('#UserInfoModal').modal('show');
+
+
+});
+
+
+$('#mainDiv').on('click', '.showGroupInfoModal', function(){
+
+   var id = $(this).attr('data');
+
+
+       $.ajax({
+        type: 'ajax',
+        method: 'get',
+        url: '<?php echo base_url(); ?>api/ChatGroup/row',
+        data:{'id': id},  
+        async: false,
+        dataType: 'json',
+        success: function(response){
+            var html='';
+            if(response.status){
+            data=response.data;
+            group_members=response.group_members;
+            if(data){
+                  html+='<table class="table table-striped">'+
+                '<thead>'+
+                  '<tr>'+
+                    '<th>Group Name</th>'+
+                    '<td>'+data.chat_group_name+'</td>'+
+                  ' </tr>'+
+                    '<tr>'+
+                    '<th>Group Description</th>'+
+                    '<td>'+data.group_description+'</td>'+
+                  ' </tr>'+
+                  '<tr>'+
+                    '<th>Group Members</th>'+
+                    '<td>';
+                    if(group_members){
+                        html+='<p>';
+                        for (var i = 0; i < group_members.length; i++) {
+                            html+=group_members[i].firstname+' '+group_members[i].lastname+', ';
+                        }
+                        html+='</p>';
+                    }
+
+                     html+='</td>'+
+                  ' </tr>'+
+
+                ' </thead>'+
+             
+
+              '</table>';
+            }
+              
+      
+             $('#modal-bodyGroup').html(html);
+
+            }
+  
+
+
+        },
+          error: function(response){
+               var data =JSON.parse(response.responseText);
+               toastr.error(data.message);
+        }
+    });
+
+   $('#GroupInfoModal').modal('show');
 
 
 });
