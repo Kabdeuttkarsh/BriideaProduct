@@ -443,7 +443,8 @@ $('#UserData').on('click', '.item-edit', function(){
                 $('select[name=designation]').val(data.group_id);
                 $('select[name=company]').val(data.company_id);      
                
-                $('input[name=insert_type]').val(2);      
+                $('input[name=insert_type]').val(2);    
+
            
         },
           error: function(response){
@@ -619,10 +620,14 @@ else{
 
                 if (response.status) {
                  toastr.success(response.message);
+                   
                 }
                 else{
                    toastr.error(response.message);
                 }
+
+                 document.getElementById('company').disabled=true;
+                 document.getElementById('designation').disabled=true;
                 
                 showUserData();
         },
@@ -630,6 +635,8 @@ else{
       error: function(response){
                var data =JSON.parse(response.responseText);
                toastr.error(data.message);
+               document.getElementById('company').disabled=true;
+               document.getElementById('designation').disabled=true;
         }
 
     });
