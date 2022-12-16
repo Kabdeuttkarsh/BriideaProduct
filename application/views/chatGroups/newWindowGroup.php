@@ -353,13 +353,15 @@
 
               delivery_time = $(this).attr('delivery_time');
               seen_time = $(this).attr('seen_time');
-            
-
-
+          
              convertedDate=dateChangeFormat(delivery_time);
-             convertedSeenDate=dateChangeFormat(seen_time);
-
-                
+             if(seen_time==null || seen_time=="null"){
+                convertedSeenDate="-"
+             }
+             else{
+               convertedSeenDate=dateChangeFormat(seen_time);
+             
+             }
              if(delivery_time!=null){
                 $('#delivery_time').html("Delivery :- "+convertedDate);
              }
@@ -367,12 +369,16 @@
                 $('#delivery_time').html("Delivery :- -");
              }
 
-             if(seen_time!=null){
-                $('#seen_time').html("Seen :- "+convertedSeenDate);
-             }
-             else{
-                $('#seen_time').html("Seen :- -");
-             }
+
+             // if(seen_time!=null){
+                 $('#seen_time').html("Seen :- "+convertedSeenDate);
+             // }
+             // else{
+             //    $('#seen_time').html("Seen :- -");
+             // }
+
+              
+           
              // if(id!=null){
              //    $('#msg_delete').html('<a tabindex="-1" href="javascript:;" class="item-deleteUserMsg" data="'+id+'">Delete Message</a>');
              //    // 
