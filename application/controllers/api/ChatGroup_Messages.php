@@ -589,7 +589,7 @@ class ChatGroup_Messages extends REST_Controller{
             if (!empty($group_id))  {
      
                     $config['upload_path']   = './uploads/group_chat_files/'; 
-                    $config['allowed_types'] = 'gif|jpg|png|mp4|xlsx|xls|csv|pdf|docx|txt|wav|mp3'; 
+                     $config['allowed_types'] = 'gif|jpg|png|mp4|xlsx|xls|csv|pdf|docx|txt|wav|mp3'; 
                     $config['max_size']      = 30000;
                     $ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
                     $new_name = time().rand(10,100).'.'.$ext;
@@ -781,6 +781,55 @@ class ChatGroup_Messages extends REST_Controller{
                  }
 
         
+    }
+
+ public function delete_post($value='')
+    {
+        # code...
+     $id = $this->security->xss_clean($this->post("id"));
+ 
+        if (!empty($id) && is_numeric($id)) {
+            # code...
+    
+
+          $conUser['conditions'] = array(
+                  'group_messages_id' => $id,
+                  'is_deleted' => 0,
+                  'is_active' => 1,
+              
+              );
+        $data = array('is_deleted' => 1,'is_active' => 0);
+
+         if($user_row=$this->Crud_model->update($this->table,$data,$conUser)){
+                      // Set the response and exit
+
+             
+            $this->response([
+                  "status" => TRUE,
+                  "message" => "Message deleted successfully.",
+                  "data"=>$user_row
+              ], REST_Controller::HTTP_OK);
+    
+          }
+          else{
+              // Set the response and exit
+            $this->response([
+                  'status' => FALSE,
+                  "message" => "Message not delete ."],
+                  REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+              
+          }
+
+      }
+      else{
+              // Set the response and exit
+            $this->response([
+                  'status' => FALSE,
+                  "message" => "invalid data."
+                   ], REST_Controller::HTTP_BAD_REQUEST);
+              
+          }
+          
     }
 
 

@@ -348,6 +348,10 @@
 
           type = $(this).attr('type');
           id = $(this).attr('data');
+          firstname = $(this).attr('firstname');
+          lastname = $(this).attr('lastname');
+          u_id = $(this).attr('u_id');
+          g_id = $(this).attr('g_id');
      
           if(type=="UserChat") {
 
@@ -381,10 +385,10 @@
 
               
            
-             // if(id!=null){
-             //    $('#msg_delete').html('<a tabindex="-1" href="javascript:;" class="item-deleteUserMsg" data="'+id+'">Delete Message</a>');
-             //    // 
-             // }
+             if(id!=null){
+                $('#msg_delete').html('<a tabindex="-1" href="javascript:;" class="item-deleteMsg" type="UserMessage" firstname="'+firstname+'" lastname="'+lastname+'"data="'+id+'" u_id="'+u_id+'">Delete Message</a>');
+                // 
+             }
              
       
           }
@@ -445,10 +449,10 @@
 
                     }
 
-                        // if(id!=null){
-                        //     $('#msg_delete').html('<a tabindex="-1" href="javascript:;" class="item-deleteUserMsg" data="'+id+'">Delete Message</a>');
-                        //     // 
-                        //  }
+                        if(id!=null){
+                            $('#msg_delete').html('<a tabindex="-1" href="javascript:;" class="item-deleteMsg" type="GroupMessage"  g_id="'+g_id+'" data="'+id+'">Delete Message</a>');
+                        
+                         }
                         
                 },
                   error: function(response){
@@ -626,7 +630,24 @@
   </div>
 </div>
 
-
+<div class="modal fade" id="myModal_for_delete_message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="myModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                
+            </div>
+            <div class="modal-body">
+                Are sure to delete this messege.
+             </div>
+            <div class="modal-footer">
+                 <button type="button" class="btn btn-outline-default btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" id="btdeleteMessage">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="contextMenu" class="dropdown clearfix">
     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
@@ -830,15 +851,10 @@ showGroupListforChat();
 
 }
 
-$('#mainDiv').on('click', '.item-OpenChatWindow12', function(){
-    // alert("id");
 
-    var id = $(this).attr('data');
-    var firstname = $(this).attr('firstname');
-    var lastname = $(this).attr('lastname');
-    chat_open_of_user=id;
-    chat_open_group='';
-    $.ajax({
+function openUserChat(id,firstname,lastname) {
+
+        $.ajax({
         type: 'ajax',
         method: 'get',
         url: '<?php echo base_url(); ?>api/UserChat/row',
@@ -914,17 +930,23 @@ $('#mainDiv').on('click', '.item-OpenChatWindow12', function(){
         }
     });
 
+}
+
+$('#mainDiv').on('click', '.item-OpenChatWindow12', function(){
+    // alert("id");
+
+    var id = $(this).attr('data');
+    var firstname = $(this).attr('firstname');
+    var lastname = $(this).attr('lastname');
+    chat_open_of_user=id;
+    chat_open_group='';
+    openUserChat(id,firstname,lastname);
 });
 
 
+function openGroupChat(id) {
 
-
-$('#mainDiv').on('click', '.item-OpenGroupChatWindow12', function(){
-    // alert("id");
-    chat_open_of_user='';
-    var id = $(this).attr('data');
-    chat_open_group=id;
-     $.ajax({
+   $.ajax({
         type: 'ajax',
         method: 'get',
         url: '<?php echo base_url(); ?>api/ChatGroup_Messages/row',
@@ -998,6 +1020,14 @@ $('#mainDiv').on('click', '.item-OpenGroupChatWindow12', function(){
                toastr.error(data.message);
         }
     });
+}
+
+$('#mainDiv').on('click', '.item-OpenGroupChatWindow12', function(){
+    // alert("id");
+    chat_open_of_user='';
+    var id = $(this).attr('data');
+    chat_open_group=id;
+    openGroupChat(id);
 
 
 });
@@ -1039,7 +1069,7 @@ function showWindow12(firstname,lastname,id,messages,last_online_at) {
             if(messages){
 
                html+='<div class="chat-history" id="chatHistoryMessage">'+
-                        '<p style="text-align:center;"><a href="javascript:;" class="load-previous-user-messages" data="'+id+'"> Load Previous Messages</a></p>'+
+                        '<p style="text-align:center;"><a href="javascript:;" class="load-previous-user-messages" data="'+id+'" firstname="'+firstname+'" lastname="'+lastname+'"> Load Previous Messages</a></p>'+
                     
                   '<div id="append-newly-loaded-user-messages"></div>'+
               
@@ -1082,13 +1112,13 @@ function showWindow12(firstname,lastname,id,messages,last_online_at) {
                                   '  </div>';
 
                                   if(messages[i].message!=null){
-                                    html+='<div data="'+messages[i].message_id+'" delivery_time="'+messages[i].delivery_time+'" seen_time="'+messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat" >'+messages[i].message+'</div>';
+                                    html+='<div data="'+messages[i].message_id+'" delivery_time="'+messages[i].delivery_time+'" seen_time="'+messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat" firstname="'+firstname+'" lastname="'+lastname+'" u_id="'+id+'">'+messages[i].message+'</div>';
                                   }
 
 
                                  if(messages[i].message_file!=null){
 
-                                    html+='<div data="'+messages[i].message_id+'" delivery_time="'+messages[i].delivery_time+'" seen_time="'+messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat" >';
+                                    html+='<div data="'+messages[i].message_id+'" delivery_time="'+messages[i].delivery_time+'" seen_time="'+messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat" firstname="'+firstname+'" lastname="'+lastname+'"  u_id="'+id+'">';
                                    
                                         if(messages[i].message_file_extension=="gif" ||
                                            messages[i].message_file_extension=="jpg" || 
@@ -1248,12 +1278,12 @@ function showGroupChatWindow12(chat_group_name,id,messages) {
 
                                  if(messages[i].group_message!=null){
                                    
-                                   html+='<div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+messages[i].group_messages_id+'">'+messages[i].group_message+'</div>';
+                                   html+='<div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+messages[i].group_messages_id+'" g_id="'+id+'">'+messages[i].group_message+'</div>';
                                   }
 
                                  if(messages[i].group_message_file!=null){
 
-                                    html+='<div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+messages[i].group_messages_id+'">';
+                                    html+='<div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+messages[i].group_messages_id+'" g_id="'+id+'">';
                                    
                                         if(messages[i].group_message_extension=="gif" ||
                                            messages[i].group_message_extension=="jpg" || 
@@ -1595,6 +1625,8 @@ function sendSeenReceiptToSenderForGroupChat(group_id) {
 $('#mainDiv').on('click', '.load-previous-user-messages', function(){
 
     var id = $(this).attr('data');
+    var firstname = $(this).attr('firstname');
+    var lastname = $(this).attr('lastname');
   
     $.ajax({
         type: 'ajax',
@@ -1662,13 +1694,13 @@ $('#mainDiv').on('click', '.load-previous-user-messages', function(){
                                   
                              if(cht_messages[i].message!=null){
 
-                                    html+='<div data="'+cht_messages[i].message_id+'" delivery_time="'+cht_messages[i].delivery_time+'" seen_time="'+cht_messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat" >'+cht_messages[i].message+'</div>';
+                                    html+='<div data="'+cht_messages[i].message_id+'" delivery_time="'+cht_messages[i].delivery_time+'" seen_time="'+cht_messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat"  firstname="'+firstname+'" lastname="'+lastname+'" u_id="'+id+'">'+cht_messages[i].message+'</div>';
                                   }
 
 
                                  if(cht_messages[i].message_file!=null){
 
-                                    html+='<div data="'+cht_messages[i].message_id+'" delivery_time="'+cht_messages[i].delivery_time+'" seen_time="'+cht_messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat" >';
+                                    html+='<div data="'+cht_messages[i].message_id+'" delivery_time="'+cht_messages[i].delivery_time+'" seen_time="'+cht_messages[i].seen_time+'"class="message other-message float-right" id="UserSentMsg" type="UserChat"  firstname="'+firstname+'" lastname="'+lastname+'" u_id="'+id+'">';
                                    
                                         if(cht_messages[i].message_file_extension=="gif" ||
                                            cht_messages[i].message_file_extension=="jpg" || 
@@ -1800,12 +1832,12 @@ $('#mainDiv').on('click', '.load-previous-group-messages', function(){
 
                                 if(grp_cht_messages[i].group_message!=null){
                                    
-                                   html+='<div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+grp_cht_messages[i].group_messages_id+'">'+grp_cht_messages[i].group_message+'</div>';
+                                   html+='<div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+grp_cht_messages[i].group_messages_id+'"  g_id="'+id+'">'+grp_cht_messages[i].group_message+'</div>';
                                   }
 
                                  if(grp_cht_messages[i].group_message_file!=null){
 
-                                    html+='<div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+grp_cht_messages[i].group_messages_id+'">';
+                                    html+='<div id="GroupSentMsg" class="message other-message float-right" type="GroupChat" data="'+grp_cht_messages[i].group_messages_id+'"  g_id="'+id+'">';
                                    
                                         if(grp_cht_messages[i].group_message_extension=="gif" ||
                                            grp_cht_messages[i].group_message_extension=="jpg" || 
@@ -2467,5 +2499,62 @@ if (loginche) {
         }
 
   }
+
+  $('#mainDiv').on('click', '.item-deleteMsg', function(){
+  
+    var id = $(this).attr('data');
+    var type = $(this).attr('type');
+    var u_id = $(this).attr('u_id');
+    var g_id = $(this).attr('g_id');
+
+    $('#myModal_for_delete_message').find('.modal-title').text('Delete Messages');
+    $('#myModal_for_delete_message').modal('show');
+
+    if(type=="UserMessage"){
+        var url='<?php echo base_url(); ?>api/UserChat/delete/'+id; 
+    }
+    if(type=="GroupMessage"){
+        var url='<?php echo base_url(); ?>api/ChatGroup_Messages/delete/'+id;
+    }
+
+
+    $('#btdeleteMessage').unbind().click(function(){
+        $.ajax({
+            type: 'ajax',
+            method: 'post',
+            async: false,
+            url: url,
+            data: {'id': id},
+            dataType: 'json',
+            success: function(response)
+            {
+                  $('#myModal_for_delete_message').modal('hide');
+                  
+                  toastr.success(response.message);
+                  if(type=="UserMessage"){
+                    showUserListforChat();
+                     openUserChat(u_id,firstname,lastname);  
+                  }
+                  if(type=="GroupMessage"){
+                    showGroupListforChat();
+                     openGroupChat(g_id);
+                  }
+                  
+            },
+
+               error: function() 
+            {
+                $('#myModal_for_delete_message').modal('hide');
+               
+                toastr.error(response.message);
+            }
+        });
+
+    });
+
+});
+
+
+
 
 </script>

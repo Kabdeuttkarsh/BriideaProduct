@@ -8,7 +8,7 @@ class Crud_model extends CI_Model
     $outPutArray = array();
     $ids=array();
      
-    $sql = $this->db->query("SELECT MAX(message_id) as message_id FROM (SELECT * FROM messages ORDER BY message_id DESC) AS messages WHERE $user_id in (sender_message_id, receiver_message_id) GROUP BY receiver_message_id ORDER BY message_id DESC");
+    $sql = $this->db->query("SELECT MAX(message_id) as message_id FROM (SELECT * FROM messages WHERE is_deleted=0 ORDER BY message_id DESC) AS messages WHERE is_deleted=0 AND $user_id in (sender_message_id, receiver_message_id) GROUP BY receiver_message_id ORDER BY message_id DESC");
 
     $array=$sql->result();
 
@@ -105,11 +105,11 @@ class Crud_model extends CI_Model
             FROM chat_groups AS a 
           
             INNER JOIN group_messages AS t ON t.group_id = a.group_id 
-           WHERE a.is_active= ? AND a.is_deleted= ?
+           WHERE a.is_active= ? AND a.is_deleted= ? AND t.is_active=? AND t.is_deleted=?
             GROUP BY a.group_id, t.group_id
            
             ORDER BY MAX(t.group_messages_id) DESC"; 
-         $query = $this->db->query($sql, array(1,0));
+         $query = $this->db->query($sql, array(1,0,1,0));
         $array=$query->result();
         // echo "<pre>";
         // print_r( $array);
@@ -162,7 +162,6 @@ class Crud_model extends CI_Model
                     }
                 }
         
-
             }
 
         }

@@ -127,7 +127,7 @@ class UserChat extends REST_Controller{
 
             if(!empty($receiver_id)){
 
-            $sql =$this->db->query("SELECT * FROM (SELECT * FROM messages WHERE $sender_id IN (sender_message_id,receiver_message_id) AND  $receiver_id IN (sender_message_id,receiver_message_id) ORDER BY message_id DESC LIMIT $start,50) AS messages ORDER BY message_id ASC");
+            $sql =$this->db->query("SELECT * FROM (SELECT * FROM messages WHERE is_deleted=0 AND $sender_id IN (sender_message_id,receiver_message_id) AND  $receiver_id IN (sender_message_id,receiver_message_id)ORDER BY message_id DESC LIMIT $start,50) AS messages ORDER BY message_id ASC");
                 $array=$sql->result();
          
                  $conSender['conditions'] = array(
@@ -501,6 +501,55 @@ public function uploadFilesUserChat_post($value='')
 
     
 }
+
+public function delete_post($value='')
+    {
+        # code...
+     $id = $this->security->xss_clean($this->post("id"));
+ 
+        if (!empty($id) && is_numeric($id)) {
+            # code...
+    
+
+          $conUser['conditions'] = array(
+                  'message_id' => $id,
+               
+                  'is_deleted' => 0,
+              
+              );
+        $data = array('is_deleted' => 1);
+
+         if($user_row=$this->Crud_model->update($this->table,$data,$conUser)){
+                      // Set the response and exit
+
+             
+            $this->response([
+                  "status" => TRUE,
+                  "message" => "Message delete successfully.",
+                  "data"=>$user_row
+              ], REST_Controller::HTTP_OK);
+    
+          }
+          else{
+              // Set the response and exit
+            $this->response([
+                  'status' => FALSE,
+                  "message" => "Message not delete ."],
+                  REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+              
+          }
+
+      }
+      else{
+              // Set the response and exit
+            $this->response([
+                  'status' => FALSE,
+                  "message" => "invalid data."
+                   ], REST_Controller::HTTP_BAD_REQUEST);
+              
+          }
+          
+    }
 
 }
 
