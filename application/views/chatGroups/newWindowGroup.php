@@ -1093,8 +1093,13 @@ function showWindow12(firstname,lastname,id,messages,last_online_at) {
                                         if(messages[i].message_file_extension=="gif" ||
                                            messages[i].message_file_extension=="jpg" || 
                                            messages[i].message_file_extension=="png")  {
-                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'"><img src="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'"width="50" height="50" /></a>';
+                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'"><img src="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'"width="150" height="150" /></a>';
                                         }
+
+                                        else if(messages[i].message_file_extension=="pdf"){
+                                            html+='<object data="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'" type="application/pdf" width="150" height="150"></object></br><a href="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'" target="_BLANK">'+messages[i].message_file+'</a>';
+                                        }
+
                                         else{
                                             html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'">'+messages[i].message_file+'</a>';
                                         }
@@ -1129,9 +1134,14 @@ function showWindow12(firstname,lastname,id,messages,last_online_at) {
                                                messages[i].message_file_extension=="jpg" || 
                                                messages[i].message_file_extension=="png")  {
                                             
-                                               html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'"><img src="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'" alt="Girl in a jacket" width="50" height="50" /></a>';
+                                               html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'"><img src="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'" alt="Girl in a jacket" width="150" height="150" /></a>';
 
                                             }
+
+                                            else if(messages[i].message_file_extension=="pdf"){
+                                               html+='<object data="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'" type="application/pdf" width="150" height="150"></object></br><a href="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'" target="_BLANK">'+messages[i].message_file+'</a>';
+                                            }
+
                                           
                                            else{
                                                   html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+messages[i].message_file+'">'+messages[i].message_file+'</a>';
@@ -1249,8 +1259,12 @@ function showGroupChatWindow12(chat_group_name,id,messages) {
                                            messages[i].group_message_extension=="jpg" || 
                                            messages[i].group_message_extension=="png")  {
                                           
-                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'"><img src="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'"width="50" height="50" /></a>';
+                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'"><img src="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'"width="150" height="150" /></a>';
                                         }
+                                         else if(messages[i].group_message_extension=="pdf"){
+                                                html+='<object data="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'" type="application/pdf" width="150" height="150"></object></br><a href="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'" target="_BLANK">'+messages[i].group_message_file+'</a>';
+                                            }
+
                                         else{
                                             html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'">'+messages[i].group_message_file+'</a>';
                                         }
@@ -1283,8 +1297,11 @@ function showGroupChatWindow12(chat_group_name,id,messages) {
                                                messages[i].group_message_extension=="jpg" || 
                                                messages[i].group_message_extension=="png")  {
                                             
-                                               html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'"><img src="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'" width="50" height="50" /></a>';
+                                               html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'"><img src="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'" width="150" height="150" /></a>';
 
+                                            }
+                                             else if(messages[i].group_message_extension=="pdf"){
+                                                 html+='<object data="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'" type="application/pdf" width="150" height="150"></object></br><a href="<?php echo base_url("uploads/group_chat_files/");?>'+messages[i].group_message_file+'" target="_BLANK">'+messages[i].group_message_file+'</a>';
                                             }
                                           
                                            else{
@@ -1656,8 +1673,12 @@ $('#mainDiv').on('click', '.load-previous-user-messages', function(){
                                         if(cht_messages[i].message_file_extension=="gif" ||
                                            cht_messages[i].message_file_extension=="jpg" || 
                                            cht_messages[i].message_file_extension=="png")  {
-                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'"><img src="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'"width="50" height="50" /></a>';
+                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'"><img src="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'"width="150" height="150" /></a>';
                                         }
+                                          else if(cht_messages[i].message_file_extension=="pdf"){
+                                                html+='<object data="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'" type="application/pdf" width="150" height="150"><p><a href="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'" target="_BLANK">to the PDF!</a></p></object>';
+                                            }
+
                                         else{
                                             html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'">'+cht_messages[i].message_file+'</a>'
                                         }
@@ -1692,8 +1713,11 @@ $('#mainDiv').on('click', '.load-previous-user-messages', function(){
                                                cht_messages[i].message_file_extension=="jpg" || 
                                                cht_messages[i].message_file_extension=="png")  {
                                             
-                                               html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'"><img src="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'" alt="Girl in a jacket" width="50" height="50" /></a>';
+                                               html+='<a target="_BLANK" href="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'"><img src="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'" alt="Girl in a jacket" width="150" height="150" /></a>';
 
+                                            }
+                                           else if(cht_messages[i].message_file_extension=="pdf"){
+                                                html+='<object data="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'" type="application/pdf" width="150" height="150"><p><a href="<?php echo base_url("uploads/user_chat_files/");?>'+cht_messages[i].message_file+'" target="_BLANK">to the PDF!</a></p></object>';
                                             }
                                           
                                            else{
@@ -1787,8 +1811,11 @@ $('#mainDiv').on('click', '.load-previous-group-messages', function(){
                                            grp_cht_messages[i].group_message_extension=="jpg" || 
                                            grp_cht_messages[i].group_message_extension=="png")  {
                                           
-                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'"><img src="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'"width="50" height="50" /></a>';
+                                            html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'"><img src="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'"width="150" height="150" /></a>';
                                         }
+                                         else if(grp_cht_messages[i].group_message_extension=="pdf"){
+                                                html+='<object data="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'" type="application/pdf" width="150" height="150"><p><a href="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'" target="_BLANK">to the PDF!</a></p></object>';
+                                            }
                                         else{
                                             html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'">'+grp_cht_messages[i].group_message_file+'</a>';
                                         }
@@ -1822,8 +1849,11 @@ $('#mainDiv').on('click', '.load-previous-group-messages', function(){
                                                grp_cht_messages[i].group_message_extension=="jpg" || 
                                                grp_cht_messages[i].group_message_extension=="png")  {
                                             
-                                               html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'"><img src="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'" width="50" height="50" /></a>';
+                                               html+='<a target="_BLANK" href="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'"><img src="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'" width="150" height="150" /></a>';
 
+                                            }
+                                             else if(grp_cht_messages[i].group_message_extension=="pdf"){
+                                                html+='<object data="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'" type="application/pdf" width="150" height="150"><p><a href="<?php echo base_url("uploads/group_chat_files/");?>'+grp_cht_messages[i].group_message_file+'" target="_BLANK">to the PDF!</a></p></object>';
                                             }
                                           
                                            else{
