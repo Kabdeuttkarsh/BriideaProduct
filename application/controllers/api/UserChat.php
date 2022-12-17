@@ -429,7 +429,7 @@ public function uploadFilesUserChat_post($value='')
         if (!empty($receiver_id))  {
  
                 $config['upload_path']   = './uploads/user_chat_files/'; 
-                $config['allowed_types'] = 'gif|jpg|png|mp4|xlsx|xls|csv|pdf|docx|txt'; 
+                $config['allowed_types'] = 'gif|jpg|png|mp4|xlsx|xls|csv|pdf|docx|txt|wav|mp3'; 
                 $config['max_size']      = 30000;
                 $ext = pathinfo($_FILES["file"]['name'], PATHINFO_EXTENSION);
                 $new_name = time().rand(10,100).'.'.$ext;
