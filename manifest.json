@@ -1,0 +1,15 @@
+{
+  "background_color": "#1e741e",
+  "description": "esfghtrddfghfgh",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "ensurechat",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "ensurechat",
+  "start_url": "/",
+  "theme_color": "#d02020",
+  "categories": [],
+  "screenshots": [],
+  "icons": [],
+  "shortcuts": []

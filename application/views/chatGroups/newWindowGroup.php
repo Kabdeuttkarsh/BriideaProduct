@@ -384,7 +384,6 @@
              // }
 
               
-           
              if(id!=null){
                 $('#msg_delete').html('<a tabindex="-1" href="javascript:;" class="item-deleteMsg" type="UserMessage" firstname="'+firstname+'" lastname="'+lastname+'"data="'+id+'" u_id="'+u_id+'">Delete Message</a>');
                 // 
