@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="<?php echo base_url('assets/dist/css/skins/_all-skins.min.css') ?>">
   <!-- Morris chart -->
   <link rel="stylesheet" href="<?php echo base_url('assets/bower_components/morris.js/morris.css') ?>">
+  <link rel="manifest" href="<?php echo base_url("manifest.json");?>">
  
   <!-- jvectormap -->
 <!--   <link rel="stylesheet" href="<?php echo base_url('assets/bower_components/jvectormap/jquery-jvectormap.css') ?>"> -->
