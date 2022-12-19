@@ -3,7 +3,7 @@
     "background_color": "#f69435",
     "display": "standalone",
     "scope": "/",
-    "start_url": "ensurechat.com",
+    "start_url": "/",
     "name": "Ensure Chat",
     "short_name": "EC",
     "description": "Ensure Chat- Secure Chat App",
