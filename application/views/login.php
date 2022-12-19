@@ -29,6 +29,7 @@
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
   <link href="<?php echo base_url('assets/dist/css/toastr.css'); ?>" rel="stylesheet">
+    <link rel="manifest" href="<?php echo base_url("manifest.json");?>">
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
