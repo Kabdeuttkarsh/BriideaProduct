@@ -78,7 +78,7 @@ class Auth extends REST_Controller{
                       $this->session->set_userdata($logged_in_sess);
                        
                        $conUserActive['conditions'] = array(
-                          'email' => $email,
+                         // 'email' => $email,
                           'id'=> $users_row->id,
                           'is_active' => 1,
                           'is_deleted' => 0
